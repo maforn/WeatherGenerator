@@ -1,0 +1,32 @@
+# DPHPC baseline: peak GPU memory over ~100 training steps (no allocator snapshot).
+# Use with --base-config config/config_operan_georing_avhrr_forecasting_lowres.yml.
+# config_memory_profiling.yml gives the per-site breakdown over 3 steps; this run gives the
+# distribution of the per-step peak, which varies with the observation tokens in each batch.
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  # per-step source MB, to relate a step's memory peak to how much data that batch carried
+  throughput_tracking: True
+  # one record per step: the memory tracker resets its peak at every collect()
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  # same data order as config_memory_profiling.yml, so both runs see the same batches
+  rng_seed: 1
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 100 steps
+  samples_per_mini_epoch: 400
+
+validation_config:
+  # validation runs after the mini-epoch; keep it to one batch
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"

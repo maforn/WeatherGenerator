@@ -197,6 +197,9 @@ bar
 *.nc
 *.npz
 *.json
+!.minion.json
+!config/**/*.json
+!experiments/**/*.json
 *.zarr/
 ~$images.pptx
 test.py

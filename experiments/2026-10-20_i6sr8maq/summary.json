@@ -1,0 +1,14 @@
+{
+ "run": "i6sr8maq",
+ "job": "2418834",
+ "date": "2026-10-20",
+ "state": "FAILED",
+ "elapsed": "00:06:44",
+ "setup": "default_config.yml + config_operan_georing_avhrr_forecasting_lowres.yml",
+ "steps": 1,
+ "s_per_step": null,
+ "gpu_peak_gib": null,
+ "host_rss_gib": 70.5,
+ "error": "RuntimeError: DataLoader worker (pid 161772) is killed by signal: Killed.",
+ "note": "operan config merged on default_config.yml (memory_pinning on): GPU allocation failed in flash-attn backward, then a DataLoader worker was killed"
+}

@@ -1,0 +1,14 @@
+{
+ "run": "myt36ynx",
+ "job": "2418802",
+ "date": "2026-10-20",
+ "state": "FAILED",
+ "elapsed": "00:02:43",
+ "setup": "default_config.yml + config_operan_georing_avhrr_forecasting_lowres.yml",
+ "steps": 0,
+ "s_per_step": null,
+ "gpu_peak_gib": null,
+ "host_rss_gib": null,
+ "error": "subprocess.CalledProcessError: Command '['platform-env.py', 'hpc']' returned non-zero exit status 1.",
+ "note": "setup error: BUDGET_ACCOUNTS missing in ~/.bashrc (now set by make init)"
+}

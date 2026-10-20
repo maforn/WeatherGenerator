@@ -1,0 +1,23 @@
+{
+  "use": "jupiter",
+  "hosts": {
+    "jupiter": {
+      "ssh": "jupiter",
+      "remote_dir": "/e/scratch/weatherai/$USER/{repo}"
+    }
+  },
+  "templates": {
+    "jupiter": {
+      "host": "jupiter",
+      "needs": ["WeatherGenerator-private"],
+      "exclude": [".git", ".venv", "profiling"],
+      "tasks": {
+        "init": "make init",
+        "check": "make check",
+        "train": "make train $MINION_ARGS",
+        "profile": "make profile $MINION_ARGS",
+        "queue": "squeue --me"
+      }
+    }
+  }
+}
