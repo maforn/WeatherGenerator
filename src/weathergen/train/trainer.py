@@ -55,7 +55,11 @@ from weathergen.train.utils import (
 )
 from weathergen.utils.distributed import get_spatial_parallel_size, is_root
 from weathergen.utils.performance import (
+    DataTimingTracker,
+    HostMemoryTracker,
     MemoryTracker,
+    NullDataTimingTracker,
+    NullHostMemoryTracker,
     NullMemoryTracker,
     NullThroughputTracker,
     ThroughputTracker,
@@ -109,6 +113,10 @@ class Trainer(TrainerBase):
         self.collapse_monitor: CollapseMonitor | None = None
         self.perf_tracker: ThroughputTracker | NullThroughputTracker = NullThroughputTracker()
         self.memory_tracker: MemoryTracker | NullMemoryTracker = NullMemoryTracker()
+        self.data_timer: DataTimingTracker | NullDataTimingTracker = NullDataTimingTracker()
+        self.host_memory_tracker: HostMemoryTracker | NullHostMemoryTracker = (
+            NullHostMemoryTracker()
+        )
         self.t_training_start: float = 0
         self.training_loop_annotation_context = contextlib.nullcontext
 
@@ -207,6 +215,10 @@ class Trainer(TrainerBase):
             )
         if cf.train_logging.get("memory_tracking", False) and torch.cuda.is_available():
             self.memory_tracker = MemoryTracker(device=torch.device(self.devices[0]))
+        if cf.train_logging.get("data_timing", False) and torch.cuda.is_available():
+            self.data_timer = DataTimingTracker(device=torch.device(self.devices[0]))
+        if cf.train_logging.get("host_memory_tracking", False):
+            self.host_memory_tracker = HostMemoryTracker(device=torch.device(self.devices[0]))
         if cf.get("profiling", {}).get("nvtx_annotate", False):
             self.training_loop_annotation_context = nvtx_range
 
@@ -341,8 +353,7 @@ class Trainer(TrainerBase):
                 halflife_steps=validate_with_ema_cfg.get("ema_halflife_in_thousands", 1e-3),
                 rampup_ratio=validate_with_ema_cfg.get("ema_ramp_up_ratio", 0.09),
                 is_model_sharded=(
-                    cf.distributed.data_parallel.with_ddp
-                    and cf.distributed.data_parallel.with_fsdp
+                    cf.distributed.data_parallel.with_ddp and cf.distributed.data_parallel.with_fsdp
                 ),
             )
 
@@ -487,8 +498,11 @@ class Trainer(TrainerBase):
 
         # training loop
         self.t_start = time.time()
+        t_wait = time.perf_counter()
         for bidx, batch in enumerate(dataset_iter):
+            self.data_timer.received(batch, time.perf_counter() - t_wait)
             self._train_batch(batch, bidx, mini_epoch)
+            t_wait = time.perf_counter()
 
         self.dataset.advance()
 
@@ -632,11 +646,21 @@ class Trainer(TrainerBase):
             return {}
 
     def _train_batch(self, batch: ModelBatch, bidx: int, mini_epoch: int):
+        self.data_timer.start_step()
         with self.training_loop_annotation_context(f"batch_{bidx}"):
             if self.cf.data_loading.get("memory_pinning", False):
                 # pin memory for faster CPU-GPU transfer
-                batch = batch.pin_memory()
-            batch.to_device(self.device)
+                with self.data_timer.timed("pin"):
+                    batch = batch.pin_memory()
+            # the embedding casts the source tokens to the mixed-precision dtype first, so
+            # keeping them in that dtype on the device gives the same result with less memory
+            source_dtype = (
+                self.mixed_precision_dtype
+                if self.cf.get("source_tokens_in_mixed_precision", False)
+                else None
+            )
+            with self.data_timer.timed("h2d"):
+                batch.to_device(self.device, source_dtype)
             with torch.autocast(
                 device_type=f"cuda:{self.cf.local_rank}",
                 dtype=self.mixed_precision_dtype,
@@ -733,11 +757,16 @@ class Trainer(TrainerBase):
                 targets_and_auxs,
             )
 
+        self.data_timer.end_step(batch)
         self._log_terminal(bidx, mini_epoch, TRAIN)
         if bidx % self.train_logging.metrics == 0:
             perf_metrics = self.perf_tracker.compute_metrics()
             mem_metrics = self.memory_tracker.collect(window="train")
-            self._log(TRAIN, extra_metrics={**mem_metrics, **perf_metrics})
+            data_metrics = self.data_timer.collect()
+            host_metrics = self.host_memory_tracker.collect()
+            self._log(
+                TRAIN, extra_metrics={**mem_metrics, **perf_metrics, **data_metrics, **host_metrics}
+            )
             # Log collapse metrics
             if self.collapse_monitor.should_log(self.cf.general.istep):
                 self._log_collapse_metrics(TRAIN)

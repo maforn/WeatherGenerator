@@ -10,8 +10,11 @@
 """Utilities for measuring training throughput metrics."""
 
 import logging
-from contextlib import contextmanager
+import time
+from contextlib import contextmanager, nullcontext
+from pathlib import Path
 
+import psutil
 import torch
 
 logger = logging.getLogger(__name__)
@@ -196,6 +199,184 @@ class MemoryTracker:
             "performance.memory.global.max_allocated_gib": self._run_peak[0] / _GIB,
             "performance.memory.global.max_reserved_gib": self._run_peak[1] / _GIB,
         }
+
+
+def _gather(values: list[float], device: torch.device) -> list[list[float]]:
+    """``values`` of every rank, in rank order. Collective when distributed."""
+    local = torch.tensor(values, dtype=torch.float64, device=device)
+    if not (torch.distributed.is_available() and torch.distributed.is_initialized()):
+        return [local.tolist()]
+    gathered = [torch.empty_like(local) for _ in range(torch.distributed.get_world_size())]
+    torch.distributed.all_gather(gathered, local)
+    return [g.tolist() for g in gathered]
+
+
+class DataTimingTracker:
+    """Tracks wall time per training step, split into data-loading stages.
+
+    Training-loop stages: ``wait`` (for the next batch from the DataLoader), ``queued``
+    (from the worker finishing the batch to the training loop receiving it: time spent
+    waiting in the queue plus the hand-off), ``pin`` (pinning it in host memory), ``h2d``
+    (copy to the device) and ``step`` (the whole step, including ``pin`` and ``h2d``).
+    Worker stages arrive with each batch in ``batch.timings``: ``read`` (dataset readers),
+    ``preprocess`` (shuffle, NaN removal, normalization), ``tokenize``, ``assemble`` (the
+    rest of building the batch) and ``batch`` (all of it, including retries of empty
+    samples). Workers prefetch, so worker time only slows training when it shows up as
+    ``wait``.
+
+    ``h2d`` and ``step`` synchronize the device to time the actual copy and compute;
+    this removes some CPU/GPU overlap, so enable it for measurement runs only.
+    """
+
+    STAGES = (
+        "wait",
+        "queued",
+        "pin",
+        "h2d",
+        "step",
+        "read",
+        "preprocess",
+        "tokenize",
+        "assemble",
+        "batch",
+    )
+
+    def __init__(self, device: torch.device) -> None:
+        self._device = device
+        self._sums = dict.fromkeys(self.STAGES, 0.0)
+        self._steps = 0
+        self._t_step = 0.0
+
+    def add(self, stage: str, seconds: float) -> None:
+        self._sums[stage] += seconds
+
+    def received(self, batch, wait: float) -> None:
+        """Record a batch arriving in the training loop after waiting ``wait`` seconds."""
+        self.add("wait", wait)
+        # wall clock: the batch was stamped in another process on the same node
+        self.add("queued", time.time() - getattr(batch, "t_ready", time.time()))
+
+    @contextmanager
+    def timed(self, stage: str):
+        """Time a block, synchronizing the device around it."""
+        torch.cuda.synchronize(self._device)
+        t = time.perf_counter()
+        yield
+        torch.cuda.synchronize(self._device)
+        self.add(stage, time.perf_counter() - t)
+
+    def start_step(self) -> None:
+        self._t_step = time.perf_counter()
+
+    def end_step(self, batch) -> None:
+        """Close the step started by ``start_step`` and add the batch's worker timings."""
+        torch.cuda.synchronize(self._device)
+        self.add("step", time.perf_counter() - self._t_step)
+        for stage, seconds in getattr(batch, "timings", {}).items():
+            self.add(stage, seconds)
+        self._steps += 1
+
+    def collect(self) -> dict[str, float]:
+        """Mean seconds per step for each stage since the last call.
+
+        Returns each rank's own values (``performance.data.rank<r>.<stage>_s``, which add
+        up within a rank) and the max over ranks (``performance.data.<stage>_s``, taken per
+        stage, so these can come from different ranks).
+
+        Collective: call on every rank at the same point in the training loop.
+        """
+        if self._steps == 0:
+            return {}
+        per_rank = _gather([self._sums[s] / self._steps for s in self.STAGES], self._device)
+        self._sums, self._steps = dict.fromkeys(self.STAGES, 0.0), 0
+        metrics = {
+            f"performance.data.{s}_s": max(rank[i] for rank in per_rank)
+            for i, s in enumerate(self.STAGES)
+        }
+        for r, values in enumerate(per_rank):
+            metrics |= {
+                f"performance.data.rank{r}.{s}_s": v
+                for s, v in zip(self.STAGES, values, strict=True)
+            }
+        return metrics
+
+
+class NullDataTimingTracker:
+    """No-op data timing tracker used when data timing is disabled."""
+
+    def add(self, stage: str, seconds: float) -> None:
+        pass
+
+    def received(self, batch, wait: float) -> None:
+        pass
+
+    def timed(self, stage: str):
+        return nullcontext()
+
+    def start_step(self) -> None:
+        pass
+
+    def end_step(self, batch) -> None:
+        pass
+
+    def collect(self) -> dict[str, float]:
+        return {}
+
+
+class HostMemoryTracker:
+    """Host memory of this rank's processes, sampled at each ``collect()``.
+
+    ``main_pss`` is the training process and ``workers_pss`` its child processes (the
+    DataLoader workers), as proportional set sizes, so pages shared after the fork are
+    split between processes instead of counted in each. ``cgroup_anon`` and
+    ``cgroup_shmem`` come from the cgroup the rank runs in (cgroup v2). Slurm on JUPITER
+    uses one cgroup per job step and node, so these are totals for all ranks on the
+    rank's node, not per rank. ``cgroup_shmem`` holds the batches that workers hand to
+    the main process through /dev/shm. Reading the memory maps of every process takes
+    time, so enable it for measurement runs only.
+    """
+
+    KEYS = ("main_pss", "workers_pss", "cgroup_anon", "cgroup_shmem")
+
+    def __init__(self, device: torch.device) -> None:
+        self._device = device
+        self._process = psutil.Process()
+        # cgroup v2 has one line "0::<path>"
+        cgroup = Path("/proc/self/cgroup").read_text().split("::", 1)[-1].strip()
+        self._stat = Path("/sys/fs/cgroup") / cgroup.lstrip("/") / "memory.stat"
+
+    @staticmethod
+    def _pss(process: psutil.Process) -> int:
+        try:
+            return process.memory_full_info().pss
+        except psutil.Error:  # e.g. a worker that exited in the meantime
+            return 0
+
+    def collect(self) -> dict[str, float]:
+        """Current host memory of every rank, ``performance.host_memory.rank<r>.<key>_gib``.
+
+        Collective: call on every rank at the same point in the training loop.
+        """
+        workers = sum(self._pss(p) for p in self._process.children(recursive=True))
+        stat = {}
+        if self._stat.exists():
+            stat = dict(line.split() for line in self._stat.read_text().splitlines())
+        values = [self._pss(self._process), workers]
+        values += [int(stat.get(k, 0)) for k in ("anon", "shmem")]
+        metrics = {}
+        for r, rank in enumerate(_gather([v / _GIB for v in values], self._device)):
+            metrics |= {
+                f"performance.host_memory.rank{r}.{k}_gib": v
+                for k, v in zip(self.KEYS, rank, strict=True)
+            }
+        return metrics
+
+
+class NullHostMemoryTracker:
+    """No-op host memory tracker used when host memory tracking is disabled."""
+
+    def collect(self) -> dict[str, float]:
+        return {}
 
 
 class NullMemoryTracker:

@@ -1,0 +1,18 @@
+{
+ "run": "umwsh7wk",
+ "job": "2507457",
+ "date": "2026-10-25",
+ "state": "COMPLETED",
+ "elapsed": "00:08:38",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml",
+ "steps": 50,
+ "s_per_step": 3.71,
+ "gpu_peak_gib": 15.77,
+ "host_rss_gib": 5.3,
+ "source_gb_per_sample": 0.61,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "GPU scaling: spatial_parallel.size=4, 50 steps"
+}

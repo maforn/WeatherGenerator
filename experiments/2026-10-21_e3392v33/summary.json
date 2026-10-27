@@ -1,0 +1,78 @@
+{
+ "run": "e3392v33",
+ "job": "2430901",
+ "date": "2026-10-21",
+ "state": "COMPLETED",
+ "elapsed": "00:12:08",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml",
+ "steps": 100,
+ "s_per_step": 4.55,
+ "gpu_peak_gib": 29.31,
+ "host_rss_gib": 74.3,
+ "source_gb_per_sample": 2.42,
+ "data_s": {
+  "wait": 1.607,
+  "queued": 28.609,
+  "h2d": 0.053,
+  "step": 3.36,
+  "batch": 41.342,
+  "read": 7.857,
+  "preprocess": 1.047,
+  "tokenize": 19.468,
+  "assemble": 13.71
+ },
+ "data_s_by_rank": {
+  "0": {
+   "wait": 1.186,
+   "queued": 26.032,
+   "h2d": 0.044,
+   "step": 3.109,
+   "batch": 39.957,
+   "read": 7.231,
+   "preprocess": 1.007,
+   "tokenize": 18.578,
+   "assemble": 13.141
+  },
+  "1": {
+   "wait": 1.508,
+   "queued": 20.802,
+   "h2d": 0.046,
+   "step": 2.79,
+   "batch": 40.831,
+   "read": 7.275,
+   "preprocess": 1.014,
+   "tokenize": 19.16,
+   "assemble": 13.382
+  },
+  "2": {
+   "wait": 1.015,
+   "queued": 28.282,
+   "h2d": 0.048,
+   "step": 3.278,
+   "batch": 39.028,
+   "read": 7.183,
+   "preprocess": 1.003,
+   "tokenize": 17.902,
+   "assemble": 12.94
+  },
+  "3": {
+   "wait": 1.043,
+   "queued": 21.906,
+   "h2d": 0.046,
+   "step": 3.256,
+   "batch": 40.48,
+   "read": 7.255,
+   "preprocess": 1.008,
+   "tokenize": 18.945,
+   "assemble": 13.273
+  }
+ },
+ "host_memory_gib": {
+  "main_pss": 2.1,
+  "workers_pss": 89.2,
+  "cgroup_anon": 211.1,
+  "cgroup_shmem": 135.2
+ },
+ "error": "",
+ "note": "baseline + data_timing + host_memory_tracking, 12 workers"
+}

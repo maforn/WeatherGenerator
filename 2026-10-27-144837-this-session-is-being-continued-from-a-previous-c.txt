@@ -1,0 +1,225 @@
+ ▐▛███▛█   Claude Code v2.1.296
+▝▜██████▀  Opus · Amazon Bedrock
+ ▝▝   ▝▝   ~/git/WeatherGenerator
+
+▎ Claude Code usage is cleared for Business Data per the AI For Me Guidance.
+▎ ITAR, PII, Customer Data, and more are strictly prohibited for use within this tool.
+▎ Read more: https://w.amazon.com/bin/view/Security/AI-Security/AIforMe-Guidance#HDATAANDEXAMPLESQUICKREFERENCETABLE
+
+✻ Conversation compacted (ctrl+o for history)
+
+
+⏺ The traces are on JUPITER, and you can view them two ways:
+
+  Trace: GPU memory snapshot, reference
+  Where on JUPITER: /e/scratch/weatherai/shared_work/logs/lvzfwv01/profiling_tra
+  ces/Oct_26_09_08_46_rank_0.pickle
+  How to view: https://pytorch.org/memory_viz, or as an HTML file
+  ────────────────────────────────────────
+  Trace: GPU memory snapshot, 4 options combined
+  Where on JUPITER:
+  .../logs/bnayqygv/profiling_traces/Oct_26_11_58_48_rank_0.pickle
+  How to view: same
+  ────────────────────────────────────────
+  Trace: Nsight Systems timeline (rank 0)
+  Where on JUPITER: /e/scratch/weatherai/shared_work/profiling/ugvgc4m8/nsys_pro
+  file_0_ugvgc4m8_2424345.nsys-rep
+  How to view: Nsight Systems app
+
+  I'll copy them to your laptop, and also turn the two snapshots into
+  stand-alone HTML pages with PyTorch's own viewer (torch.cuda._memory_viz).
+  Then they open in any browser, without uploading anything:
+
+⏺ Bash(mkdir -p ~/Downloads/weathergen-traces; timeout 600 ssh -o BatchMode=yes
+      jupiter 'cd /e/scratch/weatherai/$USER/WeatherGenerator && module load
+      Stages/2025 GCCc…)
+  ⎿  <frozen runpy>:128: RuntimeWarning: 'torch.cuda._memory_viz' found in
+     sys.modules after import of package 'torch.cuda', but prior to executi
+     on of 'torch.cuda._memory_viz'; this may result in unpredictable behav
+     … +10 lines (ctrl+o to expand)
+  ⎿  Read experiments/findings.md (171 lines)
+  ⎿  Read ../minion/docs/DESIGN.md (81 lines)
+  ⎿  Read ../minion/internal/cli/run.go (297 lines)
+  ⎿  Read ../minion/internal/remote/remote.go (206 lines)
+  ⎿  Read docs/jupiter.md (101 lines)
+
+⏺ Bash(cd ~/Downloads/weathergen-traces && timeout 600 scp -q -o BatchMode=yes
+      'jupiter:/tmp/wg_traces_navarropedregal1/*.html' . && timeout 600 scp -q
+      -o BatchMode=ye…)
+  ⎿  total 212776
+     drwxr-xr-x@ 5 znavandr  staff   160B Oct 26 13:58 .
+     drwx------@ 6 znavandr  staff   192B Oct 26 13:55 ..
+     … +5 lines (ctrl+o to expand)
+  ⎿  Shell cwd was reset to /Users/znavandr/git/WeatherGenerator
+  ⎿  (timeout 10m)
+
+⏺ The traces are copied to ~/Downloads/weathergen-traces/:
+
+  File: memory-reference.html
+  What it is: GPU memory over 3 steps, unchanged config (run lvzfwv01)
+  How to open: open in a browser
+  ────────────────────────────────────────
+  File: memory-combined.html
+  What it is: same, with the 4 exact options on (run bnayqygv)
+  How to open: open in a browser
+  ────────────────────────────────────────
+  File: nsys_profile_0_ugvgc4m8_2424345.nsys-rep
+  What it is: timeline of GPU kernels, CUDA calls and CPU threads, rank 0
+  How to open: Nsight Systems app (free from NVIDIA)
+
+  open ~/Downloads/weathergen-traces/memory-combined.html
+
+  In the HTML page, the "Active Memory Timeline" view shows each allocation as a
+  colored band over time. Click a band to see the Python stack that allocated
+  it. The highest point is the peak, which in the combined run is in the
+  embedding backward. The page loads its viewer script from the internet, but
+  your data stays in the file.
+
+  The original snapshot files (.pickle) are in
+  /e/scratch/weatherai/shared_work/logs/<run_id>/profiling_traces/. You can also
+  drag one onto https://pytorch.org/memory_viz, which reads it in your browser.
+
+  There is no PyTorch profiler trace (op by op, for Chrome or Perfetto) yet. It
+  needs one run with profiling.pytorch_profiling=True. I have not checked where
+  it writes its files, and the team notes say its memory timeline export is
+  skipped on GH200. I can start that run if you want it.
+
+  There was no code change, so nothing needed building or testing.
+
+✻ Brewed for 4m 28s · done Monday 1:58 PM
+
+❯ ok that is very good, so explain what did you do                              
+
+⏺ I'll first cover the trace step, then the GPU memory work it belongs to.
+
+  The trace files
+
+  On JUPITER, I turned the two memory snapshots (.pickle) into HTML pages with
+  PyTorch's own tool:
+
+  python -m torch.cuda._memory_viz trace_plot <snapshot>.pickle -o 
+  memory-<name>.html
+
+  Then I copied the two HTML files and the Nsight file to your laptop with scp.
+  Nothing in the repo changed.
+
+  The GPU memory work
+
+  1. Find what fills the GPU
+
+  - Reference run dw1fgpmo, with the unchanged operan config, peaks at 31.69 GiB
+    per GPU.
+  - A memory snapshot of the same setup (lvzfwv01) shows what is alive at the
+    peak. I analyzed it with scripts/analyze_memory_snapshot.py.
+  - About 75% of the peak is activations: tensors the forward pass keeps so the
+    backward pass can use them. Weights, gradients and optimizer states are
+    small because FSDP splits them over the 4 GPUs.
+
+  The biggest items:
+  - Forecast engine: every layer has its own checkpoint, so it keeps 52 saved
+    inputs of 96 MiB each.
+  - Decoder: it copies each cell's 9 neighbor cells, which makes 2 copies of 864
+    MiB.
+  - Input batch: the source tokens sit on the GPU in float32.
+
+  2. Background: checkpointing
+
+  With checkpointing, the forward pass saves only the input of a block. The
+  backward pass then recomputes the inside of the block. This trades memory for
+  extra compute. The code already uses it, but often per layer, which still
+  saves many inputs.
+
+  3. Six options, each behind a config flag (all off by default)
+
+  Option: fe_checkpoint_per_block
+  Change: forecast engine: one checkpoint per attention block plus the layers
+  after it, so fewer saved inputs
+  Saved GiB: 1.66
+  ────────────────────────────────────────
+  Option: decoder_gather_after_kv_projection
+  Change: decoder: compute keys and values once per cell, then pick the 9
+  neighbors by index instead of copying the tokens 9 times
+  Saved GiB: 1.69
+  ────────────────────────────────────────
+  Option: ae_local_checkpoint_per_block
+  Change: local assimilation: one checkpoint per attention + MLP pair
+  Saved GiB: 0.78
+  ────────────────────────────────────────
+  Option: pred_checkpoint_per_layer
+  Change: decoder: one checkpoint per cross-attention plus the blocks after it
+  Saved GiB: -2.79 (worse)
+  ────────────────────────────────────────
+  Option: source_tokens_in_mixed_precision
+  Change: copy source tokens to the GPU as bf16, since the embedding converts
+  them to bf16 anyway
+  Saved GiB: 1.16
+  ────────────────────────────────────────
+  Option: fe_checkpoint_bf16
+  Change: save forecast engine checkpoint inputs as bf16 instead of float32
+  Saved GiB: 1.69
+
+  Code locations:
+  - engines.py: the checkpoint options.
+  - model.py, attention.py, spatial_parallel.py: the decoder index.
+  - trainer.py, batch.py, stream_data.py: the bf16 source tokens.
+
+  One problem along the way: when one checkpoint covers several FSDP modules,
+  the recompute crashed. Only part of the weights had been gathered from the
+  other GPUs. I added _unshard, which gathers all of a group's weights at the
+  start of the recompute. The first attempts failed (z7frx7e3, a5g9twto); the
+  reruns worked.
+
+  pred_checkpoint_per_layer makes things worse. The peak happens during the
+  decoder backward, and a bigger checkpoint recomputes more at once there. It
+  stays off.
+
+  4. How each option was checked
+
+  - Each option ran alone: 50 steps, fixed data order, compared with dw1fgpmo.
+  - Loss: per step, the difference from the reference is at noise level (mean
+    0.01% to 0.06%).
+  - Decoder index: I also checked it directly on a GPU. The forward output is
+    identical, and the gradients differ only by bf16 rounding.
+  - fe_checkpoint_bf16 is the only option that changes the math, because it
+    rounds the saved values.
+  - Speed: no run was slower (4.3 vs 4.48 s/step). However, step time is mostly
+    set by data loading, so these runs do not show the real cost of the extra
+    recompute.
+
+  5. Combined
+
+  ┌──────────────────────────────────────┬──────────┬─────────────────┐
+  │                 Run                  │ Peak GiB │      Saved      │
+  ├──────────────────────────────────────┼──────────┼─────────────────┤
+  │ reference dw1fgpmo                   │ 31.69    │                 │
+  ├──────────────────────────────────────┼──────────┼─────────────────┤
+  │ 4 exact options (zjif1x9c)           │ 28.93    │ 2.76 GiB (8.7%) │
+  ├──────────────────────────────────────┼──────────┼─────────────────┤
+  │ same + fe_checkpoint_bf16 (pbpl25ww) │ 28.93    │ nothing more    │
+  └──────────────────────────────────────┴──────────┴─────────────────┘
+
+  The savings do not add up (about 5.3 GiB alone, 2.76 GiB together). Once one
+  phase gets smaller, another phase becomes the peak. The snapshot of the
+  combined run (bnayqygv) shows where the peak is now: the stream embedding
+  backward.
+
+  The embedding runs all 9 streams in one checkpoint, so the backward recomputes
+  all of them at once. That is about 10 GiB of recomputed attention plus 7 GiB
+  of backward buffers.
+
+  6. Where it is written down
+
+  - experiments/findings.md, sections 7 to 9.
+  - The options table in docs/jupiter.md.
+  - One folder per run under experiments/.
+  - The snapshot reports experiments/2026-10-26_gpu-memory-snapshot_*.txt.
+
+  Nothing is committed yet.
+
+  Next, I propose one checkpoint per stream in the embedding, so the backward
+  recomputes only one stream at a time. That would attack the new peak. I'll
+  start it when you say go.
+
+✻ Churned for 36s · done Monday 2:13 PM
+
+※ recap: The goal is to cut GPU memory so a bigger WeatherGenerator model fits later, and the 4 exact options together lower the peak from 31.69 to 28.93 GiB. Next, if you agree, I'll add one checkpoint per stream in the embedding, where the peak is now.

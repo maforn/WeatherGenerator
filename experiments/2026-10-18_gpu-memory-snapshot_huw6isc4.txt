@@ -1,0 +1,43 @@
+196302 events over 19.4 s
+peak allocated 29.22 GiB (1.81 before recording + 27.41 recorded), at 17.5 s
+allocation that reached the peak (0.00 GiB): OpOverloadPacket.__call__ <- flash_attn_interface.py:_flash_attn_backward <- FlashAttnVarlenFunc.backward <- BackwardCFunction.apply
+
+live at the peak, by category:
+    18.48 GiB  forward
+     3.39 GiB  backward
+     2.65 GiB  input batch
+     1.81 GiB  weights (before recording)
+     1.72 GiB  optimizer
+     1.17 GiB  FSDP buffers
+
+live at the peak, by model part:
+     5.72 GiB  forward      ForecastingEngine.forward
+     4.83 GiB  forward      Model.predict_decoders
+     4.16 GiB  forward      EncoderModule.forward
+     3.07 GiB  backward     (no model frame)
+     2.65 GiB  input batch  (no model frame)
+     2.32 GiB  forward      MultiSelfAttentionHeadVarlen.forward
+     1.72 GiB  optimizer    (no model frame)
+     1.45 GiB  forward      (no model frame)
+     1.00 GiB  FSDP buffers ForecastingEngine.forward
+     0.23 GiB  backward     MultiSelfAttentionHeadVarlen.forward
+     0.17 GiB  FSDP buffers (no model frame)
+     0.10 GiB  backward     EncoderModule.forward
+     0.00 GiB  forward      MLP.forward
+
+live at the peak, by operation (innermost weathergen frame):
+     4.40 GiB  forward      MLP.forward
+     3.07 GiB  backward     (outside weathergen)
+     2.65 GiB  input batch  StreamData.to_device
+     2.62 GiB  forward      MultiSelfAttentionHead.forward
+     2.18 GiB  forward      MultiSelfAttentionHeadVarlen.forward
+     1.72 GiB  optimizer    run_train.py:run_train
+     1.71 GiB  forward      RMSNorm.forward
+     1.69 GiB  forward      spatial_parallel.py:select_healpix_neighborhood_shard
+     1.40 GiB  forward      (outside weathergen)
+     1.01 GiB  forward      MultiCrossAttentionHeadVarlenSlicedQ.forward
+     1.00 GiB  FSDP buffers ForecastingEngine.forward
+     0.95 GiB  forward      MultiCrossAttentionHeadVarlen.forward
+     0.93 GiB  forward      AdaLayerNorm.forward
+     0.47 GiB  forward      NamedLinear.forward
+     0.47 GiB  forward      ForecastingEngine.forward

@@ -80,6 +80,26 @@ def select_healpix_neighborhood_shard(
     return tokens[:, local_neighbours].flatten(0, 3)
 
 
+def healpix_neighborhood_index(
+    hp_neighbours: torch.Tensor,
+    cell_start: int,
+    cell_end: int,
+    num_samples: int,
+    num_queries: int,
+) -> torch.Tensor:
+    """Row indices into tokens flattened from ``(sample, cell, query, channel)`` to
+    ``(sample * cell * query, channel)`` that give the rows of
+    ``select_healpix_neighborhood_shard``, in the same order."""
+
+    num_cells = hp_neighbours.shape[0]
+    local_neighbours = hp_neighbours[cell_start:cell_end].to(dtype=torch.long)
+    device = local_neighbours.device
+    samples = torch.arange(num_samples, device=device).view(-1, 1, 1, 1)
+    queries = torch.arange(num_queries, device=device).view(1, 1, 1, -1)
+    cells = local_neighbours.view(1, *local_neighbours.shape, 1)
+    return ((samples * num_cells + cells) * num_queries + queries).flatten()
+
+
 def reassemble_packed_cell_shards(
     shards: list[torch.Tensor],
     shard_cell_lens: list[torch.Tensor],

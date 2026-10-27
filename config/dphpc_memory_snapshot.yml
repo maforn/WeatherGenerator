@@ -1,0 +1,12 @@
+# CUDA allocator snapshot of the first 3 training steps, then stop (see ProfilingTrainer).
+# Analyze it with scripts/analyze_memory_snapshot.py <logs/<run_id>/profiling_traces/*.pickle>.
+
+profiling:
+  memory_profiling: True
+  only_profiling: True
+  wait_iteration: 1
+  warmup_iteration: 1
+  active_iteration: 1
+  repeat: 1
+  # ring buffer of allocator events; 500k covers 3 steps of this config
+  max_mem_events: 500000

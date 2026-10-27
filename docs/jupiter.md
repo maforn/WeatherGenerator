@@ -52,8 +52,21 @@ minion run train                                    # baseline: BASE + CONFIG fr
 minion run train --arg "CONFIG=config/my_test.yml"  # your own overlay on the same base
 minion run train --arg "NODES=2 TIME=01:00:00"
 minion run profile                                  # same, with Nsight Systems profiling
+minion run timing                                   # same, with per-stage data-loading timers
+minion run timing --arg "OPTIONS=data_loading.num_workers=6"   # config overrides, comma-separated
+minion run test                                     # unit tests on the login node
 minion run queue
 ```
+
+`timing` logs, per step and per rank (see `src/weathergen/utils/performance.py`):
+- `performance.data.rank<r>.<stage>_s` (`DataTimingTracker`): `wait`, `queued`, `pin`, `h2d` and `step` in the training loop,
+  and `read`, `preprocess`, `tokenize`, `assemble` and `batch` per worker batch; `performance.data.<stage>_s` is the max over ranks.
+- `performance.host_memory.rank<r>.<key>_gib` (`HostMemoryTracker`): `main_pss`, `workers_pss`, and the cgroup's
+  `cgroup_anon` and `cgroup_shmem`, which on JUPITER are totals for the node, not per rank.
+
+It syncs the GPU around `h2d` and `step` and reads every process's memory maps, so use it for measurement runs only.
+`minion run profile-data` profiles the data loading alone on a compute node (cProfile, plus the worker-to-main hand-off).
+`profile` writes one Nsight trace per GPU to `shared_work/profiling/<run_id>/`; Nsight stops the program after 240 s.
 
 `minion run train` prints the run id. Outputs are in `/e/scratch/weatherai/shared_work/`:
 `logs/<run_id>/output.<job>.txt` (training log) and `results/<run_id>/<run_id>_train_metrics.json`
@@ -62,6 +75,20 @@ After jobs finish, `experiments/save.py` copies every new run into [experiments]
 (`experiments/save.py <run_id> "note"` adds a note).
 
 Without minion, run the same targets on JUPITER: `cd /e/scratch/weatherai/$USER/WeatherGenerator && make train`.
+
+## GPU memory options
+
+All off by default; turn one on with `minion run train --arg "OPTIONS=<option>=True"`.
+`minion run snapshot` records a CUDA allocator snapshot (3 steps); `scripts/analyze_memory_snapshot.py` breaks it down.
+
+| Option | What it changes | Results |
+|---|---|---|
+| `fe_checkpoint_per_block` | forecast engine: one checkpoint per attention block and the layers after it | same math |
+| `decoder_gather_after_kv_projection` | decoder: project keys/values of the cells' tokens, then select the 9-cell neighbourhoods | same math |
+| `ae_local_checkpoint_per_block` | local assimilation: one checkpoint per attention + MLP pair | same math |
+| `pred_checkpoint_per_layer` | decoder: one checkpoint per cross-attention and the blocks after it (raises the peak on the operan config) | same math |
+| `source_tokens_in_mixed_precision` | source tokens kept on the GPU in the mixed-precision dtype (the embedding casts to it anyway) | same |
+| `fe_checkpoint_bf16` | forecast engine: checkpoint inputs saved in bf16 | rounds the residual stream |
 
 ## Notes
 

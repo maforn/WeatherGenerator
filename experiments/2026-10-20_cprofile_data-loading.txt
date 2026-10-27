@@ -1,0 +1,79 @@
+seconds per batch, mean of 3 (with cProfile overhead):
+  batch         49.68
+  tokenize      19.43
+  assemble      16.55
+  read          12.83
+  preprocess     0.87
+by own time (tottime):
+         56196576 function calls (56186167 primitive calls) in 149.048 seconds
+   Ordered by: internal time
+   List reduced from 954 to 30 due to restriction <30>
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       81   22.459    0.277   56.415    0.696 tokenizer_utils.py:127(hpy_splits)
+  659/432   19.688    0.030   12.263    0.028 {method 'read' of '_io.BufferedReader' objects}
+   554065   12.602    0.000   12.602    0.000 {built-in method torch.cat}
+   995328    7.801    0.000    7.801    0.000 {built-in method torch.argsort}
+ 1318/531    4.147    0.003   20.576    0.039 thread.py:53(run)
+       27    4.055    0.150   19.125    0.708 tokenizer_utils.py:255(tokenize_apply_mask_source)
+   591639    3.947    0.000    3.947    0.000 {built-in method torch.tensor}
+     1363    3.583    0.003    3.584    0.003 {built-in method numpy.asarray}
+  5169116    3.580    0.000    5.875    0.000 _tensor.py:1145(__len__)
+   553753    3.577    0.000    3.577    0.000 {built-in method torch.zeros}
+   885003    3.425    0.000    3.425    0.000 {method 'sum' of 'torch._C.TensorBase' objects}
+  300/297    3.174    0.011   23.027    0.078 indexing.py:988(__getitem__)
+   590031    2.582    0.000    2.582    0.000 {method 'unbind' of 'torch._C.TensorBase' objects}
+   553204    2.401    0.000    2.401    0.000 {built-in method torch.split}
+      108    2.044    0.019   23.313    0.216 tokenizer_utils.py:342(tokenize_apply_mask_target)
+   553618    1.939    0.000    1.939    0.000 {method 'numpy' of 'torch._C.TensorBase' objects}
+   553291    1.770    0.000    5.270    0.000 {method 'take' of 'numpy.ndarray' objects}
+       24    1.702    0.071   14.888    0.620 tokenizer_utils.py:453(get_target_coords_local)
+       48    1.681    0.035    1.681    0.035 {built-in method torch.atan2}
+   553492    1.643    0.000    5.999    0.000 _tensor.py:1015(split)
+10617191/10615592    1.476    0.000    7.352    0.000 {built-in method builtins.len}
+      288    1.434    0.005    1.434    0.005 {built-in method torch.split_with_sizes}
+       81    1.413    0.017    1.414    0.017 core.py:380(lonlat_to_healpix)
+      336    1.409    0.004    1.409    0.004 {built-in method torch.bmm}
+      659    1.373    0.002    1.375    0.002 cpu.py:185(__getitem__)
+  5759147    1.348    0.000    1.348    0.000 {built-in method torch._C._get_tracing_state}
+   553618    1.314    0.000    3.504    0.000 _tensor.py:1207(__array__)
+      135    1.270    0.009    3.209    0.024 tokenizer_masking.py:116(cell_to_token_mask)
+      117    1.206    0.010    1.206    0.010 {built-in method torch.stack}
+   152856    1.188    0.000    1.188    0.000 {method 'repeat' of 'torch._C.TensorBase' objects}
+by cumulative time, weathergen functions only:
+         56196576 function calls (56186167 primitive calls) in 149.048 seconds
+   Ordered by: cumulative time
+   List reduced from 954 to 100 due to restriction <'weathergen'>
+   List reduced from 100 to 30 due to restriction <30>
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      4/3    0.087    0.022  139.890   46.630 src/weathergen/datasets/multi_stream_data_sampler.py:823(__iter__)
+      4/3    0.353    0.088  129.888   43.296 src/weathergen/datasets/multi_stream_data_sampler.py:709(_get_batch)
+       54    0.005    0.000   57.911    1.072 src/weathergen/datasets/tokenizer_masking.py:73(get_tokens_windows)
+       81    0.470    0.006   56.885    0.702 src/weathergen/datasets/tokenizer_utils.py:187(tokenize_space)
+       81   22.459    0.277   56.415    0.696 src/weathergen/datasets/tokenizer_utils.py:127(hpy_splits)
+       54    0.059    0.001   49.257    0.912 src/weathergen/datasets/multi_stream_data_sampler.py:547(_build_stream_data)
+    84/81    0.003    0.000   39.759    0.491 src/weathergen/datasets/multi_stream_data_sampler.py:53(collect_datasources)
+    30/27    0.018    0.001   38.466    1.425 src/weathergen/datasets/multi_stream_data_sampler.py:614(_get_data_windows)
+   104/99    0.871    0.008   35.607    0.360 src/weathergen/datasets/data_reader_obs.py:244(_get)
+       54    0.004    0.000   26.283    0.487 src/weathergen/datasets/multi_stream_data_sampler.py:493(_build_stream_data_output)
+    82/78    0.000    0.000   23.359    0.299 src/weathergen/datasets/data_reader_base.py:392(get_target)
+      108    2.044    0.019   23.313    0.216 src/weathergen/datasets/tokenizer_utils.py:342(tokenize_apply_mask_target)
+       54    0.005    0.000   22.677    0.420 src/weathergen/datasets/multi_stream_data_sampler.py:437(_build_stream_data_input)
+       27    0.105    0.004   19.968    0.740 src/weathergen/datasets/tokenizer_masking.py:146(get_source)
+       27    4.055    0.150   19.125    0.708 src/weathergen/datasets/tokenizer_utils.py:255(tokenize_apply_mask_source)
+    41/39    0.000    0.000   15.074    0.387 src/weathergen/datasets/data_reader_base.py:374(get_source)
+       24    1.702    0.071   14.888    0.620 src/weathergen/datasets/tokenizer_utils.py:453(get_target_coords_local)
+       54    0.087    0.002   13.290    0.246 src/weathergen/datasets/tokenizer_masking.py:211(get_target_values)
+       54    0.074    0.001   12.986    0.240 src/weathergen/datasets/tokenizer_masking.py:178(get_target_coords)
+        9    0.610    0.068    8.598    0.955 src/weathergen/datasets/tokenizer_utils.py:212(tokenize_spacetime)
+      192    0.538    0.003    6.553    0.034 src/weathergen/datasets/utils.py:129(locs_to_ctr_coords)
+       24    0.003    0.000    5.135    0.214 src/weathergen/datasets/tokenizer_utils.py:429(get_source_coords_local)
+       81    0.018    0.000    4.368    0.054 src/weathergen/datasets/tokenizer_utils.py:95(hpy_cell_splits)
+      135    1.270    0.009    3.209    0.024 src/weathergen/datasets/tokenizer_masking.py:116(cell_to_token_mask)
+      120    0.332    0.003    3.157    0.026 src/weathergen/datasets/utils.py:193(locs_to_cell_coords_ctrs)
+       27    1.153    0.043    2.703    0.100 src/weathergen/datasets/stream_data.py:171(add_source)
+       81    0.319    0.004    2.402    0.030 src/weathergen/datasets/healpix_domain.py:13(build_local_healpix_cell_splits)
+       24    0.051    0.002    2.109    0.088 src/weathergen/datasets/utils.py:65(r3tos2)
+        9    0.384    0.043    1.731    0.192 src/weathergen/datasets/data_reader_anemoi.py:182(_get)
+       48    0.126    0.003    1.583    0.033 src/weathergen/datasets/utils.py:45(s2tor3)
+
+[exited with code 0]

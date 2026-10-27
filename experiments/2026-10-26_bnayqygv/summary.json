@@ -1,0 +1,18 @@
+{
+ "run": "bnayqygv",
+ "job": "2525516",
+ "date": "2026-10-26",
+ "state": "COMPLETED",
+ "elapsed": "00:03:51",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_measure.yml + dphpc_memory_snapshot.yml",
+ "steps": 3,
+ "s_per_step": null,
+ "gpu_peak_gib": 28.87,
+ "host_rss_gib": 49.9,
+ "source_gb_per_sample": 1.1,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "GPU combined snapshot: the 4 exact options, 3 steps"
+}

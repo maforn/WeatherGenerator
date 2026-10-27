@@ -1,0 +1,25 @@
+{
+ "run": "aw3t8coe",
+ "job": "2425933",
+ "date": "2026-10-20",
+ "state": "COMPLETED",
+ "elapsed": "00:16:29",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml",
+ "steps": 100,
+ "s_per_step": 7.0,
+ "gpu_peak_gib": 29.31,
+ "host_rss_gib": 59.8,
+ "source_gb_per_sample": 2.4,
+ "data_s": {
+  "wait": 4.365,
+  "h2d": 0.046,
+  "step": 5.374,
+  "batch": 49.102,
+  "read": 16.174,
+  "preprocess": 1.019,
+  "tokenize": 19.506,
+  "assemble": 13.434
+ },
+ "error": "",
+ "note": "worker sweep: baseline + data_timing, num_workers=8"
+}

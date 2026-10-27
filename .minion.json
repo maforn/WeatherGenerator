@@ -14,8 +14,12 @@
       "tasks": {
         "init": "make init",
         "check": "make check",
+        "test": "make test",
         "train": "make train $MINION_ARGS",
         "profile": "make profile $MINION_ARGS",
+        "snapshot": "make snapshot $MINION_ARGS",
+        "timing": "make timing $MINION_ARGS",
+        "profile-data": "make profile-data $MINION_ARGS",
         "queue": "squeue --me"
       }
     }

@@ -1,0 +1,16 @@
+{
+ "run": "ugvgc4m8",
+ "job": "2424345",
+ "date": "2026-10-20",
+ "state": "FAILED",
+ "elapsed": "00:05:40",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml",
+ "steps": 24,
+ "s_per_step": 3.24,
+ "gpu_peak_gib": 32.05,
+ "host_rss_gib": null,
+ "source_gb_per_sample": 2.43,
+ "data_s": {},
+ "error": "",
+ "note": "baseline + Nsight Systems; nsys stops the run after 240 s; only rank 0 wrote its trace"
+}

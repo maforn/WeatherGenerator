@@ -41,6 +41,7 @@ from weathergen.model.engines import (
 )
 from weathergen.model.layers import MLP, NamedLinear
 from weathergen.model.spatial_parallel import (
+    healpix_neighborhood_index,
     reassemble_packed_cell_shards,
     select_healpix_neighborhood_shard,
     select_packed_cell_shard,
@@ -791,12 +792,25 @@ class Model(torch.nn.Module):
         local_hp_nbours = model_params.hp_nbours[
             spatial_parallel.cell_start : spatial_parallel.cell_end
         ]
-        tokens_nbors = select_healpix_neighborhood_shard(
-            tokens.reshape(s),
-            model_params.hp_nbours,
-            spatial_parallel.cell_start,
-            spatial_parallel.cell_end,
-        )
+        nbors_index = None
+        if self.cf.get("decoder_gather_after_kv_projection", False):
+            # the decoders project the cells' tokens and select the neighbourhood rows
+            # afterwards, instead of every decoder layer reading a 9x copy of the tokens
+            tokens_nbors = tokens.reshape(s).flatten(0, 2)
+            nbors_index = healpix_neighborhood_index(
+                model_params.hp_nbours,
+                spatial_parallel.cell_start,
+                spatial_parallel.cell_end,
+                batch_size,
+                self.cf.ae_local_num_queries,
+            )
+        else:
+            tokens_nbors = select_healpix_neighborhood_shard(
+                tokens.reshape(s),
+                model_params.hp_nbours,
+                spatial_parallel.cell_start,
+                spatial_parallel.cell_end,
+            )
         num_decoder_cells = batch_size * spatial_parallel.local_num_cells
         tokens_nbors_lens = torch.full(
             (num_decoder_cells + 1,),
@@ -879,12 +893,14 @@ class Model(torch.nn.Module):
                     tcs_lens,
                 ).unsqueeze(0)
             else:
+                kwargs = {} if nbors_index is None else {"latent_index": nbors_index}
                 tc_tokens = self.target_token_engines[stream_name](
                     latent=tokens_nbors,
                     output=tc_tokens,
                     latent_lens=tokens_nbors_lens,
                     output_lens=tcs_lens,
                     coordinates=t_coords,
+                    **kwargs,
                 )
 
                 # final prediction head to map back to physical space

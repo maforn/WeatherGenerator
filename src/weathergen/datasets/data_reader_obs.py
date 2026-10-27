@@ -271,6 +271,8 @@ class DataReaderObs(DataReaderBase):
         start_row = self.indices_start[idx]
         end_row = self.indices_end[idx]
 
+        # ANDRES: seems llike oindex is read 3 times, what if this can be optimized to
+        # only be read once?
         coords = self.data.oindex[start_row:end_row, self.coords_idx]
         geoinfos = (
             self.data.oindex[start_row:end_row, self.geoinfo_idx]

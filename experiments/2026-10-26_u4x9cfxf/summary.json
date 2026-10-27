@@ -1,0 +1,18 @@
+{
+ "run": "u4x9cfxf",
+ "job": "2523171",
+ "date": "2026-10-26",
+ "state": "COMPLETED",
+ "elapsed": "00:07:45",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_measure.yml",
+ "steps": 50,
+ "s_per_step": 4.31,
+ "gpu_peak_gib": 29.99,
+ "host_rss_gib": 39.6,
+ "source_gb_per_sample": 2.3,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "GPU option 2: decoder_gather_after_kv_projection"
+}

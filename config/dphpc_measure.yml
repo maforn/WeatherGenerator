@@ -1,0 +1,19 @@
+# Measurement run on top of config_operan_georing_avhrr_forecasting_lowres.yml: same model and
+# data, only shorter, with a fixed data order and per-step GPU memory and throughput logs.
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+
+training_config:
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 50 steps
+  samples_per_mini_epoch: 200
+
+validation_config:
+  samples_per_mini_epoch: 4

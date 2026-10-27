@@ -9,6 +9,8 @@
  "s_per_step": 4.64,
  "gpu_peak_gib": 29.31,
  "host_rss_gib": 90.8,
+ "source_gb_per_sample": 2.42,
+ "data_s": {},
  "error": "",
  "note": "baseline; same memory peaks and losses as team run nbl12ut3"
 }

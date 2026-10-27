@@ -10,6 +10,7 @@
 import dataclasses
 import logging
 import pathlib
+import time
 from collections.abc import Sequence
 
 import numpy as np
@@ -49,11 +50,14 @@ FORECAST_DEFAULTS = {
 }
 
 
-def collect_datasources(stream_datasets: list, idx: int, type: str, rng) -> IOReaderData:
+def collect_datasources(
+    stream_datasets: list, idx: int, type: str, rng, timings: dict[str, float]
+) -> IOReaderData:
     """
     Utility function to collect all sources / targets from streams list
 
-    rng and num_subset are used to drop data
+    rng and num_subset are used to drop data; seconds spent are added to timings
+    ("read" for the readers, "preprocess" for the rest)
     """
 
     rdatas = []
@@ -75,14 +79,20 @@ def collect_datasources(stream_datasets: list, idx: int, type: str, rng) -> IORe
             assert False, "invalid value for argument `type`"
 
         # get source (of potentially multi-step length)
-        rdata = (
-            get_reader_data(idx).shuffle(rng, shuffle, num_subset).remove_nan_coords_and_geoinfos()
-        )
+        t0 = time.perf_counter()
+        rdata = get_reader_data(idx)
+        t1 = time.perf_counter()
+        rdata = rdata.shuffle(rng, shuffle, num_subset).remove_nan_coords_and_geoinfos()
         rdata.data = normalize_channels(rdata.data)
         rdata.geoinfos = ds.normalize_geoinfos(rdata.geoinfos)
         rdatas += [rdata]
+        timings["read"] += t1 - t0
+        timings["preprocess"] += time.perf_counter() - t1
 
-    return IOReaderData.combine(rdatas)
+    t0 = time.perf_counter()
+    rdata = IOReaderData.combine(rdatas)
+    timings["preprocess"] += time.perf_counter() - t0
+    return rdata
 
 
 @dataclasses.dataclass
@@ -601,7 +611,9 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
 
         return stream_data
 
-    def _get_data_windows(self, base_idx, num_forecast_steps, num_steps_input_max, stream_ds):
+    def _get_data_windows(
+        self, base_idx, num_forecast_steps, num_steps_input_max, stream_ds, timings
+    ):
         """
         Collect all data needed for current stream to potentially amortize costs by
         generating multiple samples
@@ -613,7 +625,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
         for idx in range(base_idx - num_steps_input_max + 1, base_idx + 1):
             # TODO: check that we are not out of bounds when we go back in time
 
-            rdata = collect_datasources(stream_ds, idx, "source", self.rng)
+            rdata = collect_datasources(stream_ds, idx, "source", self.rng, timings)
 
             if rdata.is_empty():
                 # work around for https://github.com/pytorch/pytorch/issues/158719
@@ -636,7 +648,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
         for timestep_idx in range(self.output_offset, num_output_steps):
             step_forecast_dt = base_idx + (self.time_step * timestep_idx) // self.step_timedelta
 
-            rdata = collect_datasources(stream_ds, step_forecast_dt, "target", self.rng)
+            rdata = collect_datasources(stream_ds, step_forecast_dt, "target", self.rng, timings)
 
             if rdata.is_empty():
                 # work around for https://github.com/pytorch/pytorch/issues/158719
@@ -694,9 +706,10 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
 
         return batch
 
-    def _get_batch(self, idx: int, num_forecast_steps: int):
+    def _get_batch(self, idx: int, num_forecast_steps: int, timings: dict[str, float]):
         """
-        Assemble a batch using the sample corresponding to idx
+        Assemble a batch using the sample corresponding to idx; seconds spent in reading,
+        preprocessing and tokenizing are added to timings
         """
 
         mode = self.mode_cfg.get("training_mode")
@@ -743,15 +756,17 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             # in source and target channels; overlap in one window when self.output_offset=0
             i_max = input_steps.max().item()
             (input_data, output_data) = self._get_data_windows(
-                idx, num_forecast_steps, i_max, stream_ds
+                idx, num_forecast_steps, i_max, stream_ds, timings
             )
 
             # tokenize windows
             # *_tokens = [ (cells_idx, cells_idx_lens), ... ] with length = #time_steps
+            t0 = time.perf_counter()
             input_tokens = self.tokenizer.get_tokens_windows(
                 stream_info, input_data, True, local_source=True
             )
             output_tokens = self.tokenizer.get_tokens_windows(stream_info, output_data, False)
+            timings["tokenize"] += time.perf_counter() - t0
 
             for sidx, source_mask in enumerate(source_masks.masks):
                 # Map each source to its target
@@ -827,13 +842,17 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             # (amortized through data parallel training)
             num_forecast_steps = perms_num_forecast_steps[i]
 
+            # seconds per stage for this batch, read by the trainer's DataTimingTracker
+            timings = dict.fromkeys(("read", "preprocess", "tokenize"), 0.0)
+            t_batch = time.perf_counter()
+
             # use while loop due to the scattered nature of the data in time and to
             # ensure batches are not empty
             while True:
                 idx: TIndex = perms[idx_raw % perms.shape[0]]
                 idx_raw += 1
 
-                batch = self._get_batch(idx, num_forecast_steps)
+                batch = self._get_batch(idx, num_forecast_steps, timings)
 
                 # ensure the batch is valid, i.e. not completely empty and no NaN values
                 # student teacher has no classical targets
@@ -853,6 +872,13 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                 else:
                     break
 
+            timings["batch"] = time.perf_counter() - t_batch
+            timings["assemble"] = timings["batch"] - sum(
+                timings[s] for s in ("read", "preprocess", "tokenize")
+            )
+            batch.timings = timings
+            # wall clock, so the training loop (another process) can tell how long it was queued
+            batch.t_ready = time.time()
             yield batch
 
     def __len__(self):

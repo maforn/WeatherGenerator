@@ -1,0 +1,46 @@
+234386 events over 25.7 s
+peak allocated 29.94 GiB (1.82 allocated before recording + 28.12 recorded), at 23.4 s
+allocation that reached the peak (0.00 GiB): OpOverloadPacket.__call__ <- flash_attn_interface.py:_flash_attn_backward <- FlashAttnVarlenFunc.backward <- BackwardCFunction.apply
+
+live at the peak, by category:
+    19.89 GiB  forward
+     3.39 GiB  backward
+     1.95 GiB  input batch
+     1.82 GiB  allocated before recording (weights etc.)
+     1.72 GiB  optimizer
+     1.17 GiB  FSDP buffers
+
+live at the peak, by model part:
+     5.72 GiB  forward      ForecastingEngine.forward
+     4.81 GiB  forward      Model.predict_decoders
+     4.43 GiB  forward      EncoderModule.forward
+     3.48 GiB  forward      MultiSelfAttentionHeadVarlen.forward
+     3.07 GiB  backward     (no model frame)
+     1.95 GiB  input batch  (no model frame)
+     1.72 GiB  optimizer    (no model frame)
+     1.45 GiB  forward      (no model frame)
+     1.00 GiB  FSDP buffers ForecastingEngine.forward
+     0.23 GiB  backward     MultiSelfAttentionHeadVarlen.forward
+     0.17 GiB  FSDP buffers (no model frame)
+     0.10 GiB  backward     EncoderModule.forward
+
+live at the peak, by operation (innermost weathergen frame):
+     4.16 GiB  forward      MLP.forward
+     3.78 GiB  forward      norms.py:norm_in_input_dtype
+     3.07 GiB  backward     (outside weathergen)
+     2.62 GiB  forward      MultiSelfAttentionHead.forward
+     1.95 GiB  input batch  StreamData.to_device
+     1.78 GiB  forward      MultiSelfAttentionHeadVarlen.forward
+     1.72 GiB  optimizer    run_train.py:run_train
+     1.69 GiB  forward      spatial_parallel.py:select_healpix_neighborhood_shard
+     1.62 GiB  forward      AdaLayerNorm.forward
+     1.40 GiB  forward      (outside weathergen)
+     1.00 GiB  FSDP buffers ForecastingEngine.forward
+     0.94 GiB  forward      MultiCrossAttentionHeadVarlen.forward
+
+largest model parts, by allocation size (count x MiB):
+  forward      ForecastingEngine.forward: 52 x 96.0, 18 x 48.0, 2 x 0.0
+  forward      Model.predict_decoders: 12 x 236.2, 2 x 864.0, 2 x 105.2, 2 x 37.4
+  forward      EncoderModule.forward: 13 x 78.3, 13 x 75.6, 15 x 48.0, 4 x 156.6
+  forward      MultiSelfAttentionHeadVarlen.forward: 4 x 472.5, 5 x 236.2, 2 x 210.4, 1 x 52.6
+  backward     (no model frame): 1 x 2392.5, 3 x 236.2, 2 x 18.7, 1 x 0.2

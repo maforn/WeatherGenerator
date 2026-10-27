@@ -1,0 +1,18 @@
+{
+ "run": "z7frx7e3",
+ "job": "2523165",
+ "date": "2026-10-26",
+ "state": "COMPLETED",
+ "elapsed": "00:03:26",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_measure.yml",
+ "steps": 0,
+ "s_per_step": null,
+ "gpu_peak_gib": null,
+ "host_rss_gib": null,
+ "source_gb_per_sample": null,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "RuntimeError: aten.mm.default: got mixed torch.Tensor and DTensor, need to convert all torch.Tensor to DTensor before calling distributed operators!",
+ "note": "GPU option 1, first attempt: failed, FSDP weights not gathered in a multi-module checkpoint; fixed in cpg9zlnw"
+}

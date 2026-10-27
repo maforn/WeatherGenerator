@@ -1,0 +1,42 @@
+236639 events over 24.3 s
+peak allocated 28.40 GiB (1.82 allocated before recording + 26.58 recorded), at 19.8 s
+allocation that reached the peak (0.00 GiB): _ops.py:__call__ <- flash_attn_interface.py:_flash_attn_backward <- flash_attn_interface.py:backward <- function.py:apply
+
+live at the peak, by category:
+    15.45 GiB  forward
+     7.11 GiB  backward
+     1.82 GiB  allocated before recording (weights etc.)
+     1.72 GiB  optimizer
+     1.16 GiB  input batch
+     1.14 GiB  FSDP buffers
+
+live at the peak, by model part:
+    10.10 GiB  forward      MultiSelfAttentionHead.forward
+     6.09 GiB  backward     (no model frame)
+     2.74 GiB  forward      EmbeddingEngine.forward
+     2.31 GiB  forward      (no model frame)
+     1.72 GiB  optimizer    (no model frame)
+     1.16 GiB  input batch  (no model frame)
+     1.14 GiB  FSDP buffers (no model frame)
+     1.03 GiB  backward     MultiSelfAttentionHead.forward
+     0.19 GiB  forward      ForecastingEngine.forward
+     0.07 GiB  forward      Model.predict_decoders
+
+live at the peak, by operation (innermost weathergen frame):
+     9.10 GiB  forward      norms.py:norm_in_input_dtype
+     6.09 GiB  backward     (outside weathergen)
+     2.31 GiB  forward      (outside weathergen)
+     2.21 GiB  forward      MultiSelfAttentionHead.forward
+     1.72 GiB  optimizer    run_train.py:run_train
+     1.16 GiB  input batch  StreamData.to_device
+     1.10 GiB  forward      positional_encoding.py:positional_encoding_harmonic
+     1.03 GiB  backward     MultiSelfAttentionHead.forward
+     0.98 GiB  FSDP buffers (outside weathergen)
+     0.40 GiB  forward      MLP.forward
+
+largest model parts, by allocation size (count x MiB):
+  forward      MultiSelfAttentionHead.forward: 3 x 2041.3, 4 x 1020.7, 4 x 31.9, 2 x 4.0
+  backward     (no model frame): 1 x 3074.0, 3 x 1020.7, 2 x 48.0, 1 x 0.4
+  forward      EmbeddingEngine.forward: 2 x 1020.7, 5 x 107.5, 1 x 215.1, 1 x 15.9
+  forward      (no model frame): 2 x 1020.7, 1 x 153.4, 31 x 2.0, 49 x 1.0
+  optimizer    (no model frame): 208 x 4.0, 100 x 8.0, 82 x 0.5, 160 x 0.2

@@ -13,6 +13,7 @@ import math
 import torch
 import torch.nn as nn
 from omegaconf import OmegaConf
+from torch.distributed.fsdp import FSDPModule
 from torch.utils.checkpoint import checkpoint
 
 from weathergen.common.config import Config
@@ -31,6 +32,17 @@ from weathergen.model.embeddings import (
 from weathergen.model.layers import MLP
 from weathergen.model.utils import ActivationFactory
 from weathergen.utils.utils import get_dtype
+
+
+def _unshard(blocks) -> None:
+    """Gather the FSDP-sharded weights of all blocks run in one checkpoint. In the backward
+    pass, FSDP gathers a module's weights just before its own backward, so the recompute of a
+    multi-module checkpoint would otherwise start with only the last module's weights gathered.
+    A no-op for modules whose weights are already gathered."""
+    if len(blocks) > 1:
+        for block in blocks:
+            if isinstance(block, FSDPModule):
+                block.unshard()
 
 
 class EmbeddingEngine(torch.nn.Module):
@@ -242,8 +254,24 @@ class LocalAssimilationEngine(torch.nn.Module):
             )
 
     def forward(self, tokens_c, cell_lens_c):
-        for block in self.ae_local_blocks:
-            tokens_c = checkpoint(block, tokens_c, cell_lens_c, use_reentrant=False)
+        if not self.cf.get("ae_local_checkpoint_per_block", False):
+            for block in self.ae_local_blocks:
+                tokens_c = checkpoint(block, tokens_c, cell_lens_c, use_reentrant=False)
+            return tokens_c
+
+        # one checkpoint per attention + MLP pair: half as many saved inputs, same math
+        blocks = list(self.ae_local_blocks)
+        for i in range(0, len(blocks), 2):
+            tokens_c = checkpoint(
+                self._run_blocks, blocks[i : i + 2], tokens_c, cell_lens_c, use_reentrant=False
+            )
+        return tokens_c
+
+    @staticmethod
+    def _run_blocks(blocks, tokens_c, cell_lens_c):
+        _unshard(blocks)
+        for block in blocks:
+            tokens_c = block(tokens_c, cell_lens_c)
         return tokens_c
 
 
@@ -631,11 +659,41 @@ class ForecastingEngine(torch.nn.Module):
                 tokens = tokens + torch.randn_like(tokens) * torch.norm(tokens) * noise_std
 
         aux_info = None
-        for _b_idx, block in enumerate(self.fe_blocks):
+        per_block = self.cf.get("fe_checkpoint_per_block", False)
+        save_bf16 = self.cf.get("fe_checkpoint_bf16", False)
+        if not (per_block or save_bf16):
+            for _b_idx, block in enumerate(self.fe_blocks):
+                if isinstance(block, torch.nn.modules.normalization.LayerNorm):
+                    tokens = checkpoint(block, tokens, use_reentrant=False)
+                else:
+                    tokens = checkpoint(block, tokens, coords, aux_info, use_reentrant=False)
+            return tokens
+
+        # fe_checkpoint_per_block: one checkpoint per attention block and the layers after it,
+        # so half as many inputs are saved for the backward pass (same math).
+        # fe_checkpoint_bf16: save each checkpoint input in bf16 (rounds the residual stream).
+        groups: list[list[torch.nn.Module]] = []
+        for block in self.fe_blocks:
+            starts_block = isinstance(block, MultiSelfAttentionHead | MultiSelfAttentionHeadLocal)
+            if not groups or not per_block or starts_block:
+                groups.append([])
+            groups[-1].append(block)
+        for group in groups:
+            saved = tokens.to(torch.bfloat16) if save_bf16 else tokens
+            tokens = checkpoint(
+                self._run_blocks, group, saved, coords, aux_info, tokens.dtype, use_reentrant=False
+            )
+        return tokens
+
+    @staticmethod
+    def _run_blocks(blocks, tokens, coords, aux_info, dtype):
+        _unshard(blocks)
+        tokens = tokens.to(dtype)
+        for block in blocks:
             if isinstance(block, torch.nn.modules.normalization.LayerNorm):
-                tokens = checkpoint(block, tokens, use_reentrant=False)
+                tokens = block(tokens)
             else:
-                tokens = checkpoint(block, tokens, coords, aux_info, use_reentrant=False)
+                tokens = block(tokens, coords, aux_info)
         return tokens
 
 
@@ -778,26 +836,67 @@ class TargetPredictionEngineClassic(nn.Module):
                 )
             )
 
-    def forward(self, latent, output, latent_lens, output_lens, coordinates):
+    def forward(self, latent, output, latent_lens, output_lens, coordinates, latent_index=None):
+        """``latent_index``: rows of ``latent`` that form the key/value tokens; when given, the
+        cross-attentions project ``latent`` first and select the rows afterwards."""
         tc_tokens = output
         tcs_lens = output_lens
         tokens_stream = latent
         tokens_lens = latent_lens
         tcs_aux = coordinates
 
+        per_layer = self.cf.get("pred_checkpoint_per_layer", False)
+        if not per_layer and latent_index is None:
+            for ib, block in enumerate(self.tte):
+                if self.cf.pred_self_attention and ib % 3 == 1:
+                    tc_tokens = checkpoint(block, tc_tokens, tcs_lens, tcs_aux, use_reentrant=False)
+                else:
+                    tc_tokens = checkpoint(
+                        block,
+                        tc_tokens,
+                        tokens_stream,
+                        tcs_lens,
+                        tokens_lens,
+                        tcs_aux,
+                        use_reentrant=False,
+                    )
+            return tc_tokens
+
+        # pred_checkpoint_per_layer: one checkpoint per cross-attention and the blocks after it
+        # (self-attention, MLP), so fewer target-token inputs are saved (same math)
+        groups: list[list[int]] = []
         for ib, block in enumerate(self.tte):
+            if not groups or not per_layer or isinstance(block, MultiCrossAttentionHeadVarlen):
+                groups.append([])
+            groups[-1].append(ib)
+        for group in groups:
+            tc_tokens = checkpoint(
+                self._run_blocks,
+                group,
+                tc_tokens,
+                tokens_stream,
+                tcs_lens,
+                tokens_lens,
+                tcs_aux,
+                latent_index,
+                use_reentrant=False,
+            )
+        return tc_tokens
+
+    def _run_blocks(
+        self, block_idxs, tc_tokens, tokens_stream, tcs_lens, tokens_lens, tcs_aux, latent_index
+    ):
+        _unshard([self.tte[ib] for ib in block_idxs])
+        for ib in block_idxs:
+            block = self.tte[ib]
             if self.cf.pred_self_attention and ib % 3 == 1:
-                tc_tokens = checkpoint(block, tc_tokens, tcs_lens, tcs_aux, use_reentrant=False)
-            else:
-                tc_tokens = checkpoint(
-                    block,
-                    tc_tokens,
-                    tokens_stream,
-                    tcs_lens,
-                    tokens_lens,
-                    tcs_aux,
-                    use_reentrant=False,
+                tc_tokens = block(tc_tokens, tcs_lens, tcs_aux)
+            elif latent_index is not None and isinstance(block, MultiCrossAttentionHeadVarlen):
+                tc_tokens = block(
+                    tc_tokens, tokens_stream, tcs_lens, tokens_lens, tcs_aux, latent_index
                 )
+            else:
+                tc_tokens = block(tc_tokens, tokens_stream, tcs_lens, tokens_lens, tcs_aux)
         return tc_tokens
 
 
