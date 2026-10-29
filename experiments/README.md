@@ -6,6 +6,7 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Notes |
 |---|---|---|---|---|---|---|---|---|
+| [a09k1cvv](2026-10-26_a09k1cvv/) | 2026-10-26 | config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml | COMPLETED | 100 | 4.47 | 29.31 |  | Alejandro baseline; reproduces nyue0k4y (same peaks, loss within FA noise, step-12 stalls again) |
 | [nyue0k4y](2026-10-20_nyue0k4y/) | 2026-10-20 | config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml | COMPLETED | 100 | 4.64 | 29.31 | 90.8 | baseline; same memory peaks and losses as team run nbl12ut3 |
 | [i6sr8maq](2026-10-20_i6sr8maq/) | 2026-10-20 | default_config.yml + config_operan_georing_avhrr_forecasting_lowres.yml | FAILED | 1 |  |  | 70.5 | operan config merged on default_config.yml (memory_pinning on): GPU allocation failed in flash-attn backward, then a DataLoader worker was killed; RuntimeError: DataLoader worker (pid 161772) is killed by signal: Killed. |
 | [myt36ynx](2026-10-20_myt36ynx/) | 2026-10-20 | default_config.yml + config_operan_georing_avhrr_forecasting_lowres.yml | FAILED | 0 |  |  |  | setup error: BUDGET_ACCOUNTS missing in ~/.bashrc (now set by make init); subprocess.CalledProcessError: Command '['platform-env.py', 'hpc']' returned non-zero exit status 1. |

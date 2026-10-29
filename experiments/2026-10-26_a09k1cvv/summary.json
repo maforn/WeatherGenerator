@@ -1,0 +1,14 @@
+{
+ "run": "a09k1cvv",
+ "job": "2528683",
+ "date": "2026-10-26",
+ "state": "COMPLETED",
+ "elapsed": "00:13:27",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml",
+ "steps": 100,
+ "s_per_step": 4.47,
+ "gpu_peak_gib": 29.31,
+ "host_rss_gib": null,
+ "error": "",
+ "note": "Alejandro baseline; reproduces nyue0k4y (same peaks, loss within FA noise, step-12 stalls again)"
+}
