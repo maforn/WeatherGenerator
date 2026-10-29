@@ -1,0 +1,72 @@
+# Memory-focused profiling: CUDA allocator snapshot + peak-memory metrics.
+# Deliberately does NOT enable the torch profiler — see pytorch_profiling below.
+profiling:
+  memory_profiling: True
+  # Left off on purpose: the torch profiler wraps every custom module's forward in
+  # record_function and records shapes/stacks, which perturbs what we are measuring.
+  # Its memory-timeline export is skipped on aarch64 (GH200) anyway, so it would add
+  # overhead without adding a memory artifact. Turn on only for per-operator attribution.
+  pytorch_profiling: False
+  only_profiling: True
+
+  # With pytorch_profiling: False no torch.profiler.schedule is built, so the split
+  # between these four is meaningless — only the product
+  # (wait + warmup + active) * repeat = number of training steps the profiling phase
+  # runs, here 3, has any effect. Sized so that:
+  #   - step 0 (grad buffers + lazy AdamW exp_avg/exp_avg_sq allocation, allocator
+  #     growth, NCCL buffers) is not the only step in the snapshot;
+  #   - steps 1..2 show the steady-state allocate/free cycle, enough to read the
+  #     activation high-water mark;
+  #   - the whole phase fits inside max_mem_events below. Six steps did not: both the
+  #     o2r9rwtc and is6wr5zh snapshots wrapped the 100k ring buffer and covered only
+  #     their last ~4 s, so anything allocated earlier lost its call site.
+  wait_iteration: 1
+  warmup_iteration: 1
+  active_iteration: 1
+  repeat: 1
+
+  # Ring buffer of allocator events. At 100k both six-step runs wrapped; 500k covers three
+  # steps with headroom, at roughly 12 MB of pickle per 100k events. Check the report's
+  # "trace window" line — if it reads exactly this number, it wrapped again and the
+  # per-site attribution is still partial.
+  max_mem_events: 500000
+
+  # Off: turns the checkpoint recompute check into an op-by-op log of the forward against
+  # the recompute, naming the operation whose output disagrees instead of reporting only a
+  # position. Enable only to chase a CheckpointError — it slowed the is6wr5zh run by ~18x
+  # (4.02 s -> 73.30 s for the same 100k events), which is not what you want in a trace
+  # you intend to compare against another.
+  checkpoint_debug: False
+
+  # Off: records which operations autocast promotes to float32 and what each costs, to
+  # <timestamp>_rank_<n>_autocast_promotions.txt. Intercepts every dispatch, so run it as
+  # its own pass rather than alongside a snapshot you plan to read for peak memory.
+  autocast_audit: False
+
+train_logging:
+  memory_tracking: True
+  # Off: this run is for memory only. Enable if you want the per-step source-MB deltas
+  # to tell a genuine memory regression apart from a step that simply carried more
+  # observation tokens (the counters are cumulative, so read them as differences).
+  throughput_tracking: False
+  # Must be 1 for this config: the trackers are only drained when
+  # bidx % train_logging.metrics == 0, so at the default 20 a 6-step profiling phase
+  # would log exactly one record — from step 0, the least representative step.
+  metrics: 1
+
+data_loading:
+  # fixed so the data order, and hence per-batch token counts and activation sizes,
+  # are identical across the arms of the ablation
+  rng_seed: 1
+  # DPHPC: 12 workers x 4 ranks ran out of /dev/shm at level 6 (js5hwonm);
+  # a 3-step snapshot does not need data throughput
+  num_workers: 2
+
+training_config:
+  start_date: 2017-06-01T00:00
+
+norm_type: "RMSNorm" # "LayerNorm" or "RMSNorm"
+# DPHPC: level-6 memory check (run u1xasv71): config_memory_profiling.yml (huw6isc4) with
+# 2 workers (above) and HEALPix level 6. Other scaling points: change healpix_level and/or
+# add training_config.forecast.num_steps, see experiments/memory/README.md
+healpix_level: 6
