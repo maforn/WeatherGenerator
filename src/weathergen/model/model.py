@@ -879,7 +879,8 @@ class Model(torch.nn.Module):
                     tcs_lens,
                 ).unsqueeze(0)
             else:
-                tc_tokens = self.target_token_engines[stream_name](
+                tc_tokens = self._predict_target_tokens_chunked(
+                    self.target_token_engines[stream_name],
                     latent=tokens_nbors,
                     output=tc_tokens,
                     latent_lens=tokens_nbors_lens,
@@ -899,6 +900,54 @@ class Model(torch.nn.Module):
             output.add_physical_prediction(step, stream_name, pred)
 
         return output
+
+    def _predict_target_tokens_chunked(
+        self, engine, latent, output, latent_lens, output_lens, coordinates
+    ) -> torch.Tensor:
+        """Run the target prediction engine over contiguous groups of decoder cells.
+        """
+        num_chunks = self.cf.get("decoder_num_chunks", 1)
+        if num_chunks <= 1:
+            return engine(
+                latent=latent,
+                output=output,
+                latent_lens=latent_lens,
+                output_lens=output_lens,
+                coordinates=coordinates,
+            )
+
+        # latent_lens / output_lens carry a leading zero; cells are packed in the same order
+        num_cells = latent_lens.shape[0] - 1
+        latent_offsets = torch.cat([latent_lens.new_zeros(1), latent_lens[1:].cumsum(0)])
+        output_offsets = torch.cat([output_lens.new_zeros(1), output_lens[1:].cumsum(0)])
+        bounds = torch.linspace(0, num_cells, num_chunks + 1).long().tolist()
+        latent_bounds = latent_offsets[bounds].tolist()
+        output_bounds = output_offsets[bounds].tolist()
+
+        outs = []
+        for i in range(num_chunks):
+            c0, c1 = bounds[i], bounds[i + 1]
+            l0, l1 = latent_bounds[i], latent_bounds[i + 1]
+            o0, o1 = output_bounds[i], output_bounds[i + 1]
+            chunk_latent_lens = torch.cat([latent_lens[:1], latent_lens[1 + c0 : 1 + c1]])
+            chunk_output_lens = torch.cat([output_lens[:1], output_lens[1 + c0 : 1 + c1]])
+            chunk_output, chunk_coords = output[o0:o1], coordinates[o0:o1]
+            is_empty = o1 == o0
+            if is_empty:
+                chunk_output = output.new_zeros((1, output.shape[-1]))
+                chunk_coords = coordinates.new_zeros((1, coordinates.shape[-1]))
+                chunk_output_lens = torch.zeros_like(chunk_output_lens)
+                chunk_output_lens[1] = 1
+            out = engine(
+                latent=latent[l0:l1],
+                output=chunk_output,
+                latent_lens=chunk_latent_lens,
+                output_lens=chunk_output_lens,
+                coordinates=chunk_coords,
+            )
+            outs.append(out[:0] if is_empty else out)
+
+        return torch.cat(outs)
 
     def _gather_decoder_predictions(
         self, pred: torch.Tensor, global_cell_lens: torch.Tensor

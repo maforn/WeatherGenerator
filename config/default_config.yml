@@ -49,6 +49,10 @@ ae_aggregation_block_factor: 64
 ae_aggregation_mlp_hidden_factor: 2
 
 decoder_type: PerceiverIOCoordConditioning #  Main options PerceiverIOCoordConditioning or Linear
+# run the decoder over this many groups of HEALPix cells (exact; bounds flash-attn's backward scratch)
+decoder_num_chunks: 1
+# False keeps decoder parameters unsharded across the chunk calls (one all-gather instead of one per chunk)
+decoder_reshard_after_forward: True
 pred_adapter_kv: False
 pred_self_attention: True
 pred_dyadic_dims: False

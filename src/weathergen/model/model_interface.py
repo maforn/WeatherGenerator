@@ -145,9 +145,13 @@ def init_model_and_shard(
             ),
         }
 
+        # with decoder_num_chunks > 1 every decoder module runs once per chunk
+        decoder_reshard = cf.get("decoder_reshard_after_forward", True)
         for module in model.target_token_engines.modules():
             if isinstance(module, modules_to_shard):
-                fully_shard(module, **full_precision_fsdp_kwargs)
+                fully_shard(
+                    module, reshard_after_forward=decoder_reshard, **full_precision_fsdp_kwargs
+                )
 
     if with_ddp and with_fsdp:
         fully_shard(model)
