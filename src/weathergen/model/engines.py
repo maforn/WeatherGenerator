@@ -68,6 +68,7 @@ class EmbeddingEngine(torch.nn.Module):
                     norm_type=self.cf.norm_type,
                     unembed_mode=self.cf.embed_unembed_mode,
                     stream_name=stream_name,
+                    num_chunks=self.cf.get("embed_num_chunks", 1),
                 )
             elif si["embed"]["net"] == "linear":
                 self.embeds[stream_name] = StreamEmbedLinear(
