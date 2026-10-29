@@ -9,6 +9,8 @@
 
 embed_unembed_mode: "block"
 embed_dropout_rate: 0.1
+# run the stream-embedding layers over this many chunks of patches (exact; bounds the backward burst)
+embed_num_chunks: 1
 
 ae_local_dim_embed: 2048
 ae_local_num_blocks: 4
