@@ -309,13 +309,25 @@ class Local2GlobalAssimilationEngine(torch.nn.Module):
             )
 
     def forward(self, tokens_c, tokens_global_c, q_cells_lens_c, cell_lens_c):
+        # checkpoint per block, as in LocalAssimilationEngine
+        with_checkpoint = self.cf.get("ae_adapter_checkpoint", False)
         for block in self.ae_adapter:
-            tokens_global_c = block(
-                tokens_global_c,
-                tokens_c,
-                q_cells_lens_c,
-                cell_lens_c,
-            )
+            if with_checkpoint:
+                tokens_global_c = checkpoint(
+                    block,
+                    tokens_global_c,
+                    tokens_c,
+                    q_cells_lens_c,
+                    cell_lens_c,
+                    use_reentrant=False,
+                )
+            else:
+                tokens_global_c = block(
+                    tokens_global_c,
+                    tokens_c,
+                    q_cells_lens_c,
+                    cell_lens_c,
+                )
         return tokens_global_c
 
 
