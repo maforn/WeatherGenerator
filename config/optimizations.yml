@@ -1,0 +1,13 @@
+# GPU memory optimizations, each off when missing. All three: peak 28.93 instead of 31.69 GiB
+# per GPU on the operan config, same losses.
+
+# one activation checkpoint per attention + MLP block instead of per layer
+# (forecast engine and local assimilation)
+checkpoint_per_block: True
+
+# decoder: project keys/values once per cell, then select each cell's 9 neighbours by index
+# instead of copying them
+decoder_gather_after_kv_projection: True
+
+# keep the source tokens on the GPU in the mixed-precision dtype, as the embedding uses them
+source_tokens_in_mixed_precision: True
