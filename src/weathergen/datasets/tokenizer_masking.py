@@ -46,8 +46,10 @@ class TokenizerMasking(Tokenizer):
         masker: Masker,
         source_cell_start: int = 0,
         source_cell_end: int | None = None,
+        optimizations: dict | None = None,
     ):
         super().__init__(healpix_level)
+        self.optimizations = optimizations or {}
         self.masker = masker
         self.rng = None
         self.token_size = None
@@ -90,6 +92,9 @@ class TokenizerMasking(Tokenizer):
                 tokens += [(None, None)]
                 continue
             # tokenize data
+            tokenize_kwargs = {}
+            if tok_spacetime and self.optimizations.get("tokenize_coords_only", False):
+                tokenize_kwargs["coords_only"] = True
             idxs_cells, idxs_cells_lens = tok(
                 readerdata_to_torch(rdata),
                 token_size,
@@ -97,6 +102,7 @@ class TokenizerMasking(Tokenizer):
                 pad_tokens,
                 cell_start=cell_start,
                 cell_end=cell_end,
+                **tokenize_kwargs,
             )
             tokens += [(idxs_cells, idxs_cells_lens)]
 
@@ -171,6 +177,7 @@ class TokenizerMasking(Tokenizer):
             time_win,
             self.hpy_verts_rots_source[-1][self.source_cell_start : self.source_cell_end],
             encode_times_source,
+            direct_build=self.optimizations.get("source_direct_build", False),
         )
 
         return (source_tokens_cells, source_tokens_lens)
@@ -204,6 +211,7 @@ class TokenizerMasking(Tokenizer):
             self.hpy_verts_local_target,
             self.hpy_nctrs_target,
             encode_times_target,
+            need_values=not self.optimizations.get("target_requested_fields_only", False),
         )
 
         return (coords_local, coords_per_cell)
@@ -215,6 +223,7 @@ class TokenizerMasking(Tokenizer):
         token_data,
         time_win: tuple,
         cell_mask,
+        need_inverse_indices: bool = True,
     ):
         # create tokenization index
         (idxs_cells, idxs_cells_lens) = token_data
@@ -236,10 +245,14 @@ class TokenizerMasking(Tokenizer):
             self.hpy_verts_local_target,
             self.hpy_nctrs_target,
             encode_times_target,
+            need_coords=not self.optimizations.get("target_requested_fields_only", False),
         )
 
         idxs_ord_inv = None
-        if data.numel() > 0:
+        compute_inverse = need_inverse_indices or not self.optimizations.get(
+            "skip_train_inverse_indices", False
+        )
+        if data.numel() > 0 and compute_inverse:
             # flatten per-token indices into one flat list
             idxs_flat = torch.cat([idxs for idxs_cell in idxs_cells for idxs in idxs_cell])
             # compute indices for inversion
