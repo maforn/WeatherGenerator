@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Serialized JUPITER submission: lock -> sync -> budget check -> queue check -> make train -> unlock.
 # Usage: scripts/martin_submit_jupiter.sh <config> [TIME] [extra launcher/sbatch args...]
-#   e.g. ... config/exp_x.yml 00:30:00 --cleanup-scripts no --dependency=afterok:<jobid>
+#   e.g. ... config/exp_x.yml 00:30:00 --dependency=afterok:<jobid>
 # Needs an open SSH session (ETH VPN, ssh-add, `ssh jupiter exit` for MFA). Run from anywhere.
 set -euo pipefail
 CONFIG="$1"; TIME="${2:-00:30:00}"; shift $(( $# >= 2 ? 2 : $# )); EXTRA="$*"
-# Each submission adds a training job plus a cleanup job unless cleanup is disabled.
-NEW_JOBS=2; [[ "$EXTRA" == *"--cleanup-scripts no"* ]] && NEW_JOBS=1
+# Each submission adds a training job plus a cleanup job. launch-slurm.py ignores
+# `--cleanup-scripts no` for plain train submissions (observed 2026-11-01), so always count 2.
+NEW_JOBS=2
 R=/e/scratch/weatherai/maranonpaliz1
 LOCK="$R/.submit.lock.d"
 LOCAL=/Users/martinmaranon2/DPHPC
