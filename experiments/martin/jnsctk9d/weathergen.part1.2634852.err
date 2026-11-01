@@ -1,0 +1,405 @@
++ echo 'shell /bin/bash'
++ '[' -f /e/home/jusers/maranonpaliz1/jupiter/.local/bin/env ']'
++ . /e/home/jusers/maranonpaliz1/jupiter/.bashrc
+++ '[' -f /etc/bashrc ']'
+++ . /etc/bashrc
++++ '[' -z '' ']'
++++ BASHRCSOURCED=Y
++++ '[' '' ']'
++++ shopt -q login_shell
+++++ umask
++++ '[' 0022 -eq 0 ']'
++++ SHELL=/bin/bash
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/bash_completion.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/bash_completion.sh
+++++ '[' 'x5.1.8(1)-release' '!=' x -a x '!=' x -a x = x ']'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/colorgrep.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/colorgrep.sh
+++++ /usr/libexec/grepconf.sh -c
+++++ alias 'grep=grep --color=auto'
+++++ alias 'egrep=egrep --color=auto'
+++++ alias 'fgrep=fgrep --color=auto'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/colorls.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/colorls.sh
+++++ '[' '!' -t 0 ']'
+++++ return
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/colorxzgrep.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/colorxzgrep.sh
+++++ /usr/libexec/grepconf.sh -c
+++++ alias 'xzgrep=xzgrep --color=auto'
+++++ alias 'xzegrep=xzegrep --color=auto'
+++++ alias 'xzfgrep=xzfgrep --color=auto'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/colorzgrep.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/colorzgrep.sh
+++++ '[' -f /usr/libexec/grepconf.sh ']'
+++++ /usr/libexec/grepconf.sh -c
+++++ alias 'zgrep=zgrep --color=auto'
+++++ alias 'zfgrep=zfgrep --color=auto'
+++++ alias 'zegrep=zegrep --color=auto'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/debuginfod.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/debuginfod.sh
+++++ prefix=/usr
+++++ '[' -z '' ']'
++++++ find /etc/debuginfod -name '*.urls' -print0
++++++ xargs -0 cat
++++++ tr '\n' ' '
+++++ DEBUGINFOD_URLS=
+++++ '[' -n '' ']'
+++++ unset DEBUGINFOD_URLS
+++++ '[' -z '' ']'
++++++ find /etc/debuginfod -name '*.certpath' -print0
++++++ xargs -0 cat
++++++ tr '\n' :
+++++ DEBUGINFOD_IMA_CERT_PATH=/etc/keys/ima:
+++++ '[' -n /etc/keys/ima: ']'
+++++ export DEBUGINFOD_IMA_CERT_PATH
+++++ unset prefix
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/gawk.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/gawk.sh
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/jsc-profile.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/jsc-profile.sh
+++++ export JUMO_USRCMD_EXEC=/usr/libexec/jutil-exe
+++++ JUMO_USRCMD_EXEC=/usr/libexec/jutil-exe
+++++ '[' -r /usr/share/bash-completion/completions/jutil.bash ']'
+++++ source /usr/share/bash-completion/completions/jutil.bash
++++++ [[ 5 -eq 4 ]]
++++++ [[ 5 -gt 4 ]]
++++++ complete -F _jutil -o nosort -o bashdefault -o default jutil
+++++ '[' -n '5.1.8(1)-release' ']'
+++++ export -f jutil
+++++ JSC_PROFILE_FZJ_CMD=_profile_fzj_source_file
+++++ alias jsc_profile_fzj=_profile_fzj_source_file
++++++ /bin/id -u
+++++ '[' 36311 -ne 0 ']'
+++++ /bin/grep -q '^' /etc/passwd
+++++ export XDG_DATA_DIRS=/usr/local/share:/usr/share
+++++ XDG_DATA_DIRS=/usr/local/share:/usr/share
+++++ '[' -f /etc/FZJ/systemname ']'
++++++ cat /etc/FZJ/systemname
+++++ export SYSTEMNAME=jupiter
+++++ SYSTEMNAME=jupiter
+++++ grep -q '^:' /etc/passwd
+++++ jutil env init
+++++ '[' 2 -gt 1 ']'
+++++ '[' env = env ']'
+++++ [[ env init =~  -h ]]
+++++ [[ env init =~ --help ]]
+++++ [[ init = \i\n\i\t ]]
++++++ /usr/libexec/jutil-exe env init
+++++ eval export 'ARCHIVE_slmet=/p/arch2/slmet;' export 'DATA_slmet=/e/data1/slmet;' export 'EXADATA_slmet=/e/data1/slmet;' export 'EXAFSCRATCH_e_ext_2025e01_128=/e/fscratch/e-ext-2025e01-128;' export 'EXAFSCRATCH_weatherai=/e/fscratch/weatherai;' export 'EXAHOME=/e/home/jusers/maranonpaliz1/jupiter;' export 'EXAPROJECT_e_ext_2025e01_128=/e/project1/e-ext-2025e01-128;' export 'EXAPROJECT_weatherai=/e/project1/weatherai;' export 'EXASCRATCH_e_ext_2025e01_128=/e/scratch/e-ext-2025e01-128;' export 'EXASCRATCH_weatherai=/e/scratch/weatherai;' export 'EXAUSERSOFTWARE_slmet=/e/usersoftware/slmet;' export 'FSCRATCH_e_ext_2025e01_128=/e/fscratch/e-ext-2025e01-128;' export 'FSCRATCH_weatherai=/e/fscratch/weatherai;' export 'HOME=/e/home/jusers/maranonpaliz1/jupiter;' export 'JUSTARCHIVE_slmet=/p/arch2/slmet;' export 'JUSTDATA_slmet=/p/data1/slmet;' export 'JUSTSCRATCH_weatherai=/p/scratch/weatherai;' export 'JUSTUSERSOFTWARE_slmet=/p/usersoftware/slmet;' export 'PROJECT_e_ext_2025e01_128=/e/project1/e-ext-2025e01-128;' export 'PROJECT_weatherai=/e/project1/weatherai;' export 'SCRATCH_e_ext_2025e01_128=/e/scratch/e-ext-2025e01-128;' export 'SCRATCH_weatherai=/e/scratch/weatherai;' export 'USERSOFTWARE_slmet=/e/usersoftware/slmet;' export 'JUTIL_ENV_VARS=ARCHIVE_slmet,DATA_slmet,EXADATA_slmet,EXAFSCRATCH_e_ext_2025e01_128,EXAFSCRATCH_weatherai,EXAHOME,EXAPROJECT_e_ext_2025e01_128,EXAPROJECT_weatherai,EXASCRATCH_e_ext_2025e01_128,EXASCRATCH_weatherai,EXAUSERSOFTWARE_slmet,FSCRATCH_e_ext_2025e01_128,FSCRATCH_weatherai,HOME,JUSTARCHIVE_slmet,JUSTDATA_slmet,JUSTSCRATCH_weatherai,JUSTUSERSOFTWARE_slmet,PROJECT_e_ext_2025e01_128,PROJECT_weatherai,SCRATCH_e_ext_2025e01_128,SCRATCH_weatherai,USERSOFTWARE_slmet;'
++++++ export ARCHIVE_slmet=/p/arch2/slmet
++++++ ARCHIVE_slmet=/p/arch2/slmet
++++++ export DATA_slmet=/e/data1/slmet
++++++ DATA_slmet=/e/data1/slmet
++++++ export EXADATA_slmet=/e/data1/slmet
++++++ EXADATA_slmet=/e/data1/slmet
++++++ export EXAFSCRATCH_e_ext_2025e01_128=/e/fscratch/e-ext-2025e01-128
++++++ EXAFSCRATCH_e_ext_2025e01_128=/e/fscratch/e-ext-2025e01-128
++++++ export EXAFSCRATCH_weatherai=/e/fscratch/weatherai
++++++ EXAFSCRATCH_weatherai=/e/fscratch/weatherai
++++++ export EXAHOME=/e/home/jusers/maranonpaliz1/jupiter
++++++ EXAHOME=/e/home/jusers/maranonpaliz1/jupiter
++++++ export EXAPROJECT_e_ext_2025e01_128=/e/project1/e-ext-2025e01-128
++++++ EXAPROJECT_e_ext_2025e01_128=/e/project1/e-ext-2025e01-128
++++++ export EXAPROJECT_weatherai=/e/project1/weatherai
++++++ EXAPROJECT_weatherai=/e/project1/weatherai
++++++ export EXASCRATCH_e_ext_2025e01_128=/e/scratch/e-ext-2025e01-128
++++++ EXASCRATCH_e_ext_2025e01_128=/e/scratch/e-ext-2025e01-128
++++++ export EXASCRATCH_weatherai=/e/scratch/weatherai
++++++ EXASCRATCH_weatherai=/e/scratch/weatherai
++++++ export EXAUSERSOFTWARE_slmet=/e/usersoftware/slmet
++++++ EXAUSERSOFTWARE_slmet=/e/usersoftware/slmet
++++++ export FSCRATCH_e_ext_2025e01_128=/e/fscratch/e-ext-2025e01-128
++++++ FSCRATCH_e_ext_2025e01_128=/e/fscratch/e-ext-2025e01-128
++++++ export FSCRATCH_weatherai=/e/fscratch/weatherai
++++++ FSCRATCH_weatherai=/e/fscratch/weatherai
++++++ export HOME=/e/home/jusers/maranonpaliz1/jupiter
++++++ HOME=/e/home/jusers/maranonpaliz1/jupiter
++++++ export JUSTARCHIVE_slmet=/p/arch2/slmet
++++++ JUSTARCHIVE_slmet=/p/arch2/slmet
++++++ export JUSTDATA_slmet=/p/data1/slmet
++++++ JUSTDATA_slmet=/p/data1/slmet
++++++ export JUSTSCRATCH_weatherai=/p/scratch/weatherai
++++++ JUSTSCRATCH_weatherai=/p/scratch/weatherai
++++++ export JUSTUSERSOFTWARE_slmet=/p/usersoftware/slmet
++++++ JUSTUSERSOFTWARE_slmet=/p/usersoftware/slmet
++++++ export PROJECT_e_ext_2025e01_128=/e/project1/e-ext-2025e01-128
++++++ PROJECT_e_ext_2025e01_128=/e/project1/e-ext-2025e01-128
++++++ export PROJECT_weatherai=/e/project1/weatherai
++++++ PROJECT_weatherai=/e/project1/weatherai
++++++ export SCRATCH_e_ext_2025e01_128=/e/scratch/e-ext-2025e01-128
++++++ SCRATCH_e_ext_2025e01_128=/e/scratch/e-ext-2025e01-128
++++++ export SCRATCH_weatherai=/e/scratch/weatherai
++++++ SCRATCH_weatherai=/e/scratch/weatherai
++++++ export USERSOFTWARE_slmet=/e/usersoftware/slmet
++++++ USERSOFTWARE_slmet=/e/usersoftware/slmet
++++++ export JUTIL_ENV_VARS=ARCHIVE_slmet,DATA_slmet,EXADATA_slmet,EXAFSCRATCH_e_ext_2025e01_128,EXAFSCRATCH_weatherai,EXAHOME,EXAPROJECT_e_ext_2025e01_128,EXAPROJECT_weatherai,EXASCRATCH_e_ext_2025e01_128,EXASCRATCH_weatherai,EXAUSERSOFTWARE_slmet,FSCRATCH_e_ext_2025e01_128,FSCRATCH_weatherai,HOME,JUSTARCHIVE_slmet,JUSTDATA_slmet,JUSTSCRATCH_weatherai,JUSTUSERSOFTWARE_slmet,PROJECT_e_ext_2025e01_128,PROJECT_weatherai,SCRATCH_e_ext_2025e01_128,SCRATCH_weatherai,USERSOFTWARE_slmet
++++++ JUTIL_ENV_VARS=ARCHIVE_slmet,DATA_slmet,EXADATA_slmet,EXAFSCRATCH_e_ext_2025e01_128,EXAFSCRATCH_weatherai,EXAHOME,EXAPROJECT_e_ext_2025e01_128,EXAPROJECT_weatherai,EXASCRATCH_e_ext_2025e01_128,EXASCRATCH_weatherai,EXAUSERSOFTWARE_slmet,FSCRATCH_e_ext_2025e01_128,FSCRATCH_weatherai,HOME,JUSTARCHIVE_slmet,JUSTDATA_slmet,JUSTSCRATCH_weatherai,JUSTUSERSOFTWARE_slmet,PROJECT_e_ext_2025e01_128,PROJECT_weatherai,SCRATCH_e_ext_2025e01_128,SCRATCH_weatherai,USERSOFTWARE_slmet
+++++ export PATH=/usr/local/bin:/usr/bin:/opt/jsc/bin:/usr/local/jsc/bin:/opt/parastation/bin:/e/software/default/bin
+++++ PATH=/usr/local/bin:/usr/bin:/opt/jsc/bin:/usr/local/jsc/bin:/opt/parastation/bin:/e/software/default/bin
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/lang.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/lang.sh
+++++ unset LANG_backup
++++++ /usr/bin/locale
+++++ '[' -n '' ']'
+++++ LANG_backup=
+++++ for config in /etc/locale.conf "${HOME}/.i18n"
+++++ '[' -f /etc/locale.conf ']'
+++++ '[' -x /usr/bin/sed ']'
++++++ /usr/bin/sed -r -e 's/^[[:blank:]]*([[:upper:]_]+)=([[:print:][:digit:]\._-]+|"[[:print:][:digit:]\._-]+")/export \1=\2/;t;d' /etc/locale.conf
+++++ eval export LANG=en_US.UTF-8
++++++ export LANG=en_US.UTF-8
++++++ LANG=en_US.UTF-8
+++++ for config in /etc/locale.conf "${HOME}/.i18n"
+++++ '[' -f /e/home/jusers/maranonpaliz1/jupiter/.i18n ']'
+++++ '[' -n '' ']'
+++++ unset LANG_backup config
+++++ '[' -n '' ']'
+++++ '[' -n en_US.UTF-8 ']'
+++++ '[' dumb = linux ']'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/less.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/less.sh
+++++ '[' -z '' ']'
+++++ '[' -x /usr/bin/lesspipe.sh ']'
+++++ export 'LESSOPEN=||/usr/bin/lesspipe.sh %s'
+++++ LESSOPEN='||/usr/bin/lesspipe.sh %s'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/man.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/man.sh
+++++ test -z ''
++++++ test -x /usr/bin/manpath
++++++ /usr/bin/manpath
+++++ export MANPATH=/usr/local/share/man:/usr/share/man:/opt/parastation/share/man
+++++ MANPATH=/usr/local/share/man:/usr/share/man:/opt/parastation/share/man
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/mmfs.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/mmfs.sh
++++++ id -u
+++++ '[' 36311 -eq 0 ']'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/pscluster.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/pscluster.sh
+++++ _psdir=/opt/parastation/share
+++++ test -d /opt/parastation/share/man
+++++ test -z /usr/local/share/man:/usr/share/man:/opt/parastation/share/man
+++++ test -z /usr/local/share/man:/usr/share/man:/opt/parastation/share/man
+++++ export MANPATH=/usr/local/share/man:/usr/share/man:/opt/parastation/share/man:/opt/parastation/share/man
+++++ MANPATH=/usr/local/share/man:/usr/share/man:/opt/parastation/share/man:/opt/parastation/share/man
+++++ unset _psdir
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/psconfig.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/psconfig.sh
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/psmgmt.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/psmgmt.sh
+++++ _psbindir=/opt/parastation/bin
+++++ _pssbindir=/opt/parastation/sbin
+++++ _psmandir=/opt/parastation/share/man
+++++ test -d /opt/parastation/bin
+++++ export PATH=/usr/local/bin:/usr/bin:/opt/jsc/bin:/usr/local/jsc/bin:/opt/parastation/bin:/e/software/default/bin:/opt/parastation/bin
+++++ PATH=/usr/local/bin:/usr/bin:/opt/jsc/bin:/usr/local/jsc/bin:/opt/parastation/bin:/e/software/default/bin:/opt/parastation/bin
++++++ id -ur
+++++ test 36311 -eq 0
+++++ test -d /opt/parastation/share/man
+++++ test -z /usr/local/share/man:/usr/share/man:/opt/parastation/share/man:/opt/parastation/share/man
+++++ test -z /usr/local/share/man:/usr/share/man:/opt/parastation/share/man:/opt/parastation/share/man
+++++ export MANPATH=/usr/local/share/man:/usr/share/man:/opt/parastation/share/man:/opt/parastation/share/man:/opt/parastation/share/man
+++++ MANPATH=/usr/local/share/man:/usr/share/man:/opt/parastation/share/man:/opt/parastation/share/man:/opt/parastation/share/man
+++++ unset _psbindir
+++++ unset _pssbindir
+++++ unset _psmandir
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/which2.sh ']'
++++ '[' '' ']'
++++ . /etc/profile.d/which2.sh
+++++ '[' -r /proc/2529671/exe ']'
+++++++ readlink /proc/2529671/exe
++++++ basename /usr/bin/bash
+++++ SHELLNAME=bash
+++++ case "$SHELLNAME" in
+++++ which_declare='declare -f'
+++++ which_opt=-f
+++++ export which_declare
+++++ export -f which
++++ unset i
++++ unset -f pathmunge
+++ export BUDGET_ACCOUNTS=e-ext-2025e01-128
+++ BUDGET_ACCOUNTS=e-ext-2025e01-128
++ echo 'LMOD_ROOT /e/software/default/lmod'
++ . /e/software/default/lmod/lmod/init/bash
+++ '[' -z '' ']'
+++ case "$-" in
+++ __lmod_vx=x
+++ '[' -n x ']'
+++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for this output (/e/software/default/lmod/8.7.64/init/bash)
+Shell debugging restarted
+++ unset __lmod_vx
++ module --force purge
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 0
++ module load Stages/2025
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+
+  [01;33mThis stage is deprecated. Please consider moving to a new stage (2026
+or newer)[0m
+
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 0
++ module load GCC/13.3.0
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 0
++ module load GCCcore/.13.3.0
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 0
++ ml git/2.45.1
+++ /e/software/default/lmod/8.7.64/libexec/ml_cmd git/2.45.1
++ eval 'module  load '\''git/2.45.1'\'''
+++ module load git/2.45.1
+++ '[' -z '' ']'
+++ case "$-" in
+++ __lmod_sh_dbg=x
+++ '[' -n x ']'
+++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Shell debugging restarted
+++ unset __lmod_sh_dbg
+++ return 0
++ ml Python/3.12.3
+++ /e/software/default/lmod/8.7.64/libexec/ml_cmd Python/3.12.3
++ eval 'module  load '\''Python/3.12.3'\'''
+++ module load Python/3.12.3
+++ '[' -z '' ']'
+++ case "$-" in
+++ __lmod_sh_dbg=x
+++ '[' -n x ']'
+++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Shell debugging restarted
+++ unset __lmod_sh_dbg
+++ return 0
++ '[' 0 = 1 ']'
++ export 'UCX_TLS=^cma'
++ UCX_TLS='^cma'
++ export UCX_NET_DEVICES=mlx5_0:1,mlx5_1:1,mlx5_4:1,mlx5_5:1
++ UCX_NET_DEVICES=mlx5_0:1,mlx5_1:1,mlx5_4:1,mlx5_5:1
++ export SRUN_CPUS_PER_TASK=72
++ SRUN_CPUS_PER_TASK=72
++ export CUDA_VISIBLE_DEVICES=0,1,2,3
++ CUDA_VISIBLE_DEVICES=0,1,2,3
+++ scontrol show hostnames jpbo-038-11
+++ head -n 1
++ export MASTER_ADDR=jpbo-038-11
++ MASTER_ADDR=jpbo-038-11
++ '[' jupiter = juwelsbooster ']'
++ '[' jupiter = juwels ']'
++ '[' jupiter = jurecadc ']'
++ '[' jupiter = jusuf ']'
++ echo 'MASTER_ADDR: jpbo-038-11'
++ export NCCL_DEBUG=INFO
++ NCCL_DEBUG=INFO
++ echo 'nccl_debug: INFO'
++ echo 'Starting job.'
++ date
++ echo 'Number of Nodes: 1'
++ echo 'Number of Tasks: 4'
++ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
++ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
++ '[' -z /e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator ']'
++ '[' -z train ']'
+++ dirname /e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator
++ WEATHERGEN_PRIVATE_REPO_PATH=/e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator-private
++ source /e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator-private/hpc/nsys_profiling.sh
+++ '[' 0 = 1 ']'
+++ NSYS_PREFIX=
++ case "$WEATHERGEN_STAGE" in
++ cd /e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator
++ source .venv/bin/activate
+++ '[' -n x ']'
+++ '[' .venv/bin/activate = /var/spool/parastation/jobs/2634852 ']'
+++ '[' false = true ']'
+++ deactivate nondestructive
+++ unset -f pydoc
+++ '[' -z '' ']'
+++ '[' -z '' ']'
+++ hash -r
+++ '[' -z '' ']'
+++ unset VIRTUAL_ENV
+++ unset VIRTUAL_ENV_PROMPT
+++ '[' '!' nondestructive = nondestructive ']'
+++ VIRTUAL_ENV=/e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator/.venv
+++ '[' linux-gnu = cygwin ']'
+++ '[' linux-gnu = msys ']'
+++ export VIRTUAL_ENV
+++ '[' false = true ']'
+++ _OLD_VIRTUAL_PATH=/e/software/default/stages/2025/software/Python/3.12.3-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/SQLite/3.45.3-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/Tcl/8.6.14-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/bzip2/1.0.8-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/git/2.45.1-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/Perl/5.38.2-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/gettext/0.22.5-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/libiconv/1.17-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/ncurses/6.5-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/libxml2/2.12.7-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/XZ/5.4.5-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/expat/2.6.2-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/cURL/8.7.1-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/OpenSSL/3/bin:/e/software/default/stages/2025/software/binutils/2.42-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/GCCcore/13.3.0/bin:/usr/local/bin:/usr/bin:/opt/jsc/bin:/usr/local/jsc/bin:/opt/parastation/bin:/e/software/default/bin
+++ PATH=/e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator/.venv/bin:/e/software/default/stages/2025/software/Python/3.12.3-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/SQLite/3.45.3-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/Tcl/8.6.14-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/bzip2/1.0.8-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/git/2.45.1-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/Perl/5.38.2-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/gettext/0.22.5-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/libiconv/1.17-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/ncurses/6.5-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/libxml2/2.12.7-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/XZ/5.4.5-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/expat/2.6.2-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/cURL/8.7.1-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/OpenSSL/3/bin:/e/software/default/stages/2025/software/binutils/2.42-GCCcore-13.3.0/bin:/e/software/default/stages/2025/software/GCCcore/13.3.0/bin:/usr/local/bin:/usr/bin:/opt/jsc/bin:/usr/local/jsc/bin:/opt/parastation/bin:/e/software/default/bin
+++ export PATH
+++ '[' xweathergen '!=' x ']'
+++ VIRTUAL_ENV_PROMPT=weathergen
+++ export VIRTUAL_ENV_PROMPT
+++ '[' -z '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ PS1='(weathergen) '
+++ export PS1
+++ alias pydoc
+++ true
+++ hash -r
++ '[' -z '' ']'
++ srun --export=ALL --label python -u /e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator/src/weathergen/run_train.py train --run-id jnsctk9d --base-config /e/scratch/weatherai/maranonpaliz1/WeatherGenerator/config/config_operan_georing_avhrr_forecasting_lowres.yml --config /e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator/config/exp_profile_baseline.yml:/e/scratch/weatherai/slurm/slurm_weathergen_jnsctk9d_dir/WeatherGenerator/config_command_line.yaml
++ echo 'Finished job.'
++ sstat -j 2634852.batch --format=JobID,MaxVMSize
++ date
