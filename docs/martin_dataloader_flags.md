@@ -7,9 +7,12 @@ values and learning behaviour intact. A **worker** is a CPU process preparing
 one batch while the GPU trains on another. A **token** groups data points for
 the model. **Loss** measures prediction error; lower is generally better.
 
-As of 2026-11-01 every flag below is implemented, default-off and covered by
-CPU synthetic-data tests, but **none has been benchmarked on JUPITER yet**.
-"Measured effect" stays "Not measured" until a run is logged.
+As of 2026-11-01 every flag below is implemented, default-off, CPU-tested and
+benchmarked on JUPITER (level 5, 100 steps, seed 1). Flags were measured in
+groups (reader / tokenizer); per-flag attribution inside a group is untested.
+**Combined result** (`config/dphpc_dataloader_all.yml`, run `svxaue1j`): mean
+step 4.67 → 2.88 s (−38%), zero stalls, job 12:51 → 9:20, host RAM unchanged,
+loss within noise of the same-sample-assignment reference. See the run log.
 Record successful and failed experiments in [the run log](../experiments/martin/LOG.md).
 
 ## What we measured so far
@@ -41,15 +44,15 @@ their original behaviour. Each experiment gets `config/exp_<name>.yml`.
 
 | Flag | What it changes and why it might work | Loss requirement | Measured effect |
 | --- | --- | --- | --- |
-| `target_requested_fields_only` | Build only the target fields the caller uses; currently the values path builds and discards coordinate encodings. Less calculation and temporary storage. | Almost identical | Not measured |
-| `skip_train_inverse_indices` | Skip sorting indices that training immediately discards. Keep them for evaluation. | Almost identical | Not measured |
-| `anemoi_avoid_dtype_copy` | Avoid copying an already-float32 array just to request float32 again. Verify ownership before sharing storage. | Almost identical | Not measured |
-| `skip_all_valid_filter_copy` | When every row passes a filter, reuse the array instead of copying every row. Keep filtering when any row fails. | Almost identical | Not measured |
-| `tokenize_coords_only` | During space-time grouping, copy only coordinates when the next operation uses only coordinates. | Almost identical | Not measured |
-| `even_workset_split` | Share leftover samples across workers: four workers get 9 and eight get 8, instead of one getting 12 and eleven getting 8. Reduces uneven finishing times. | Similar and decreasing; sampled dates change | Not measured |
-| `source_direct_build` | Reduce padding/gathering/split-and-stack copies while preserving token order and padding. | Almost identical | Not measured |
-| `obs_single_read` | Read the union of observation columns once. May avoid repeated decompression; an extra combined buffer could instead raise memory. Inspect storage chunks first. | Almost identical | Not measured |
-| `anemoi_select_vars` | Select needed variables before materializing data, in both ordinary and Operan readers. Disk savings depend on storage chunks and reader support. | Almost identical | Not measured |
+| `target_requested_fields_only` | Build only the target fields the caller uses; currently the values path builds and discards coordinate encodings. Less calculation and temporary storage. | Almost identical | Part of tokenizer group: prep −11%, worker RSS +6% (`em2wu8xf`) |
+| `skip_train_inverse_indices` | Skip sorting indices that training immediately discards. Keep them for evaluation. | Almost identical | Part of tokenizer group (`em2wu8xf`) |
+| `anemoi_avoid_dtype_copy` | Avoid copying an already-float32 array just to request float32 again. Verify ownership before sharing storage. | Almost identical | Part of reader group: read 7.75→4.16 s, worker RSS −3% (`kawac1qm`) |
+| `skip_all_valid_filter_copy` | When every row passes a filter, reuse the array instead of copying every row. Keep filtering when any row fails. | Almost identical | Part of reader group (`kawac1qm`) |
+| `tokenize_coords_only` | During space-time grouping, copy only coordinates when the next operation uses only coordinates. | Almost identical | Part of tokenizer group (`em2wu8xf`) |
+| `even_workset_split` | Share leftover samples across workers: four workers get 9 and eight get 8, instead of one getting 12 and eleven getting 8. Reduces uneven finishing times. | Similar and decreasing; sampled dates change | Mean step −28%, tail stall 39→10 s (`azmuvlzx`) |
+| `source_direct_build` | Reduce padding/gathering/split-and-stack copies while preserving token order and padding. | Almost identical | Part of tokenizer group: build −2.1 s/sample (`em2wu8xf`) |
+| `obs_single_read` | Read the union of observation columns once. May avoid repeated decompression; an extra combined buffer could instead raise memory. Inspect storage chunks first. | Almost identical | Part of reader group (`kawac1qm`) |
+| `anemoi_select_vars` | Select needed variables before materializing data, in both ordinary and Operan readers. Disk savings depend on storage chunks and reader support. | Almost identical | Part of reader group (`kawac1qm`) |
 
 ### Profiling settings (`data_loading`, all default-off)
 

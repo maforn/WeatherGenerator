@@ -6,6 +6,8 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Notes |
 |---|---|---|---|---|---|---|---|---|
+| [annepcty](2026-11-01_annepcty/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_gpu_snapshot_combined.yml | COMPLETED | 3 |  | 29.29 | 0.0 | GPU allocator snapshot of dphpc_dataloader_all (3 steps) |
+| [svxaue1j](2026-11-01_svxaue1j/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_dataloader_all.yml | COMPLETED | 100 | 2.88 | 29.33 | 47.3 |  |
 | [d8j13w9v](2026-11-01_d8j13w9v/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_gpu_snapshot_baseline.yml | COMPLETED | 3 |  | 29.26 | 44.5 | GPU allocator snapshot of baseline (3 steps) |
 | [ppxxfvr2](2026-11-01_ppxxfvr2/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_readproc_all_repeat.yml | COMPLETED | 100 | 3.83 | 29.31 |  |  |
 | [c9cfzjqg](2026-11-01_c9cfzjqg/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_workers16_even.yml | COMPLETED | 100 | 3.05 | 29.31 | 105.2 |  |

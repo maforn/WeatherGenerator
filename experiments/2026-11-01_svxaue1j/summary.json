@@ -1,0 +1,14 @@
+{
+ "run": "svxaue1j",
+ "job": "2638447",
+ "date": "2026-11-01",
+ "state": "COMPLETED",
+ "elapsed": "00:09:20",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_dataloader_all.yml",
+ "steps": 100,
+ "s_per_step": 2.88,
+ "gpu_peak_gib": 29.33,
+ "host_rss_gib": 47.3,
+ "error": "",
+ "note": ""
+}
