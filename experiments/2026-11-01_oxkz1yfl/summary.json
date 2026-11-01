@@ -1,0 +1,14 @@
+{
+ "run": "oxkz1yfl",
+ "job": "2638712",
+ "date": "2026-11-01",
+ "state": "COMPLETED",
+ "elapsed": "00:05:18",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_gpu_snapshot_even.yml",
+ "steps": 3,
+ "s_per_step": null,
+ "gpu_peak_gib": 29.29,
+ "host_rss_gib": 46.3,
+ "error": "",
+ "note": "GPU allocator snapshot, even_workset_split only (3 steps)"
+}
