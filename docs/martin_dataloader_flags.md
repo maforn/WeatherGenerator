@@ -1,0 +1,119 @@
+# Martin's data-loader experiments
+
+## Goal and current status
+
+Prepare training batches faster while using less CPU RAM. Keep the model's input
+values and learning behaviour intact. A **worker** is a CPU process preparing
+one batch while the GPU trains on another. A **token** groups data points for
+the model. **Loss** measures prediction error; lower is generally better.
+
+As of 2026-11-01, we have inspected the code and analysed the saved baseline.
+No optimization or profiling flag below has been implemented or benchmarked.
+Names marked **planned** are proposals, not usable configuration switches yet.
+Record successful and failed experiments in [the run log](../experiments/martin/LOG.md).
+
+## What we measured so far
+
+Source: `experiments/2026-10-20_nyue0k4y/train_metrics.json` and `summary.json`.
+This existing run used HEALPix level 5, 12 workers per rank, seed 1, and 100 steps.
+
+| Measurement | Baseline result | Plain-language meaning |
+| --- | --- | --- |
+| Median step interval | 2.905 s | A typical training step |
+| Mean interval after the first 10 steps | 4.641 s | Waiting makes the overall run slower |
+| Final three intervals | 37.82, 37.06, 38.01 s | Most workers have finished; the last worker still has work |
+| Peak allocated GPU memory | 29.31 GiB | Saved training GPU peak |
+| Training loss, first → last | 0.720 → 0.509 | Learning progressed, with fluctuations |
+| Reported host memory | 90.8 GiB, accounting scope unverified | Do not yet treat this as a measured node total |
+
+Step intervals are differences between consecutive training elapsed-time records,
+so they include waiting and other work between log entries. The periodic stalls
+support a loader bottleneck but do not directly measure individual worker time.
+The 90.8 GiB value comes from Slurm `MaxRSS`, which reports the maximum across
+tasks; confirm the site's accounting before interpreting it as whole-node usage.
+See [Slurm's definition](https://slurm.schedmd.com/sacct.html).
+
+## Flag reference
+
+Every optimization will default to `False` under `data_loading.optimizations`.
+Read new settings with `.get(...)` defaults so existing configurations retain
+their original behaviour. Each experiment gets `config/exp_<name>.yml`.
+
+| Planned flag | What it changes and why it might work | Loss requirement | Measured effect |
+| --- | --- | --- | --- |
+| `target_requested_fields_only` | Build only the target fields the caller uses; currently the values path builds and discards coordinate encodings. Less calculation and temporary storage. | Almost identical | Not measured |
+| `skip_train_inverse_indices` | Skip sorting indices that training immediately discards. Keep them for evaluation. | Almost identical | Not measured |
+| `anemoi_avoid_dtype_copy` | Avoid copying an already-float32 array just to request float32 again. Verify ownership before sharing storage. | Almost identical | Not measured |
+| `skip_all_valid_filter_copy` | When every row passes a filter, reuse the array instead of copying every row. Keep filtering when any row fails. | Almost identical | Not measured |
+| `tokenize_coords_only` | During space-time grouping, copy only coordinates when the next operation uses only coordinates. | Almost identical | Not measured |
+| `even_workset_split` | Share leftover samples across workers: four workers get 9 and eight get 8, instead of one getting 12 and eleven getting 8. Reduces uneven finishing times. | Similar and decreasing; sampled dates change | Not measured |
+| `source_direct_build` | Reduce padding/gathering/split-and-stack copies while preserving token order and padding. | Almost identical | Not measured |
+| `obs_single_read` | Read the union of observation columns once. May avoid repeated decompression; an extra combined buffer could instead raise memory. Inspect storage chunks first. | Almost identical | Not measured |
+| `anemoi_select_vars` | Select needed variables before materializing data, in both ordinary and Operan readers. Disk savings depend on storage chunks and reader support. | Almost identical | Not measured |
+
+Profiling settings are also planned: `data_loading.profile_timing` and
+`data_loading.profile_memory_timeline`, both default-off. The first records
+read/normalization, tokenization, build and total times, sizes, and worker RSS.
+The second records memory against time, approximately every 0.5 seconds.
+
+Plain settings: `num_workers` already exists (baseline 12). Training support for
+explicit `prefetch_factor` (default 2) and `persistent_workers` (default False)
+still needs implementation. Prefetch means preparing batches ahead of use;
+less prefetch may save memory but increase waiting. More workers may improve
+speed while increasing memory. Persistent workers need correct mini-epoch state
+synchronization before testing; keeping old worker state could repeat samples.
+
+## How we judge an experiment
+
+1. Measure an instrumented baseline before optimizing. Check profiling overhead.
+2. Enable one optimization at a time, keeping seed, streams and workload fixed.
+3. Check synthetic outputs for unchanged values, shapes, order and padding.
+4. Compare median step time, stalls, total duration, host memory, GPU peaks and loss.
+5. Plot host/GPU GiB against elapsed seconds, marking peaks; also plot step time
+   and loss per step. Save plots in `experiments/martin/<run_id>/`.
+6. Explain the outcome in ordinary language, including unsuccessful changes.
+   Combine only verified improvements in `config/dphpc_dataloader_all.yml`.
+
+RSS means memory resident in RAM. Summed process RSS can count shared pages more
+than once; label it honestly and, where available, supplement it with node/job
+memory and proportional memory measurements. Before/after RSS and a 0.5-second
+sampler can miss brief allocation spikes. Do not claim exact transient peaks.
+
+## HEALPix level 6 comparison
+
+HEALPix divides the globe into cells. The code uses `12 * 4**healpix_level`:
+level 5 has **12,288 cells**, and level 6 has **49,152 cells**. Each cell therefore
+covers one quarter of the area. This gives finer spatial grouping, not four times
+as many source observations or a guaranteed improvement in forecast accuracy.
+See the [HEALPix cell-count definition](https://healpix.sourceforge.io/html/idl_nside2npix.htm).
+
+Level 6 can change token padding, CPU preparation, model work and GPU memory.
+Four times as many cells does not imply exactly four times the memory or time.
+Treat this as a separate resolution experiment, retaining level 5 as a reference.
+
+Planned comparisons:
+
+| Resolution | Baseline | Optimized |
+| --- | --- | --- |
+| Level 5 | Profiling on, optimizations off | Same setup plus verified flags |
+| Level 6 | Same seed/streams/steps, `healpix_level: 6`, optimizations off | Same level-6 setup plus verified flags |
+
+First run a short level-6 feasibility check on one node; if it fits, use a
+100-step performance comparison. Use the existing baseline overlay plus the
+resolution override, and record the complete effective configuration. Profiling
+must be implemented first. No level-6 run or overlay has been created yet.
+
+Compare optimization correctness and GPU peaks **within the same resolution**.
+Do not require level 6 to match level 5's loss or 29.31 GiB GPU peak. A short run
+can establish feasibility and speed, but accuracy needs a separate, adequately
+trained comparison on the same held-out weather dates with the same metrics.
+Agree that larger study with Martin and the mentor before spending its budget.
+
+## Explanation to add after every experiment
+
+- **What changed:** code, commit, flag, default and overlay.
+- **Why we tried it:** the unnecessary work or waiting we expected to remove.
+- **What we measured:** baseline → experiment numbers, run IDs and plot links.
+- **Did the data stay correct?** Output checks, loss behaviour and GPU peak.
+- **Why it helped or failed:** evidence first; label untested explanations.
+- **Decision:** keep, revise, or reject, and what to test next.
