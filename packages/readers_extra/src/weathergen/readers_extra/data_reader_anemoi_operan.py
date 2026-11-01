@@ -145,7 +145,21 @@ class DataReaderAnemoiOperan(DataReaderAnemoi):
         # subsetting is pushed to the ctor via frequency argument; this also ensures that no sub-
         # sampling is required here
         try:
-            data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32)
+            read_channels_idx = channels_idx
+            read_geoinfo_idx = self.geoinfo_idx
+            if self.optimizations.get("anemoi_select_vars", False):
+                raw, read_channels_idx, read_geoinfo_idx = self._read_selected_variables(
+                    didx_start, didx_end, channels_idx
+                )
+                data = raw[:, :, 0].astype(
+                    np.float32,
+                    copy=not self.optimizations.get("anemoi_avoid_dtype_copy", False),
+                )
+                del raw
+            elif self.optimizations.get("anemoi_avoid_dtype_copy", False):
+                data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32, copy=False)
+            else:
+                data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32)
         except MissingDateError as e:
             _logger.debug(f"Date not present in anemoi dataset: {str(e)}. Skipping.")
             return ReaderData.empty(
@@ -156,9 +170,9 @@ class DataReaderAnemoiOperan(DataReaderAnemoi):
         data = data.transpose([0, 2, 1]).reshape((data.shape[0] * data.shape[2], -1))
 
         # extract geoinfo channels (can be time-varying, so read from dataset)
-        geoinfos = data[:, list(self.geoinfo_idx)]
+        geoinfos = data[:, list(read_geoinfo_idx)]
         # extract channels
-        data = data[:, list(channels_idx)]
+        data = data[:, list(read_channels_idx)]
 
         # construct lat/lon coords
         latlon = np.concatenate(

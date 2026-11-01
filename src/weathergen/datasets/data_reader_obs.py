@@ -271,14 +271,28 @@ class DataReaderObs(DataReaderBase):
         start_row = self.indices_start[idx]
         end_row = self.indices_end[idx]
 
-        coords = self.data.oindex[start_row:end_row, self.coords_idx]
-        geoinfos = (
-            self.data.oindex[start_row:end_row, self.geoinfo_idx]
-            if len(self.geoinfo_idx) > 0
-            else np.zeros((coords.shape[0], 0), np.float32)
-        )
+        if self.optimizations.get("obs_single_read", False):
+            # Keep output ordering and duplicates even when column sets overlap.
+            columns = np.unique(np.concatenate((self.coords_idx, self.geoinfo_idx, channels_idx)))
+            columns = columns.astype(np.int64, copy=False)
+            values = self.data.oindex[start_row:end_row, columns]
+            coords = values[:, np.searchsorted(columns, self.coords_idx)]
+            geoinfos = (
+                values[:, np.searchsorted(columns, self.geoinfo_idx)]
+                if len(self.geoinfo_idx) > 0
+                else np.zeros((coords.shape[0], 0), np.float32)
+            )
+            data = values[:, np.searchsorted(columns, channels_idx)]
+            del values
+        else:
+            coords = self.data.oindex[start_row:end_row, self.coords_idx]
+            geoinfos = (
+                self.data.oindex[start_row:end_row, self.geoinfo_idx]
+                if len(self.geoinfo_idx) > 0
+                else np.zeros((coords.shape[0], 0), np.float32)
+            )
 
-        data = self.data.oindex[start_row:end_row, channels_idx]
+            data = self.data.oindex[start_row:end_row, channels_idx]
         datetimes = self.dt[start_row:end_row][:, 0]
 
         # indices_start, indices_end above work with [t_start, t_end] and violate
@@ -287,12 +301,15 @@ class DataReaderObs(DataReaderBase):
         t_win = self.time_window_handler.window(idx)
         t_mask = np.logical_and(datetimes >= t_win.start, datetimes < t_win.end)
 
-        rdata = ReaderData(
-            coords=coords[t_mask],
-            geoinfos=geoinfos[t_mask],
-            data=data[t_mask],
-            datetimes=datetimes[t_mask],
-        )
+        if self.optimizations.get("skip_all_valid_filter_copy", False) and t_mask.all():
+            rdata = ReaderData(coords, geoinfos, data, datetimes)
+        else:
+            rdata = ReaderData(
+                coords=coords[t_mask],
+                geoinfos=geoinfos[t_mask],
+                data=data[t_mask],
+                datetimes=datetimes[t_mask],
+            )
 
         dtr = self.time_window_handler.window(idx)
         check_reader_data(rdata, dtr)
