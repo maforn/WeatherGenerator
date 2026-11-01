@@ -35,7 +35,7 @@ from weathergen.datasets.utils import (
     get_tokens_lens,
 )
 from weathergen.readers_extra.registry import get_extra_reader
-from weathergen.train.utils import Stage, get_batch_size_from_config
+from weathergen.train.utils import TRAIN, Stage, get_batch_size_from_config
 from weathergen.utils.dataloader_profile import SampleProfiler, profile_output_dir
 from weathergen.utils.distributed import SpatialParallelContext, get_rank, is_root
 
@@ -82,7 +82,10 @@ def collect_datasources(
         # get source (of potentially multi-step length)
         with profiler.measure(stream_name, "read") if profiler else nullcontext():
             rdata = get_reader_data(idx).shuffle(rng, shuffle, num_subset)
-            rdata = rdata.remove_nan_coords_and_geoinfos()
+            if ds.optimizations.get("skip_all_valid_filter_copy", False):
+                rdata = rdata.remove_nan_coords_and_geoinfos(skip_all_valid_filter_copy=True)
+            else:
+                rdata = rdata.remove_nan_coords_and_geoinfos()
         with profiler.measure(stream_name, "normalize") if profiler else nullcontext():
             rdata.data = normalize_channels(rdata.data)
             rdata.geoinfos = ds.normalize_geoinfos(rdata.geoinfos)
@@ -105,6 +108,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
+        self.optimizations = cf.data_loading.get("optimizations", {})
         self.profile_timing = cf.data_loading.get("profile_timing", False)
         self.profile_directory = profile_output_dir(cf) if self.profile_timing else None
         self.profile_rank = get_rank()
@@ -126,6 +130,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.masker,
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
+            optimizations=self.optimizations,
         )
         if self.spatial_parallel.size > 1:
             logger.info(
@@ -294,6 +299,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                         + f" from stream config {stream_name}.",
                     )
                 ds = dataset(filename=filename, **kwargs)
+                ds.optimizations = self.optimizations
 
                 streams_datasets[stream_name].readers += [ds]
 
@@ -535,6 +541,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     token_data,
                     (time_win_target.start, time_win_target.end),
                     target_mask,
+                    need_inverse_indices=self._stage != TRAIN,
                 )
 
                 stream_data.add_target_values(
