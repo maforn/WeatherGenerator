@@ -7,9 +7,9 @@ values and learning behaviour intact. A **worker** is a CPU process preparing
 one batch while the GPU trains on another. A **token** groups data points for
 the model. **Loss** measures prediction error; lower is generally better.
 
-As of 2026-11-01, we have inspected the code and analysed the saved baseline.
-No optimization or profiling flag below has been implemented or benchmarked.
-Names marked **planned** are proposals, not usable configuration switches yet.
+As of 2026-11-01 every flag below is implemented, default-off and covered by
+CPU synthetic-data tests, but **none has been benchmarked on JUPITER yet**.
+"Measured effect" stays "Not measured" until a run is logged.
 Record successful and failed experiments in [the run log](../experiments/martin/LOG.md).
 
 ## What we measured so far
@@ -35,11 +35,11 @@ See [Slurm's definition](https://slurm.schedmd.com/sacct.html).
 
 ## Flag reference
 
-Every optimization will default to `False` under `data_loading.optimizations`.
+Every optimization defaults to `False` under `data_loading.optimizations`.
 Read new settings with `.get(...)` defaults so existing configurations retain
 their original behaviour. Each experiment gets `config/exp_<name>.yml`.
 
-| Planned flag | What it changes and why it might work | Loss requirement | Measured effect |
+| Flag | What it changes and why it might work | Loss requirement | Measured effect |
 | --- | --- | --- | --- |
 | `target_requested_fields_only` | Build only the target fields the caller uses; currently the values path builds and discards coordinate encodings. Less calculation and temporary storage. | Almost identical | Not measured |
 | `skip_train_inverse_indices` | Skip sorting indices that training immediately discards. Keep them for evaluation. | Almost identical | Not measured |
@@ -51,17 +51,27 @@ their original behaviour. Each experiment gets `config/exp_<name>.yml`.
 | `obs_single_read` | Read the union of observation columns once. May avoid repeated decompression; an extra combined buffer could instead raise memory. Inspect storage chunks first. | Almost identical | Not measured |
 | `anemoi_select_vars` | Select needed variables before materializing data, in both ordinary and Operan readers. Disk savings depend on storage chunks and reader support. | Almost identical | Not measured |
 
-Profiling settings are also planned: `data_loading.profile_timing` and
-`data_loading.profile_memory_timeline`, both default-off. The first records
-read/normalization, tokenization, build and total times, sizes, and worker RSS.
-The second records memory against time, approximately every 0.5 seconds.
+### Profiling settings (`data_loading`, all default-off)
 
-Plain settings: `num_workers` already exists (baseline 12). Training support for
-explicit `prefetch_factor` (default 2) and `persistent_workers` (default False)
-still needs implementation. Prefetch means preparing batches ahead of use;
-less prefetch may save memory but increase waiting. More workers may improve
-speed while increasing memory. Persistent workers need correct mini-epoch state
-synchronization before testing; keeping old worker state could repeat samples.
+| Setting | Output in `<run_dir>/dataloader_profile/` |
+| --- | --- |
+| `profile_timing: true` | `samples_rank*_worker*.jsonl`: per sample read, normalize, tokenize, build and total seconds, source MB/tokens, worker RSS before/after. `loader_wait_rank*.jsonl`: how long the training loop waited for each batch. |
+| `profile_memory_timeline: true` | `memory_rank*.csv`: rank + loader-worker RSS and GPU allocated/reserved, sampled every `profile_memory_interval_seconds` (default 0.5). |
+| `profile_output_dir` | Optional override of the output directory. |
+
+Summarize or compare runs with
+`python scripts/analyze_dataloader_profile.py --run <dir> --baseline <dir> --output <plots>`.
+
+### Plain loader settings
+
+`num_workers` already existed (baseline 12). `prefetch_factor` and
+`persistent_workers` are now forwarded to the PyTorch `DataLoader` only when
+set, so old configurations keep PyTorch's defaults (2 and False). Prefetch means
+preparing batches ahead of use; less prefetch may save memory but increase
+waiting. More workers may improve speed while increasing memory. With
+`persistent_workers: true`, the parent's mini-epoch is shared with workers
+through a shared-memory counter so reused workers do not repeat the previous
+epoch's samples; verify this on a short multi-epoch run before relying on it.
 
 ## How we judge an experiment
 

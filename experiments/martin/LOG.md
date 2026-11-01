@@ -21,6 +21,18 @@ in every row's notes; compare optimized runs against the same-resolution baselin
 - Created the flag/explanation guide and planned separate level-5/level-6 comparisons.
 - No training code changed, jobs submitted, or node-hours consumed by this review.
 
+## Implementation completed on 2026-11-01 (no runs yet)
+
+- Reader and tokenizer flags: commits `6522a925`, `9a0da224`; wired into the
+  sampler in `4ad990d4`.
+- Profiling (timing, loader wait, memory timeline, analysis script): `ff838054`.
+- `prefetch_factor` / `persistent_workers` support: `07ecf231`.
+- `even_workset_split`: `77a3496d`.
+- Fixed an undefined `TRAIN` name in the sampler that would have crashed target
+  building; dropped an undocumented `free_raw_after_tokenize` flag that only
+  deleted locals about to be rebound.
+- 39 CPU tests pass locally. No jobs submitted, no node-hours used.
+
 ## Next steps
 
 Implement default-off profiling, measure a baseline, then test isolated flags.
