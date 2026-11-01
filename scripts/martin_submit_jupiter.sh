@@ -36,8 +36,10 @@ fi
 echo "budget ok"
 
 NJOBS=$($SSH "squeue --me -h | wc -l")
-if (( NJOBS + NEW_JOBS > 3 )); then
-  echo "ABORT: $NJOBS jobs queued/running + $NEW_JOBS new would exceed 3"; exit 5
+# AGENTS.md limit is 3 queued/running jobs; raise MAX_JOBS only with Martin's explicit approval.
+MAX_JOBS="${MAX_JOBS:-3}"
+if (( NJOBS + NEW_JOBS > MAX_JOBS )); then
+  echo "ABORT: $NJOBS jobs queued/running + $NEW_JOBS new would exceed $MAX_JOBS"; exit 5
 fi
 echo "queue ok ($NJOBS jobs)"
 
