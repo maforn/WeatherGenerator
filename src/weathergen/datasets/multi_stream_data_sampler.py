@@ -112,6 +112,10 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self.profile_timing = cf.data_loading.get("profile_timing", False)
         self.profile_directory = profile_output_dir(cf) if self.profile_timing else None
         self.profile_rank = get_rank()
+        # A shared scalar lets persistent worker copies see the parent's current epoch.
+        self._shared_mini_epoch = None
+        if cf.data_loading.get("persistent_workers", False) and cf.data_loading.num_workers > 0:
+            self._shared_mini_epoch = torch.zeros((), dtype=torch.int64).share_memory_()
         self.mask_value = 0.0
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
@@ -405,6 +409,8 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
         Advance mini_epoch (this is applied to the template for the worker processes)
         """
         self.mini_epoch += 1
+        if self._shared_mini_epoch is not None:
+            self._shared_mini_epoch.fill_(self.mini_epoch)
 
     def get_sources_size(self):
         return [
@@ -869,6 +875,8 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
         Return :
             batch of data
         """
+        if self._shared_mini_epoch is not None:
+            self.mini_epoch = int(self._shared_mini_epoch.item())
         iter_start, iter_end = self.worker_workset()
         logger.info(f"iter_start={iter_start}, iter_end={iter_end}, len={self.len}")
 
