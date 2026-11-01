@@ -20,9 +20,10 @@ fi
 trap '$SSH "rm -f \"$LOCK/owner\"; rmdir \"$LOCK\"" && echo "lock released"' EXIT
 echo "lock acquired"
 
-# Same exclusions as .minion.json, plus local caches. No --delete: never remove remote files.
+# Same exclusions as .minion.json, plus local caches and experiments/ (results are pulled, not
+# pushed; launch-slurm.py would copy them into every job dir). No --delete: never remove remote files.
 rsync -az --checksum --exclude .git --exclude .venv --exclude profiling --exclude .pytest_cache \
-  --exclude .ruff_cache --exclude __pycache__ --exclude .DS_Store \
+  --exclude .ruff_cache --exclude __pycache__ --exclude .DS_Store --exclude experiments \
   "$LOCAL/WeatherGenerator/" "jupiter:$R/WeatherGenerator/"
 echo "synced WeatherGenerator"
 

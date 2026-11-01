@@ -6,6 +6,8 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Notes |
 |---|---|---|---|---|---|---|---|---|
+| [dy8638jm](2026-11-01_dy8638jm/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_readproc_all.yml | COMPLETED | 100 | 3.78 | 32.11 | 72.9 |  |
+| [azmuvlzx](2026-11-01_azmuvlzx/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_even_workset_split.yml | COMPLETED | 100 | 3.35 | 29.33 | 89.6 |  |
 | [jnsctk9d](2026-11-01_jnsctk9d/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_profile_baseline.yml | COMPLETED | 100 | 4.67 | 29.31 | 83.9 | profiled baseline (profiling on, optimizations off); compare nyue0k4y |
 | [nyue0k4y](2026-10-20_nyue0k4y/) | 2026-10-20 | config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml | COMPLETED | 100 | 4.64 | 29.31 | 90.8 | baseline; same memory peaks and losses as team run nbl12ut3 |
 | [i6sr8maq](2026-10-20_i6sr8maq/) | 2026-10-20 | default_config.yml + config_operan_georing_avhrr_forecasting_lowres.yml | FAILED | 1 |  |  | 70.5 | operan config merged on default_config.yml (memory_pinning on): GPU allocation failed in flash-attn backward, then a DataLoader worker was killed; RuntimeError: DataLoader worker (pid 161772) is killed by signal: Killed. |

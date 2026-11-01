@@ -1,0 +1,14 @@
+{
+ "run": "dy8638jm",
+ "job": "2635004",
+ "date": "2026-11-01",
+ "state": "COMPLETED",
+ "elapsed": "00:10:54",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_readproc_all.yml",
+ "steps": 100,
+ "s_per_step": 3.78,
+ "gpu_peak_gib": 32.11,
+ "host_rss_gib": 72.9,
+ "error": "",
+ "note": ""
+}
