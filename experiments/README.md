@@ -6,6 +6,8 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Notes |
 |---|---|---|---|---|---|---|---|---|
+| [kawac1qm](2026-11-01_kawac1qm/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_readers_only.yml | COMPLETED | 100 | 4.07 | 29.31 | 40.1 |  |
+| [em2wu8xf](2026-11-01_em2wu8xf/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_tokenizer_only.yml | COMPLETED | 100 | 4.06 | 29.31 | 78.6 |  |
 | [t5dc8t3i](2026-11-01_t5dc8t3i/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_profile_baseline_repeat.yml | COMPLETED | 100 | 4.54 | 29.31 | 90.5 |  |
 | [dy8638jm](2026-11-01_dy8638jm/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_readproc_all.yml | COMPLETED | 100 | 3.78 | 32.11 | 72.9 |  |
 | [azmuvlzx](2026-11-01_azmuvlzx/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_even_workset_split.yml | COMPLETED | 100 | 3.35 | 29.33 | 89.6 |  |
