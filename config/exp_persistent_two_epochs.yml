@@ -1,0 +1,33 @@
+# Martin data-loader experiment: persistent_workers over 2 mini-epochs.
+# Pass: per-epoch sample ids identical to exp_two_epochs_control (no repeated epoch), loss similar.
+# Use with --base-config config/config_operan_georing_avhrr_forecasting_lowres.yml.
+# Flag documentation: docs/martin_dataloader_flags.md
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+  # writes <run_dir>/dataloader_profile/: per-sample stage times, loader waits, memory CSV
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  persistent_workers: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 2
+  # 2 x 50 steps (1 sample per GPU x 4 GPUs) so the total stays 100 steps
+  samples_per_mini_epoch: 200
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
