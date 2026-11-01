@@ -73,6 +73,31 @@ waiting. More workers may improve speed while increasing memory. With
 through a shared-memory counter so reused workers do not repeat the previous
 epoch's samples; verify this on a short multi-epoch run before relying on it.
 
+## Prepared overlays and when to run them
+
+All are `config/exp_*.yml` on the same base, seed and level-5 data unless noted. The first
+three are queued; the rest are prepared but not submitted.
+
+| Overlay | Purpose | Run when |
+| --- | --- | --- |
+| `exp_profile_baseline` | Profiled baseline (`jnsctk9d`) | queued |
+| `exp_even_workset_split` | Even worker split (`azmuvlzx`) | queued |
+| `exp_readproc_all` | All 8 read/process flags (`dy8638jm`) | queued |
+| `exp_profile_baseline_repeat` | Run-to-run noise | first free slot |
+| `exp_readers_only` / `exp_tokenizer_only` | Bisect `exp_readproc_all` | if it was faster or changed loss |
+| `exp_workers16` / `exp_prefetch4` | Less waiting, more RAM | if the training loop waits for batches |
+| `exp_prefetch1` | Less RAM, maybe more waiting | if host RAM is the constraint |
+| `exp_two_epochs_control` + `exp_persistent_two_epochs` | Persistent workers must reproduce the per-epoch sample ids | before using `persistent_workers` |
+| `exp_gpu_snapshot_baseline` | CUDA allocator snapshot (pytorch.org/memory_viz), 3 steps | paired with a snapshot of the combined config |
+| `exp_level6_feasibility` | HEALPix level 6, 20 steps | after the combined level-5 config |
+
+## Plots
+
+- `scripts/plot_dataloader_memory_stack.py --run <dir> [--baseline <dir>] --output <dir>` draws two figures:
+  - Host memory stacked per process (training ranks in blue, loader workers in orange), with CUDA memory and per-batch waits on the same time axis.
+  - A per-sample stage-time breakdown (read, normalize, tokenize, build), compared against the baseline.
+- `scripts/analyze_dataloader_profile.py` prints summary numbers and draws the line plots: step time, loss, and peak comparisons.
+
 ## How we judge an experiment
 
 1. Measure an instrumented baseline before optimizing. Check profiling overhead.
