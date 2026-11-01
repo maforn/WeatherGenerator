@@ -1,0 +1,14 @@
+{
+ "run": "d8j13w9v",
+ "job": "2637787",
+ "date": "2026-11-01",
+ "state": "COMPLETED",
+ "elapsed": "00:05:12",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_gpu_snapshot_baseline.yml",
+ "steps": 3,
+ "s_per_step": null,
+ "gpu_peak_gib": 29.26,
+ "host_rss_gib": 44.5,
+ "error": "",
+ "note": "GPU allocator snapshot of baseline (3 steps)"
+}
