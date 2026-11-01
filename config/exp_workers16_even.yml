@@ -1,0 +1,36 @@
+# Martin data-loader experiment: 16 loader workers per rank + even_workset_split (profiling on).
+# Compare with azmuvlzx (12 workers + even split). 12 workers x ~40 s/sample = 3.33 s per sample,
+# slower than the ~2.85 s GPU step; 16 workers give ~2.5 s. Costs ~6 GiB host RSS per extra worker.
+# Use with --base-config config/config_operan_georing_avhrr_forecasting_lowres.yml.
+# Flag documentation: docs/martin_dataloader_flags.md
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+  num_workers: 16
+  # writes <run_dir>/dataloader_profile/: per-sample stage times, loader waits, memory CSV
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  optimizations:
+    even_workset_split: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 100 steps
+  samples_per_mini_epoch: 400
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
