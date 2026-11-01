@@ -6,6 +6,7 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Notes |
 |---|---|---|---|---|---|---|---|---|
+| [i24jcqoe](2026-11-01_i24jcqoe/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_prefetch1.yml | COMPLETED | 100 | 5.01 | 29.31 | 81.0 |  |
 | [kawac1qm](2026-11-01_kawac1qm/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_readers_only.yml | COMPLETED | 100 | 4.07 | 29.31 | 40.1 |  |
 | [em2wu8xf](2026-11-01_em2wu8xf/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_tokenizer_only.yml | COMPLETED | 100 | 4.06 | 29.31 | 78.6 |  |
 | [t5dc8t3i](2026-11-01_t5dc8t3i/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_profile_baseline_repeat.yml | COMPLETED | 100 | 4.54 | 29.31 | 90.5 |  |
