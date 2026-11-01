@@ -6,12 +6,13 @@ Plain-language explanations and flag definitions:
 ## Runs
 
 The row below references an existing team baseline, not a new submission.
-No optimization or HEALPix level-6 experiment has run yet. Record the resolution
+No optimization or HEALPix level-6 experiment has run yet; the profiled baseline is below. Record the resolution
 in every row's notes; compare optimized runs against the same-resolution baseline.
 
 | date | branch / commit | flags on | overlay | run_id | job_id | state | median s/step | stalls | peak GPU GiB | peak host RSS GiB | loss start→end | plots | verdict / notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-10-20 | Existing team baseline; commit unverified | No new loader flags | `dphpc_memory_baseline_100steps.yml` | `nyue0k4y` | `2418878` | COMPLETED | 2.905 | 11 intervals >5 s; includes 3 tail intervals of 37–38 s | 29.31 | 90.8 reported by Slurm; node total unverified | 0.720→0.509 | Not generated | Level 5. Mean after first 10 steps: 4.641 s. Source: `../2026-10-20_nyue0k4y/`. |
+| 2026-11-01 | `martin/backup-dump` `919dd6bc` | None (profiling only: `profile_timing`, `profile_memory_timeline`) | `exp_profile_baseline.yml` | `jnsctk9d` | `2634852` | PENDING | | | | | | | Level 5. Profiled baseline, same seed/steps as `nyue0k4y`; also measures profiling overhead. Submitted under lock `/e/scratch/weatherai/maranonpaliz1/.submit.lock.d`. |
 
 ## Work completed on 2026-11-01
 
