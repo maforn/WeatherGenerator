@@ -10,11 +10,13 @@ Peak GPU memory per training step, per GPU, from CUDA allocator snapshots (3-ste
 |---|---|---|
 | `wg_memory_model.py` | Analytical model of peak A (decoder backward) and peak B (embedding recompute) from level, width, forecast steps, spatial parallel size and the memory options. Prints its validation against the runs below and projections. | stdlib |
 | `snapdiff.py` | Live memory at the peak of two snapshots, grouped by WeatherGenerator call site, and the difference. `python -I snapdiff.py a.pickle b.pickle [--top N] [--depth K]` | stdlib |
-| `memtimeline.py` | Stacked active-memory timeline per model part (like pytorch.org/memory_viz), several runs on one scale. `python -I memtimeline.py out.png title "label=a.pickle" ...` | numpy, matplotlib |
+| `memtimeline.py` | Stacked active-memory timeline per model part (like pytorch.org/memory_viz), several runs on one scale. `python -I memtimeline.py out.png title "label=a.pickle[@engines.py]" ...` | numpy, matplotlib |
 
-`memtimeline.py` maps frames to model parts by line ranges in `model/engines.py` of this
-branch; on other code the ranges need checking. Backward allocations have no Python frame and
-are assigned to the last part seen, which is a heuristic.
+`memtimeline.py` maps frames in `model/engines.py` to model parts by the class they fall in.
+The class line ranges are those of this branch; for a run on other code, pass that code's
+`engines.py` after `@` (on Git Bash set `MSYS_NO_PATHCONV=1`), otherwise allocations land in the
+wrong part. Backward allocations have no Python frame and are assigned to the last part seen,
+which is a heuristic.
 
 ## Runs
 

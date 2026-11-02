@@ -5,7 +5,8 @@
 Like pytorch.org/memory_viz, but several runs side by side on one GiB scale and with
 allocations grouped by the WeatherGenerator component that made them.
 
-usage: python -I memtimeline.py out.png title "label=path.pickle" ["label=path.pickle" ...]
+usage: python -I memtimeline.py out.png title "label=path.pickle[@engines.py]" [...]
+Give the engines.py of the code that ran when it is not this branch (line numbers differ).
 Needs numpy and matplotlib. Panels share the y-axis; x is the allocator event index (as in
 memory_viz), so data-loading waits do not stretch the plot. Backward-pass allocations carry
 no Python frame of ours; they are assigned to the component of the most recent allocation
@@ -37,7 +38,38 @@ CATS = [
 STATIC, BATCH, EMBED, ENC, FE, DEC, OTHER = range(len(CATS))
 
 
-def category(frames):
+# engines.py classes -> component; classes not listed are decoder-side
+ENGINE_CLASSES = {
+    "EmbeddingEngine": EMBED,
+    "LocalAssimilationEngine": ENC,
+    "Local2GlobalAssimilationEngine": ENC,
+    "Local2GlobalSumEngine": ENC,
+    "QueryAggregationEngine": ENC,
+    "GlobalAssimilationEngine": ENC,
+    "IdentityEngine": ENC,
+    "ForecastingEngine": FE,
+}
+# class start lines in engines.py on dphpc/dev; other code versions shift them, so pass the
+# engines.py that ran ("label=run.pickle@path/to/engines.py")
+DEV_ENGINES = [
+    (1, "EmbeddingEngine"),
+    (206, "LocalAssimilationEngine"),
+    (546, "ForecastingEngine"),
+    (642, "TargetPredictionEngineClassic"),
+]
+
+
+def engine_classes(path):
+    """(start line, class name) for every top-level class in an engines.py."""
+    with open(path, encoding="utf-8") as fh:
+        return [
+            (i, line[6:].split("(")[0].split(":")[0].strip())
+            for i, line in enumerate(fh, 1)
+            if line.startswith("class ")
+        ]
+
+
+def category(frames, engines=DEV_ENGINES):
     for f in frames:  # innermost first; skip generic layers until a component frame
         fn = f["filename"]
         if "/src/weathergen/" not in fn:
@@ -47,14 +79,12 @@ def category(frames):
             return BATCH
         if rel == "model/embeddings.py":
             return EMBED
-        if rel == "model/engines.py":  # class line ranges in engines.py on dphpc/dev
-            if line < 206:
-                return EMBED
-            if line < 546:
-                return ENC
-            if line < 642:
-                return FE
-            return DEC
+        if rel == "model/engines.py":
+            cls = None
+            for start, c in engines:
+                if start <= line:
+                    cls = c
+            return ENGINE_CLASSES.get(cls, DEC)
         if rel == "model/encoder.py":
             return ENC
         if rel == "model/spatial_parallel.py" or name == "predict_decoders":
@@ -67,7 +97,7 @@ def category(frames):
     return OTHER
 
 
-def timeline(path, bins=1600):
+def timeline(path, bins=1600, engines=DEV_ENGINES):
     with open(path, "rb") as fh:
         s = pickle.load(fh)
     trace = s["device_traces"][0]
@@ -96,7 +126,7 @@ def timeline(path, bins=1600):
     for e in trace:
         a = e["action"]
         if a == "alloc":
-            c = category(e["frames"])
+            c = category(e["frames"], engines)
             if c in (EMBED, ENC, FE, DEC):
                 last = c
             elif c == OTHER:
@@ -124,7 +154,12 @@ def timeline(path, bins=1600):
 
 def main():
     out, title, specs = sys.argv[1], sys.argv[2], sys.argv[3:]
-    runs = [(sp.rsplit("=", 1)[0], timeline(sp.rsplit("=", 1)[1])) for sp in specs]
+    runs = []
+    for sp in specs:
+        label, path = sp.rsplit("=", 1)
+        path, _, src = path.partition("@")
+        engines = engine_classes(src) if src else DEV_ENGINES
+        runs.append((label, timeline(path, engines=engines)))
     ymax = max(max(r[2] for _, r in runs) * 1.12, HBM_GIB * 1.06)
     fig, axes = plt.subplots(1, len(runs), figsize=(4.6 * len(runs), 4.4), sharey=True)
     axes = np.atleast_1d(axes)
