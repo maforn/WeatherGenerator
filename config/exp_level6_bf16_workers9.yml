@@ -1,0 +1,47 @@
+# Martin data-loader experiment: level 6, combined flags + source_tokens_bf16, 9 workers, prefetch 1.
+# bf16 source tokens halve a sample to ~4.7 GiB (pi3kavlj: 9.2 GiB, 98% source tokens), so 9 workers
+# ~= 4 ranks x 9 x 4.7 = 169 GiB of the 239 GiB /dev/shm (71%). Speed check vs k6i6mdyp (22.1 s/step).
+# Different worker count -> different sample assignment; loss compared for trend only. 40 steps.
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+  # writes <run_dir>/dataloader_profile/: per-sample stage times, loader waits, memory CSV
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  num_workers: 9
+  prefetch_factor: 1
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True
+    source_tokens_bf16: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 40 steps
+  samples_per_mini_epoch: 160
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
+
+healpix_level: 6

@@ -1,0 +1,48 @@
+# Martin data-loader experiment: k6i6mdyp (level 6, combined flags, 5 workers, prefetch 1, 40 steps)
+# + optimizations.source_tokens_bf16. Loss check: everything else identical, so loss must match k6i6mdyp
+# within run-to-run noise (the model already casts source tokens to bf16 in EmbeddingEngine.forward).
+# Expect /dev/shm peak ~95 GiB instead of 185. Use with --base-config
+# config/config_operan_georing_avhrr_forecasting_lowres.yml.
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+  # writes <run_dir>/dataloader_profile/: per-sample stage times, loader waits, memory CSV
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  num_workers: 5
+  prefetch_factor: 1
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True
+    source_tokens_bf16: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 40 steps
+  samples_per_mini_epoch: 160
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
+
+healpix_level: 6
