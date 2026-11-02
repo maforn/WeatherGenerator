@@ -1,0 +1,14 @@
+{
+ "run": "deh3gakq",
+ "job": "2645437",
+ "date": "2026-11-02",
+ "state": "COMPLETED",
+ "elapsed": "00:25:29",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_workers2.yml",
+ "steps": 20,
+ "s_per_step": 59.14,
+ "gpu_peak_gib": 82.23,
+ "host_rss_gib": 41.6,
+ "error": "",
+ "note": "level 6 retry"
+}
