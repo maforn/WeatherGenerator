@@ -1,0 +1,48 @@
+# Martin data-loader experiment: HEALPix level 6 with the combined config (dphpc_dataloader_all flags),
+# 8 workers per rank, prefetch_factor 1. Level-6 runs with flags off: 4 workers (a5z733w1) fit but were
+# loader-bound (27.5 s/step, ~115 s prep/sample/worker, GPU-side ~13-18 s/step); 12 workers (w0a1jb0w)
+# exhausted /dev/shm. 8 workers should roughly match the GPU step. 40 steps (5 samples/worker) to reach
+# steady state. Compare only to level-6 runs. Use with --base-config
+# config/config_operan_georing_avhrr_forecasting_lowres.yml.
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+  # writes <run_dir>/dataloader_profile/: per-sample stage times, loader waits, memory CSV
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  num_workers: 8
+  prefetch_factor: 1
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 40 steps
+  samples_per_mini_epoch: 160
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
+
+healpix_level: 6
