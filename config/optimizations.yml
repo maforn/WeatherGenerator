@@ -14,7 +14,8 @@ fe_blocks_per_checkpoint: 2
 # instead of copying them
 decoder_gather_after_kv_projection: True
 
-# keep the source tokens on the GPU in the mixed-precision dtype, as the embedding uses them
+# convert the source tokens to the mixed-precision dtype in the data loader workers, as the
+# embedding uses them: half the size in shared memory, the host-to-device copy and on the GPU
 source_tokens_in_mixed_precision: True
 
 # keep the source tokens in pinned CPU memory; the embedding copies them to the GPU when it runs

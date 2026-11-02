@@ -59,6 +59,7 @@ class StreamData:
         output_steps: int,
         healpix_cells: int,
         source_num_healpix_cells: int | None = None,
+        source_dtype: torch.dtype | None = None,
     ) -> None:
         """
         StreamData object
@@ -77,6 +78,9 @@ class StreamData:
         source_num_healpix_cells : int | None
             Number of rank-local healpix cells used for encoder sources. Defaults
             to ``healpix_cells`` for non-spatial-parallel callers.
+        source_dtype : torch.dtype | None
+            If given, the source tokens are converted to it when they are added, i.e. in the
+            data loader worker. None keeps them as produced by the tokenizer.
 
         Returns
         -------
@@ -84,6 +88,7 @@ class StreamData:
         """
 
         self.mask_value = 0.0
+        self.source_dtype = source_dtype
 
         self.input_steps = input_steps
         self.output_steps = output_steps
@@ -216,6 +221,11 @@ class StreamData:
 
         idx = torch.isnan(self.source_tokens_cells[step])
         self.source_tokens_cells[step][idx] = self.mask_value
+
+        # after the NaN masking, so the values equal those of a cast on the GPU; the tokens are
+        # then smaller in shared memory, in host memory and in the host-to-device copy
+        if self.source_dtype is not None:
+            self.source_tokens_cells[step] = self.source_tokens_cells[step].to(self.source_dtype)
 
         self.source_is_spoof[step] = is_spoof
 
