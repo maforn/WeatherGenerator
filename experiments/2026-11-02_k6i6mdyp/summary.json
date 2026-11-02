@@ -1,0 +1,14 @@
+{
+ "run": "k6i6mdyp",
+ "job": "2648219",
+ "date": "2026-11-02",
+ "state": "COMPLETED",
+ "elapsed": "00:21:18",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_all_workers5.yml",
+ "steps": 40,
+ "s_per_step": 22.14,
+ "gpu_peak_gib": 82.19,
+ "host_rss_gib": 87.8,
+ "error": "",
+ "note": "level 6 all flags 5 workers"
+}
