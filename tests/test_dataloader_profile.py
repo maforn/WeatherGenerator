@@ -209,5 +209,31 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(summary["mean_per_stream"]["ERA5"]["source_tokens"], 42)
 
 
+class PayloadTests(unittest.TestCase):
+    def test_counts_shared_storage_once_and_groups_by_path(self):
+        import numpy as np
+        import torch
+
+        class Sample:
+            def __init__(self):
+                self.source = {"era5": torch.zeros(256, dtype=torch.float32)}
+                base = torch.zeros(100, dtype=torch.float64)
+                self.target = [base, base[10:20]]  # view of the same storage
+                self.coords = np.zeros(50, dtype=np.float32)
+                self.name = "x"
+
+        sample = Sample()
+        sample.self_ref = sample  # cycles must not loop
+        result = profile.payload_bytes(sample)
+        self.assertEqual(result["torch_bytes"], 256 * 4 + 100 * 8)
+        self.assertEqual(result["numpy_bytes"], 200)
+        self.assertEqual(result["tensors"], 2)
+        self.assertEqual(result["groups"]["source.era5"], 1024)
+        self.assertEqual(result["groups"]["target"], 800)
+
+    def test_shm_usage_missing_path(self):
+        self.assertEqual(profile.shm_usage("/nonexistent/shm"), (None, None))
+
+
 if __name__ == "__main__":
     unittest.main()

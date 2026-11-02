@@ -4,6 +4,7 @@ import csv
 import json
 import logging
 import os
+import shutil
 import socket
 import sys
 import threading
@@ -22,6 +23,74 @@ def profile_output_dir(cf):
     from weathergen.common.config import get_path_run
 
     return get_path_run(cf) / "dataloader_profile"
+
+
+def payload_bytes(obj, max_groups=12):
+    """Bytes of torch tensors and numpy arrays reachable from ``obj``, grouped by attribute path.
+
+    Torch tensors are what a DataLoader worker moves into shared memory (/dev/shm) when it
+    hands a sample to the main process; numpy arrays are pickled through the pipe instead.
+    Views of one storage are counted once. Groups use the first two path components.
+    """
+    seen_storage, seen_obj = set(), set()
+    totals = {"torch_bytes": 0, "numpy_bytes": 0, "tensors": 0}
+    groups = {}
+    stack = [(obj, ())]
+    while stack:
+        item, path = stack.pop()
+        if item is None or isinstance(item, (str, bytes, int, float, bool)):
+            continue
+        kind, nbytes = None, 0
+        module = type(item).__module__
+        if module.startswith("torch") and hasattr(item, "untyped_storage"):
+            storage = item.untyped_storage()
+            key = (storage.data_ptr(), storage.nbytes())
+            if key not in seen_storage:
+                seen_storage.add(key)
+                kind, nbytes = "torch_bytes", storage.nbytes()
+            else:
+                continue
+        elif module == "numpy" and hasattr(item, "nbytes") and hasattr(item, "dtype"):
+            if id(item) in seen_obj:
+                continue
+            seen_obj.add(id(item))
+            if item.dtype == object:
+                stack.extend((x, path) for x in item.ravel())
+                continue
+            kind, nbytes = "numpy_bytes", int(item.nbytes)
+        if kind:
+            totals[kind] += nbytes
+            totals["tensors"] += kind == "torch_bytes"
+            group = ".".join(path[:2]) or "<root>"
+            groups[group] = groups.get(group, 0) + nbytes
+            continue
+        if id(item) in seen_obj:
+            continue
+        seen_obj.add(id(item))
+        if isinstance(item, dict):
+            children = item.items()
+        elif isinstance(item, (list, tuple, set, frozenset)):
+            children = ((None, x) for x in item)
+        elif hasattr(item, "__dict__") or hasattr(item, "__slots__"):
+            names = list(getattr(item, "__dict__", {}))
+            names += [n for n in getattr(type(item), "__slots__", ()) if hasattr(item, n)]
+            children = ((n, getattr(item, n, None)) for n in names)
+        else:
+            continue
+        for name, child in children:
+            stack.append((child, path if name is None else path + (str(name),)))
+    top = sorted(groups.items(), key=lambda kv: -kv[1])[:max_groups]
+    totals["groups"] = dict(top)
+    return totals
+
+
+def shm_usage(path="/dev/shm"):
+    """(used, total) bytes of the shared-memory filesystem, or (None, None) if absent."""
+    try:
+        usage = shutil.disk_usage(path)
+    except OSError:
+        return None, None
+    return usage.used, usage.total
 
 
 class SampleProfiler:
@@ -84,6 +153,7 @@ class SampleProfiler:
             "valid": self.valid,
             "total_seconds": time.perf_counter() - self.started,
             "get_batch_seconds": getattr(self, "get_batch_seconds", None),
+            "payload": getattr(self, "payload", None),
             "rss_before_bytes": self.rss_before,
             "rss_after_bytes": self.process.memory_info().rss,
             "streams": self.streams,
@@ -122,6 +192,8 @@ class MemoryTimeline:
         "total_rss_bytes",
         "gpu_allocated_bytes",
         "gpu_reserved_bytes",
+        "shm_used_bytes",
+        "shm_total_bytes",
     )
 
     def __init__(self, output_dir, rank, device=None, interval_seconds=0.5, worker_pids=None):
@@ -173,6 +245,7 @@ class MemoryTimeline:
             allocated = torch.cuda.memory_allocated(self.device)
             reserved = torch.cuda.memory_reserved(self.device)
         step, stage, mini_epoch = self._position
+        shm_used, shm_total = shm_usage()
         return {
             "schema_version": 1,
             "timestamp": time.time(),
@@ -189,6 +262,8 @@ class MemoryTimeline:
             "total_rss_bytes": rank_rss + sum(workers.values()),
             "gpu_allocated_bytes": allocated,
             "gpu_reserved_bytes": reserved,
+            "shm_used_bytes": shm_used,
+            "shm_total_bytes": shm_total,
         }
 
     def start(self):

@@ -36,7 +36,11 @@ from weathergen.datasets.utils import (
 )
 from weathergen.readers_extra.registry import get_extra_reader
 from weathergen.train.utils import TRAIN, Stage, get_batch_size_from_config
-from weathergen.utils.dataloader_profile import SampleProfiler, profile_output_dir
+from weathergen.utils.dataloader_profile import (
+    SampleProfiler,
+    payload_bytes,
+    profile_output_dir,
+)
 from weathergen.utils.distributed import SpatialParallelContext, get_rank, is_root
 
 type AnyDataReader = DataReaderBase | DataReaderAnemoi | DataReaderObs
@@ -110,6 +114,10 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self.mini_epoch = 0
         self.optimizations = cf.data_loading.get("optimizations", {})
         self.profile_timing = cf.data_loading.get("profile_timing", False)
+        # bytes of tensors/arrays each yielded sample carries (what reaches /dev/shm)
+        self.profile_payload_bytes = self.profile_timing and cf.data_loading.get(
+            "profile_payload_bytes", False
+        )
         self.profile_directory = profile_output_dir(cf) if self.profile_timing else None
         self.profile_rank = get_rank()
         # A shared scalar lets persistent worker copies see the parent's current epoch.
@@ -930,6 +938,8 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     not_valid = not_valid or (batch.targets_empty() if "masking" in mode else False)
                     if profiler:
                         profiler.valid = not not_valid
+                        if self.profile_payload_bytes:
+                            profiler.payload = payload_bytes(batch)
 
                 # skip completely empty batch item or when all targets are empty -> no grad
                 if not_valid:
