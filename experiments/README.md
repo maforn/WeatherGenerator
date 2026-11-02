@@ -6,6 +6,7 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Notes |
 |---|---|---|---|---|---|---|---|---|
+| [pi3kavlj](2026-11-02_pi3kavlj/) | 2026-11-02 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_shm_measure.yml | COMPLETED | 20 | 28.86 | 82.1 | 65.3 | level 6 shm measurement |
 | [a5z733w1](2026-11-02_a5z733w1/) | 2026-11-02 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_workers4.yml | COMPLETED | 20 | 27.5 | 82.1 | 62.4 | level 6 retry |
 | [deh3gakq](2026-11-02_deh3gakq/) | 2026-11-02 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_workers2.yml | COMPLETED | 20 | 59.14 | 82.23 | 41.6 | level 6 retry |
 | [oxkz1yfl](2026-11-01_oxkz1yfl/) | 2026-11-01 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_gpu_snapshot_even.yml | COMPLETED | 3 |  | 29.29 | 46.3 | GPU allocator snapshot, even_workset_split only (3 steps) |
