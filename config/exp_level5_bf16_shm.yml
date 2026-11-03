@@ -1,0 +1,47 @@
+# Martin data-loader experiment: level 5 final config (dphpc_dataloader_all.yml) + source_tokens_bf16,
+# with /dev/shm tracking and per-sample payload bytes. Identical to svxaue1j (12 workers, prefetch 2,
+# seed 1, 100 steps) except the bf16 flag and payload profiling, so:
+#   - loss per step is compared with svxaue1j (same samples; must be almost identical),
+#   - /dev/shm peak is measured for the first time at level 5 (estimate fp32: ~220 of 239 GiB),
+#   - fp32 sample size = payload total + source_tokens_cells bytes (bf16 -> fp32 doubles that group).
+# Use with --base-config config/config_operan_georing_avhrr_forecasting_lowres.yml.
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+  # writes <run_dir>/dataloader_profile/: per-sample stage times, loader waits, memory CSV
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  profile_payload_bytes: True
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True
+    source_tokens_bf16: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 100 steps
+  samples_per_mini_epoch: 400
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
