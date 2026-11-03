@@ -291,6 +291,12 @@ def main() -> None:
     )
     report("  same, Sf=4", replace(ch, sf=4), "measured 70.93 (xokjem39, held out)")
     report("  same, Sf=6", replace(ch, sf=6), "measured 88.68 (tdaw4mhu, held out)")
+    # parameters assumed to grow with D^2 (0.9 x 2.25 billion); the real count is not in the log
+    report(
+        "  2 chunks, D=3072 (1.5x wide)",
+        replace(ch, embed_chunks=2, dim=3072, params_b=0.9 * 2.25),
+        "measured 70.09 A (ynrbs7jn, predicted before the run)",
+    )
     print(
         "  Andres's level-5 runs (his reference config) are peak-B limited after the options, "
         "so they do not test the A terms"

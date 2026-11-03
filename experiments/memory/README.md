@@ -61,9 +61,15 @@ tokens embedded in k chunks).
 | qjbmx499 | 4 options + per-stream + 4 chunks | 53.45 (55.25) | A |
 | xokjem39 | same, 4 forecast steps | 70.93 (72.85) | A |
 | tdaw4mhu | same, 6 forecast steps | 88.68 (90.95) | A |
+| ynrbs7jn | 2 chunks, 1.5x wider latent (`ae_local_dim_embed` and `ae_global_dim_embed` 3072) | 70.09 (73.84) | A |
 
 At level 6 the embedding recompute is dominated by ERA5_in (30.3 GiB of it in g2z5vwaj, every
 other stream at most 6.6).
 
-Speed at level 5 (Andres's `dphpc_measure.yml`, 50 steps, median GPU step): control 3.233 s;
-4 options 3.225 s; + per-stream 3.120 s; + 2 chunks 3.387 s (+4.8%); + 4 chunks 3.953 s (+22%).
+The wide run was predicted before it ran: the model said 72.17, 3% high. It assumes the
+parameter count grows with D^2 (about 2 billion); the real count is not in the log.
+
+Speed at level 5 (Andres's `dphpc_measure.yml`, 50 steps, median GPU step): control 3.233 s
+(ov75o0go); 4 options 3.225 s (uv034k6b); + per-stream 3.120 s (snvxxm11); + 2 chunks 3.387 s
+(+4.8%, rtdza1y2); + 4 chunks 3.953 s (+22%, ssaxqd59). One run each, so the run-to-run spread
+in step time is not known; why per-stream is faster was not looked into.
