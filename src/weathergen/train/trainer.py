@@ -636,7 +636,14 @@ class Trainer(TrainerBase):
             if self.cf.data_loading.get("memory_pinning", False):
                 # pin memory for faster CPU-GPU transfer
                 batch = batch.pin_memory()
-            batch.to_device(self.device)
+            # the embedding casts the source tokens to the mixed-precision dtype first, so
+            # keeping them in that dtype on the device gives the same result with less memory
+            source_dtype = (
+                self.mixed_precision_dtype
+                if self.cf.get("source_tokens_in_mixed_precision", False)
+                else None
+            )
+            batch.to_device(self.device, source_dtype)
             with torch.autocast(
                 device_type=f"cuda:{self.cf.local_rank}",
                 dtype=self.mixed_precision_dtype,

@@ -791,12 +791,25 @@ class Model(torch.nn.Module):
         local_hp_nbours = model_params.hp_nbours[
             spatial_parallel.cell_start : spatial_parallel.cell_end
         ]
-        tokens_nbors = select_healpix_neighborhood_shard(
-            tokens.reshape(s),
-            model_params.hp_nbours,
-            spatial_parallel.cell_start,
-            spatial_parallel.cell_end,
-        )
+        decoder_kwargs = {}
+        if self.cf.get("decoder_gather_after_kv_projection", False):
+            # select the row numbers instead of a 9x copy of the tokens; the decoder projects
+            # keys/values per cell and selects the same rows afterwards
+            rows = torch.arange(math.prod(s[:-1]), device=tokens.device).reshape(*s[:-1], 1)
+            decoder_kwargs["latent_index"] = select_healpix_neighborhood_shard(
+                rows,
+                model_params.hp_nbours,
+                spatial_parallel.cell_start,
+                spatial_parallel.cell_end,
+            ).flatten()
+            tokens_nbors = tokens.reshape(s).flatten(0, 2)
+        else:
+            tokens_nbors = select_healpix_neighborhood_shard(
+                tokens.reshape(s),
+                model_params.hp_nbours,
+                spatial_parallel.cell_start,
+                spatial_parallel.cell_end,
+            )
         num_decoder_cells = batch_size * spatial_parallel.local_num_cells
         tokens_nbors_lens = torch.full(
             (num_decoder_cells + 1,),
@@ -885,6 +898,7 @@ class Model(torch.nn.Module):
                     latent_lens=tokens_nbors_lens,
                     output_lens=tcs_lens,
                     coordinates=t_coords,
+                    **decoder_kwargs,
                 )
 
                 # final prediction head to map back to physical space
