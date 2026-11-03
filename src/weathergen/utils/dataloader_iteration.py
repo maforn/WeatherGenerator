@@ -47,6 +47,7 @@ def profile_loader_iteration(cf, iterator, device, stage, mini_epoch, other_iter
                 device=device,
                 interval_seconds=cf.data_loading.get("profile_memory_interval_seconds", 0.5),
                 worker_pids=lambda: _worker_pids((iterator, *other_iterators)),
+                full_memory=cf.data_loading.get("profile_memory_full", False),
             )
             timeline.set_step(0, stage=stage, mini_epoch=mini_epoch)
             timeline.start()

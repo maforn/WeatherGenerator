@@ -62,6 +62,7 @@ their original behaviour. Each experiment gets `config/exp_<name>.yml`.
 | `profile_timing: true` | `samples_rank*_worker*.jsonl`: per sample read, normalize, tokenize, build and total seconds, source MB/tokens, worker RSS before/after. `loader_wait_rank*.jsonl`: how long the training loop waited for each batch. |
 | `profile_memory_timeline: true` | `memory_rank*.csv`: rank + loader-worker RSS and GPU allocated/reserved, sampled every `profile_memory_interval_seconds` (default 0.5). Also `/dev/shm` used/total bytes per sample row. |
 | `profile_payload_bytes: true` (needs `profile_timing`) | Adds `payload` to each sample record: bytes of torch tensors (what a worker moves into `/dev/shm` when handing the sample over) and numpy arrays reachable from the yielded batch, plus the largest attribute groups. Shared views counted once. Added after level-6 runs exhausted `/dev/shm` (`w0a1jb0w`, `es253qrq`). |
+| `profile_memory_full: true` (needs `profile_memory_timeline`) | Adds honest host-memory columns to `memory_rank*.csv`: `rank_uss/pss_bytes`, `workers_uss/pss_bytes` (from `/proc/<pid>/smaps_rollup`; PSS splits shared pages between processes, so summing PSS over all ranks does not double-count like summed RSS), and `node_used/total_bytes` (`MemTotal − MemAvailable`, node-wide, includes `/dev/shm`; take the max across ranks, never the sum). Slower per sample than RSS (smaps walk), so off by default. |
 | `profile_output_dir` | Optional override of the output directory. |
 
 Summarize or compare runs with

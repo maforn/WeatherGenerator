@@ -174,6 +174,11 @@ class MemoryTimeline:
     descendants named ``pt_data_worker`` are counted, excluding unrelated child
     processes. Summed RSS double-counts shared memory and is not node physical RAM.
     CUDA is queried only if torch is already imported and CUDA already initialized.
+
+    ``full_memory=True`` adds honest host totals: USS (pages only this process owns) and PSS
+    (shared pages split between the processes mapping them) for the rank and its workers, read
+    from ``/proc/<pid>/smaps_rollup`` via psutil, plus node-wide used memory
+    (``MemTotal - MemAvailable``, which includes ``/dev/shm``). Columns are added only then.
     """
 
     fields = (
@@ -195,8 +200,24 @@ class MemoryTimeline:
         "shm_used_bytes",
         "shm_total_bytes",
     )
+    full_memory_fields = (
+        "rank_uss_bytes",
+        "rank_pss_bytes",
+        "workers_uss_bytes",
+        "workers_pss_bytes",
+        "node_used_bytes",
+        "node_total_bytes",
+    )
 
-    def __init__(self, output_dir, rank, device=None, interval_seconds=0.5, worker_pids=None):
+    def __init__(
+        self,
+        output_dir,
+        rank,
+        device=None,
+        interval_seconds=0.5,
+        worker_pids=None,
+        full_memory=False,
+    ):
         import psutil
 
         if interval_seconds <= 0:
@@ -208,6 +229,9 @@ class MemoryTimeline:
         self.device = device
         self.interval_seconds = float(interval_seconds)
         self.worker_pids = worker_pids
+        self.full_memory = bool(full_memory)
+        if self.full_memory:
+            self.fields = self.fields + self.full_memory_fields
         self._stop = threading.Event()
         self._thread = None
         self._position = (-1, "initializing", 0)
@@ -217,8 +241,13 @@ class MemoryTimeline:
     def set_step(self, step, stage="train", mini_epoch=0):
         self._position = (int(step), str(stage), int(mini_epoch))
 
+    def _memory(self, process):
+        """psutil memory record; the slower smaps-based one only when full_memory is on."""
+        return process.memory_full_info() if self.full_memory else process.memory_info()
+
     def snapshot(self):
-        rank_rss = self.process.memory_info().rss
+        rank_mem = self._memory(self.process)
+        rank_rss = rank_mem.rss
         children = {child.pid: child for child in self.process.children(recursive=True)}
         if self.worker_pids is None:
             requested = []
@@ -231,14 +260,17 @@ class MemoryTimeline:
         else:
             requested = list(self.worker_pids())
         workers = {}
+        worker_mems = []
         for pid in set(requested):
             # Never sample a recycled PID belonging to an unrelated process.
             if pid not in children:
                 continue
             try:
-                workers[str(pid)] = children[pid].memory_info().rss
+                mem = self._memory(children[pid])
             except self.psutil.Error:
                 continue
+            workers[str(pid)] = mem.rss
+            worker_mems.append(mem)
         allocated, reserved = None, None
         torch = sys.modules.get("torch")
         if torch is not None and torch.cuda.is_initialized():
@@ -246,7 +278,7 @@ class MemoryTimeline:
             reserved = torch.cuda.memory_reserved(self.device)
         step, stage, mini_epoch = self._position
         shm_used, shm_total = shm_usage()
-        return {
+        row = {
             "schema_version": 1,
             "timestamp": time.time(),
             "elapsed_seconds": time.perf_counter() - self._started,
@@ -264,6 +296,28 @@ class MemoryTimeline:
             "gpu_reserved_bytes": reserved,
             "shm_used_bytes": shm_used,
             "shm_total_bytes": shm_total,
+        }
+        if self.full_memory:
+            row.update(self._full_memory_columns(rank_mem, worker_mems))
+        return row
+
+    def _full_memory_columns(self, rank_mem, worker_mems):
+        def total(mems, attr):
+            values = [getattr(mem, attr, None) for mem in mems]
+            return None if any(v is None for v in values) else sum(values)
+
+        try:
+            vm = self.psutil.virtual_memory()
+            node_used, node_total = vm.total - vm.available, vm.total
+        except (AttributeError, self.psutil.Error):
+            node_used, node_total = None, None
+        return {
+            "rank_uss_bytes": getattr(rank_mem, "uss", None),
+            "rank_pss_bytes": getattr(rank_mem, "pss", None),
+            "workers_uss_bytes": total(worker_mems, "uss"),
+            "workers_pss_bytes": total(worker_mems, "pss"),
+            "node_used_bytes": node_used,
+            "node_total_bytes": node_total,
         }
 
     def start(self):

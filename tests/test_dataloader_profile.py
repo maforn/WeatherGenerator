@@ -41,6 +41,11 @@ class FakeProcess:
             raise ProcessError("gone")
         return types.SimpleNamespace(rss=self.rss)
 
+    def memory_full_info(self):
+        if self.gone:
+            raise ProcessError("gone")
+        return types.SimpleNamespace(rss=self.rss, uss=self.rss // 4, pss=self.rss // 2)
+
     def children(self, recursive):
         return self._children
 
@@ -144,6 +149,37 @@ class TimelineTests(unittest.TestCase):
             rows = list(csv.DictReader(path.open()))
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0]["schema_version"], "1")
+
+    def test_full_memory_off_keeps_original_columns(self):
+        proc = FakeProcess(children=[FakeProcess(2, 20, "pt_data_worker")])
+        with patch.dict(sys.modules, {"psutil": fake_psutil(proc)}):
+            timeline = profile.MemoryTimeline("unused", 0)
+            row = timeline.snapshot()
+        self.assertEqual(tuple(row), profile.MemoryTimeline.fields)
+        self.assertNotIn("rank_pss_bytes", timeline.fields)
+
+    def test_full_memory_adds_uss_pss_and_node_columns(self):
+        proc = FakeProcess(
+            children=[FakeProcess(2, 40, "pt_data_worker"), FakeProcess(3, 80, "pt_data_worker")]
+        )
+        fake = fake_psutil(proc)
+        fake.virtual_memory = lambda: types.SimpleNamespace(total=1000, available=300)
+        with patch.dict(sys.modules, {"psutil": fake}):
+            timeline = profile.MemoryTimeline("unused", 0, full_memory=True)
+            row = timeline.snapshot()
+        self.assertEqual(tuple(row), timeline.fields)
+        self.assertEqual(row["total_rss_bytes"], 220)
+        self.assertEqual((row["rank_uss_bytes"], row["rank_pss_bytes"]), (25, 50))
+        self.assertEqual((row["workers_uss_bytes"], row["workers_pss_bytes"]), (30, 60))
+        self.assertEqual((row["node_used_bytes"], row["node_total_bytes"]), (700, 1000))
+
+    def test_full_memory_without_pss_support_reports_none(self):
+        proc = FakeProcess(children=[FakeProcess(2, 40, "pt_data_worker")])
+        proc.memory_full_info = lambda: types.SimpleNamespace(rss=100, uss=25)
+        with patch.dict(sys.modules, {"psutil": fake_psutil(proc)}):
+            row = profile.MemoryTimeline("unused", 0, full_memory=True).snapshot()
+        self.assertIsNone(row["rank_pss_bytes"])
+        self.assertIsNone(row["node_used_bytes"])
 
     def test_bad_interval_rejected(self):
         with patch.dict(sys.modules, {"psutil": fake_psutil(FakeProcess())}):
