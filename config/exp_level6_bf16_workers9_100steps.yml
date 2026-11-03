@@ -1,0 +1,49 @@
+# Martin data-loader experiment: 100-step confirmation of the level-6 recommendation
+# (exp_level6_bf16_workers9.yml, k2rsep95: 13.8 s/step over 40 steps) with honest host-memory sampling
+# (profile_memory_full: USS/PSS per process + node used memory, incl. /dev/shm).
+# Same settings as k2rsep95 otherwise; more samples change the split and LR schedule, so loss = trend only.
+# 100 steps x ~13.8 s + ~7.5 min startup ~= 31 min -> submit with 00:45:00.
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+  # writes <run_dir>/dataloader_profile/: per-sample stage times, loader waits, memory CSV
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  profile_memory_full: True
+  num_workers: 9
+  prefetch_factor: 1
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True
+    source_tokens_bf16: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 100 steps
+  samples_per_mini_epoch: 400
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
+
+healpix_level: 6
