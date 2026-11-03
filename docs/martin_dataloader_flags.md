@@ -46,7 +46,7 @@ their original behaviour. Each experiment gets `config/exp_<name>.yml`.
 | --- | --- | --- | --- |
 | `target_requested_fields_only` | Build only the target fields the caller uses; currently the values path builds and discards coordinate encodings. Less calculation and temporary storage. | Almost identical | Part of tokenizer group: prep −11%, worker RSS +6% (`em2wu8xf`) |
 | `skip_train_inverse_indices` | Skip sorting indices that training immediately discards. Keep them for evaluation. | Almost identical | Part of tokenizer group (`em2wu8xf`) |
-| `source_tokens_bf16` | Cast source tokens to bf16 in the worker, after NaN masking and validity checks. `EmbeddingEngine.forward` already casts them to the bf16 mixed-precision dtype, so the model input is bit-identical while each sample in `/dev/shm` halves (level 6: 9.2 GiB, 98% source tokens, `pi3kavlj`). Only valid while `mixed_precision_dtype: bf16`. Throughput metrics that count source bytes (`utils/performance.py`) will report half. | Same (checked by `exp_level6_bf16_workers5`) | Pending |
+| `source_tokens_bf16` | Cast source tokens to bf16 in the worker, after NaN masking and validity checks. `EmbeddingEngine.forward` already casts them to the bf16 mixed-precision dtype, so the model input is bit-identical while each sample in `/dev/shm` halves (level 6: 9.2 GiB, 98% source tokens, `pi3kavlj`). Only valid while `mixed_precision_dtype: bf16`. Throughput metrics that count source bytes (`utils/performance.py`) will report half. | Same (checked by `exp_level6_bf16_workers5`) | Loss check PASS (`njkjo655` vs `k6i6mdyp`: per-step mean \|Δ\| 0.0001). /dev/shm 185 → 96 GiB at 5 workers; enables 9 workers at level 6 (`k2rsep95`): 22.1 → 13.8 s/step (−37%), ~GPU-bound. |
 | `anemoi_avoid_dtype_copy` | Avoid copying an already-float32 array just to request float32 again. Verify ownership before sharing storage. | Almost identical | Part of reader group: read 7.75→4.16 s, worker RSS −3% (`kawac1qm`) |
 | `skip_all_valid_filter_copy` | When every row passes a filter, reuse the array instead of copying every row. Keep filtering when any row fails. | Almost identical | Part of reader group (`kawac1qm`) |
 | `tokenize_coords_only` | During space-time grouping, copy only coordinates when the next operation uses only coordinates. | Almost identical | Part of tokenizer group (`em2wu8xf`) |
@@ -141,7 +141,12 @@ Planned comparisons:
 First run a short level-6 feasibility check on one node; if it fits, use a
 100-step performance comparison. Use the existing baseline overlay plus the
 resolution override, and record the complete effective configuration. Profiling
-must be implemented first. No level-6 run or overlay has been created yet.
+must be implemented first.
+
+Status (2026-11-03): level 6 at 8+ workers exhausts the booster's 239 GiB `/dev/shm`
+(9.2 GiB fp32 per sample). Recommended level-6 setup is `exp_level6_bf16_workers9.yml`
+(all flags + `source_tokens_bf16`, 9 workers, prefetch 1): 13.8 s/step (`k2rsep95`),
+/dev/shm peak 174 GiB, about GPU-bound. See `experiments/martin/LOG.md`.
 
 Compare optimization correctness and GPU peaks **within the same resolution**.
 Do not require level 6 to match level 5's loss or 29.31 GiB GPU peak. A short run

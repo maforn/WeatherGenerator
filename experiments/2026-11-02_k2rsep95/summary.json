@@ -1,0 +1,14 @@
+{
+ "run": "k2rsep95",
+ "job": "2649082",
+ "date": "2026-11-02",
+ "state": "COMPLETED",
+ "elapsed": "00:16:46",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_bf16_workers9.yml",
+ "steps": 40,
+ "s_per_step": 13.84,
+ "gpu_peak_gib": 77.74,
+ "host_rss_gib": 105.3,
+ "error": "",
+ "note": "level6 bf16 source tokens"
+}
