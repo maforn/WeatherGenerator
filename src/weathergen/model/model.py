@@ -916,10 +916,15 @@ class Model(torch.nn.Module):
         return output
 
     def _predict_target_tokens_chunked(
-        self, engine, latent, output, latent_lens, output_lens, coordinates
+        self, engine, latent, output, latent_lens, output_lens, coordinates, latent_index=None
     ) -> torch.Tensor:
         """Run the target prediction engine over contiguous groups of decoder cells.
+
+        With latent_index (rows of latent forming the packed neighbourhoods), the groups slice
+        latent_index and every group gets the whole latent.
         """
+        # only engines that support it get latent_index
+        idx_kwarg = {} if latent_index is None else {"latent_index": latent_index}
         num_chunks = self.cf.get("decoder_num_chunks", 1)
         if num_chunks <= 1:
             return engine(
@@ -928,6 +933,7 @@ class Model(torch.nn.Module):
                 latent_lens=latent_lens,
                 output_lens=output_lens,
                 coordinates=coordinates,
+                **idx_kwarg,
             )
 
         # latent_lens / output_lens carry a leading zero; cells are packed in the same order
@@ -952,12 +958,17 @@ class Model(torch.nn.Module):
                 chunk_coords = coordinates.new_zeros((1, coordinates.shape[-1]))
                 chunk_output_lens = torch.zeros_like(chunk_output_lens)
                 chunk_output_lens[1] = 1
+            if latent_index is None:
+                chunk_latent, chunk_idx_kwarg = latent[l0:l1], {}
+            else:
+                chunk_latent, chunk_idx_kwarg = latent, {"latent_index": latent_index[l0:l1]}
             out = engine(
-                latent=latent[l0:l1],
+                latent=chunk_latent,
                 output=chunk_output,
                 latent_lens=chunk_latent_lens,
                 output_lens=chunk_output_lens,
                 coordinates=chunk_coords,
+                **chunk_idx_kwarg,
             )
             outs.append(out[:0] if is_empty else out)
 
