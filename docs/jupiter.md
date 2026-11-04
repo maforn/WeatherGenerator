@@ -50,11 +50,17 @@ Log in once with `ssh jupiter` (MFA), then:
 ```
 minion run train                                    # baseline: BASE + CONFIG from the Makefile, 1 node, 30 min
 minion run train --arg "CONFIG=config/my_test.yml"  # your own overlay on the same base
-minion run train --arg "CONFIG=config/optimizations.yml"  # with the GPU memory optimizations (turn each on/off there)
+minion run train --arg "CONFIG=config/dphpc_memory_baseline_100steps.yml,config/optimizations.yml"  # with the GPU memory optimizations
+minion run train --arg "OPTIONS=embed_num_chunks=2,decoder_num_chunks=4"  # config overrides, comma-separated
 minion run train --arg "NODES=2 TIME=01:00:00"
 minion run profile                                  # same, with Nsight Systems profiling
+minion run snapshot                                 # 3 steps with a CUDA allocator snapshot
+minion run test                                     # unit tests on the login node
 minion run queue
 ```
+
+`snapshot` writes `logs/<run_id>/profiling_traces/<time>_rank_0.pickle`; `scripts/analyze_memory_snapshot.py <pickle>`
+(run on JUPITER with the `.venv`) prints what is alive at the peak, by category, model part and operation.
 
 `minion run train` prints the run id. Outputs are in `/e/scratch/weatherai/shared_work/`:
 `logs/<run_id>/output.<job>.txt` (training log) and `results/<run_id>/<run_id>_train_metrics.json`

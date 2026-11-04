@@ -15,7 +15,9 @@
         "init": "make init",
         "check": "make check",
         "train": "make train $MINION_ARGS",
+        "test": "make test",
         "profile": "make profile $MINION_ARGS",
+        "snapshot": "make snapshot $MINION_ARGS",
         "queue": "squeue --me"
       }
     }
