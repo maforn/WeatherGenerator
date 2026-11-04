@@ -15,7 +15,7 @@
   --bg: #f7f8f9; --surface: #ffffff; --fg: #15181c; --fg-2: #4a5059; --fg-3: #737a84;
   --rule: #dfe3e8; --grid: #e8ebef; --accent: #2a78d6;
   --s-ranks: #2a78d6; --s-workers: #eb6834; --s-shm: #1baf7a; --s-line: #15181c;
-  --good-bg: #e6f4ec; --good-fg: #146c3d;
+  --good-bg: #e6f4ec; --good-fg: #146c3d; --mid-bg: #fdf1dc; --mid-fg: #7a4d00; --no-bg: #fbe7e6; --no-fg: #9b2422;
   --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-head: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -24,12 +24,12 @@
   --bg: #121417; --surface: #1a1d21; --fg: #eceef1; --fg-2: #b4bac3; --fg-3: #8b929c;
   --rule: #2c3138; --grid: #262a30; --accent: #3987e5;
   --s-ranks: #3987e5; --s-workers: #d95926; --s-shm: #199e70; --s-line: #eceef1;
-  --good-bg: #16301f; --good-fg: #7fd3a0; color-scheme: dark; } }
+  --good-bg: #16301f; --good-fg: #7fd3a0; --mid-bg: #3a2c10; --mid-fg: #f0c674; --no-bg: #3a1a1a; --no-fg: #f19b98; color-scheme: dark; } }
 :root[data-theme="dark"] {
   --bg: #121417; --surface: #1a1d21; --fg: #eceef1; --fg-2: #b4bac3; --fg-3: #8b929c;
   --rule: #2c3138; --grid: #262a30; --accent: #3987e5;
   --s-ranks: #3987e5; --s-workers: #d95926; --s-shm: #199e70; --s-line: #eceef1;
-  --good-bg: #16301f; --good-fg: #7fd3a0; color-scheme: dark; }
+  --good-bg: #16301f; --good-fg: #7fd3a0; --mid-bg: #3a2c10; --mid-fg: #f0c674; --no-bg: #3a1a1a; --no-fg: #f19b98; color-scheme: dark; }
 body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.55; }
 .wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 64px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
@@ -73,6 +73,13 @@ th { font-weight: 600; color: var(--fg-2); font-size: 0.8rem; background: var(--
 tr:last-child td { border-bottom: 0; }
 td.n { text-align: right; white-space: nowrap; }
 .pill { display: inline-block; font-size: 0.75rem; font-weight: 500; padding: 1px 8px; border-radius: 999px; background: var(--good-bg); color: var(--good-fg); white-space: nowrap; }
+.pill.mid { background: var(--mid-bg); color: var(--mid-fg); }
+.pill.no { background: var(--no-bg); color: var(--no-fg); }
+.pill.off { background: var(--bg); color: var(--fg-2); border: 1px solid var(--rule); }
+td .flag { font-family: var(--f-mono); font-size: 0.82rem; white-space: nowrap; }
+tr.group td { background: var(--bg); font-weight: 600; color: var(--fg-2); font-size: 0.8rem; }
+td.desc { min-width: 240px; }
+td.eff { min-width: 220px; }
 ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
 .note { color: var(--fg-3); font-size: 0.85rem; }
 </style>
@@ -99,6 +106,46 @@ ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap:
     <li><b>bf16 source tokens.</b> Workers cast source tokens to bf16 before handing them over. The model's embedding engine already casts them to bf16 first, so its input is bit-identical, while each sample in shared memory halves. Needed at level 6.</li>
   </ul>
   <p>Use <code>config/dphpc_dataloader_all.yml</code> (level 5) or <code>config/dphpc_dataloader_level6.yml</code> (level 6) on branch <code>martin/main</code>. Each flag is documented in <code>docs/martin_dataloader_flags.md</code>.</p>
+</section>
+
+<section>
+  <div class="prose" style="display:flex;flex-direction:column;gap:10px">
+    <h2>Every flag and setting we tried</h2>
+    <p>All optimizations sit under <code>data_loading.optimizations</code> and default to off, so old configs behave exactly as before. Effects are at level 5 against the profiled baseline <span class="mono">jnsctk9d</span> (per-sample prep 40.0 s per worker, 4.67 s/step) unless noted. The reader and tokenizer flags were measured as two groups of four, so their effects are per group; no single flag inside a group was measured on its own.</p>
+  </div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Flag or setting</th><th>What it does</th><th>Result</th><th>Measured effect</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="4">Work split across loader workers</td></tr>
+      <tr><td><span class="flag">even_workset_split</span></td><td class="desc">Spreads leftover samples over all workers (four get 9, eight get 8) instead of giving all of them to the last worker (12 vs 8).</td><td><span class="pill">worked</span></td><td class="eff">4.67 → 3.35 s/step (−28%), largest wait 39 → 10 s. Biggest single win. <span class="mono">azmuvlzx</span></td></tr>
+      <tr class="group"><td colspan="4">Reader flags, measured together: prep −11%, read 7.75 → 4.16 s, 4.67 → 4.07 s/step (−13%), worker RAM −3% <span class="mono">kawac1qm</span></td></tr>
+      <tr><td><span class="flag">anemoi_select_vars</span></td><td class="desc">Asks the Anemoi dataset for only the variables the stream uses, before loading, in the normal and Operan readers.</td><td><span class="pill">worked</span></td><td class="eff">part of the reader group</td></tr>
+      <tr><td><span class="flag">anemoi_avoid_dtype_copy</span></td><td class="desc">Skips converting an array that is already float32 to float32 again.</td><td><span class="pill">worked</span></td><td class="eff">part of the reader group</td></tr>
+      <tr><td><span class="flag">obs_single_read</span></td><td class="desc">Reads all needed observation columns in one pass instead of one read per column group.</td><td><span class="pill">worked</span></td><td class="eff">part of the reader group</td></tr>
+      <tr><td><span class="flag">skip_all_valid_filter_copy</span></td><td class="desc">When every row passes the validity filter, reuses the array instead of copying it.</td><td><span class="pill">worked</span></td><td class="eff">part of the reader group</td></tr>
+      <tr class="group"><td colspan="4">Tokenizer flags, measured together: prep −11% (build −2.1 s, tokenize −0.8 s), 4.67 → 4.06 s/step (−13%), worker RAM +6% <span class="mono">em2wu8xf</span></td></tr>
+      <tr><td><span class="flag">tokenize_coords_only</span></td><td class="desc">During space-time grouping, copies only coordinates when the next step only needs coordinates.</td><td><span class="pill">worked</span></td><td class="eff">part of the tokenizer group</td></tr>
+      <tr><td><span class="flag">source_direct_build</span></td><td class="desc">Builds source tokens with fewer pad, gather and split-and-stack copies; same token order and padding.</td><td><span class="pill">worked</span></td><td class="eff">part of the tokenizer group (most of the build saving)</td></tr>
+      <tr><td><span class="flag">target_requested_fields_only</span></td><td class="desc">Builds only the target fields the caller uses; coordinate encodings that were built and thrown away are skipped.</td><td><span class="pill">worked</span></td><td class="eff">part of the tokenizer group</td></tr>
+      <tr><td><span class="flag">skip_train_inverse_indices</span></td><td class="desc">Skips sorting inverse indices during training, where they are discarded; evaluation still gets them.</td><td><span class="pill">worked</span></td><td class="eff">part of the tokenizer group</td></tr>
+      <tr class="group"><td colspan="4">All 8 together and combined</td></tr>
+      <tr><td>reader + tokenizer flags</td><td class="desc">The 8 flags above, without the even split.</td><td><span class="pill">worked</span></td><td class="eff">prep 40.0 → 32.9 s (−18%), 4.67 → 3.78 s/step (−19%). A +2.8 GiB GPU blip in one run did not repeat. <span class="mono">dy8638jm, ppxxfvr2</span></td></tr>
+      <tr><td>even split + all 8</td><td class="desc">The level-5 recommendation, <code>dphpc_dataloader_all.yml</code>.</td><td><span class="pill">worked</span></td><td class="eff">4.67 → 2.88 s/step (−38%), 0 stalls, host RAM unchanged, GPU allocations identical. <span class="mono">svxaue1j</span></td></tr>
+      <tr class="group"><td colspan="4">Hand-off to training</td></tr>
+      <tr><td><span class="flag">source_tokens_bf16</span></td><td class="desc">Casts source tokens to bf16 in the worker. The model casts them to bf16 anyway, so its input is identical; each sample in <code>/dev/shm</code> halves.</td><td><span class="pill">worked</span></td><td class="eff">Level 6: <code>/dev/shm</code> 185 → 96 GiB, worker RAM 11.9 → 7.5 GiB, loss Δ 0.0001; makes 8 workers fit (22.1 → 13.9 s/step). Level 5: loss within noise, RAM 386 → 335 GiB. <span class="mono">njkjo655, oq8xiir6, va54ajr5</span></td></tr>
+      <tr class="group"><td colspan="4">DataLoader settings</td></tr>
+      <tr><td><span class="flag">prefetch_factor: 1</span></td><td class="desc">Each worker keeps 1 finished sample queued instead of 2.</td><td><span class="pill mid">level 6 only</span></td><td class="eff">Level 5: −7% host RAM but +7% step time, rejected. Level 6: required, since each queued sample is 4–9 GiB. <span class="mono">i24jcqoe</span></td></tr>
+      <tr><td><span class="flag">num_workers: 16</span></td><td class="desc">More loader workers per rank (baseline 12).</td><td><span class="pill no">rejected</span></td><td class="eff">3.35 → 3.05 s/step (−9%) but +24% host RAM; the flags reach the same speed at 12 workers. <span class="mono">c9cfzjqg</span></td></tr>
+      <tr><td><span class="flag">num_workers</span> at level 6</td><td class="desc">How many workers fit at level 6.</td><td><span class="pill mid">8 with bf16</span></td><td class="eff">Without bf16, 8 and 12 workers crashed with <code>/dev/shm</code> full. With bf16, 9 workers left 0.02 GiB of node memory, 8 leave ≥ 38 GiB. <span class="mono">w0a1jb0w, es253qrq, azjgvr5m, oq8xiir6</span></td></tr>
+      <tr><td><span class="flag">persistent_workers</span></td><td class="desc">Keeps workers alive between epochs.</td><td><span class="pill off">not tested</span></td><td class="eff">Implemented but never run, so it was left out of <code>martin/main</code>.</td></tr>
+      <tr class="group"><td colspan="4">Measurement switches (under <code>data_loading</code>)</td></tr>
+      <tr><td><span class="flag">profile_timing</span>, <span class="flag">profile_memory_timeline</span></td><td class="desc">Per-sample stage times, training-loop waits, and a memory timeline every 0.5 s.</td><td><span class="pill">worked</span></td><td class="eff">No measurable overhead (2.85 vs 2.91 s median step). <span class="mono">jnsctk9d vs nyue0k4y</span></td></tr>
+      <tr><td><span class="flag">profile_payload_bytes</span></td><td class="desc">Bytes each yielded sample puts into <code>/dev/shm</code>, by tensor group.</td><td><span class="pill">worked</span></td><td class="eff">Found the level-6 limit: 9.2 GiB per sample, 98% source tokens. <span class="mono">pi3kavlj</span></td></tr>
+      <tr><td><span class="flag">profile_memory_full</span></td><td class="desc">PSS/USS per process and node memory split into host RAM and GPU HBM.</td><td><span class="pill">worked</span></td><td class="eff">Summed RSS overcounts by ~10%; the 858 GiB node total is 478 host + 380 GPU. <span class="mono">azjgvr5m, oq8xiir6</span></td></tr>
+    </tbody>
+  </table>
+  </div>
 </section>
 
 <section>
