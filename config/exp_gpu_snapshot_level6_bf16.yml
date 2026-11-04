@@ -1,0 +1,53 @@
+# Martin data-loader experiment: CUDA allocator snapshot at level 6, all flags + source_tokens_bf16.
+# Pair: exp_gpu_snapshot_level6_fp32.yml vs exp_gpu_snapshot_level6_bf16.yml differ only in
+# source_tokens_bf16. Shows in pytorch.org/memory_viz whether bf16 hand-off lowers the GPU peak
+# (82.2 -> 77.7 GiB in k6i6mdyp vs njkjo655). 5 workers, prefetch 1 as in k6i6mdyp so fp32 fits in
+# /dev/shm (4 x 5 x 9.2 GiB = 184 of 239). 3 profiled steps, rank 0 only. Submit with 00:20:00.
+# Use with --base-config config/config_operan_georing_avhrr_forecasting_lowres.yml.
+profiling:
+  memory_profiling: True
+  pytorch_profiling: False
+  only_profiling: True
+  # 3 profiled steps (see exp_gpu_snapshot_combined.yml for why)
+  wait_iteration: 1
+  warmup_iteration: 1
+  active_iteration: 1
+  repeat: 1
+  # level 5 used 196k events for 3 steps; doubled headroom for level 6
+  max_mem_events: 1000000
+  checkpoint_debug: False
+  autocast_audit: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: False
+  metrics: 1
+
+data_loading:
+  rng_seed: 1
+  num_workers: 5
+  prefetch_factor: 1
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True
+    source_tokens_bf16: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 5 samples per rank: one per worker, enough for the 3 profiled steps
+  samples_per_mini_epoch: 20
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
+
+healpix_level: 6
