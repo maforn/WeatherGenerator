@@ -9,10 +9,6 @@
 
 embed_unembed_mode: "block"
 embed_dropout_rate: 0.1
-# run the stream-embedding layers over this many chunks of patches (exact; bounds the backward burst)
-embed_num_chunks: 1
-# copy the embedded tokens into cell order with index_copy_ (1D index) instead of scatter_ (same result)
-embed_index_copy: False
 
 ae_local_dim_embed: 1024
 ae_local_num_blocks: 2
@@ -27,8 +23,6 @@ ae_adapter_embed: 128
 ae_adapter_with_qk_lnorm: True
 ae_adapter_with_residual: True
 ae_adapter_dropout_rate: 0.1
-# checkpoint each local-to-global adapter block (saves its activations until backward)
-ae_adapter_checkpoint: False
 
 ae_global_dim_embed: 2048
 ae_global_num_blocks: 2
@@ -51,10 +45,6 @@ ae_aggregation_block_factor: 64
 ae_aggregation_mlp_hidden_factor: 2
 
 decoder_type: PerceiverIOCoordConditioning #  Main options PerceiverIOCoordConditioning or Linear
-# run the decoder over this many groups of HEALPix cells (exact; bounds flash-attn's backward scratch)
-decoder_num_chunks: 1
-# False keeps decoder parameters unsharded across the chunk calls (one all-gather instead of one per chunk)
-decoder_reshard_after_forward: True
 pred_adapter_kv: False
 pred_self_attention: True
 pred_dyadic_dims: False
