@@ -155,12 +155,13 @@ class EmbeddingEngine(torch.nn.Module):
             scatter_idxs = self.get_scatter_idxs_vectorized(batch)
 
             # actual scatter operation and apply per cell positional encoding
-            if self.cf.get("embed_index_copy", False):
-                # same result with the 1D row index but without repeating
-                tokens_all.index_copy_(0, scatter_idxs, torch.cat(x_embeds))
-            else:
+            if not self.cf.get("embed_index_copy", False):
+                # original path (default)
                 scatter_idxs = scatter_idxs.unsqueeze(1).repeat((1, self.cf.ae_local_dim_embed))
                 tokens_all.scatter_(0, scatter_idxs, torch.cat(x_embeds))
+            else:
+                # same result with the 1D row index but without repeating
+                tokens_all.index_copy_(0, scatter_idxs, torch.cat(x_embeds))
 
         pe_idxs = self.get_pe_idxs_vectorized(batch)
         tokens_all = tokens_all + pe_embed[pe_idxs]
