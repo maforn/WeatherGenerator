@@ -1,0 +1,18 @@
+{
+ "run": "jmbpdvci",
+ "job": "2685543",
+ "date": "2026-11-04",
+ "state": "COMPLETED",
+ "elapsed": "00:13:19",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml",
+ "steps": 100,
+ "s_per_step": 5.17,
+ "gpu_peak_gib": 7.49,
+ "host_rss_gib": 86.4,
+ "source_gb_per_sample": 1.21,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "final: config/optimizations.yml on this branch (verification of tn6df0qr)"
+}

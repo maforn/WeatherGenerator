@@ -5,6 +5,7 @@ Fork of [ecmwf/WeatherGenerator](https://github.com/ecmwf/WeatherGenerator) for 
 from storage to CPU memory to the GPU and the encoder.
 
 - [Running on JSC JUPITER](docs/jupiter.md): one-time setup and daily use
+- [GPU memory optimizations](docs/memory-optimizations.md): the options, what they save and their trade-offs
 - [Experiments](experiments/): runs and their results
 
 For the model itself and the upstream development guidelines, see the [original repository](https://github.com/ecmwf/WeatherGenerator).

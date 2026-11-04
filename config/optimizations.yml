@@ -1,27 +1,67 @@
-# GPU memory optimizations, each off when missing. The first three: peak 28.93 instead of
-# 31.69 GiB per GPU on the operan config, same losses.
+# GPU memory optimizations, each off when missing. All of them, on the operan config with
+# dphpc_memory_baseline_100steps.yml: peak 7.49 instead of 29.31 GiB per GPU, losses within noise
+# (run jmbpdvci).
+# "requires" lines name the options or settings an option has no effect (or is unsafe) without.
 
 # one activation checkpoint per attention + MLP block instead of per layer
 # (forecast engine and local assimilation)
 checkpoint_per_block: True
 
+# attention + MLP blocks per forecast-engine checkpoint
+# requires: checkpoint_per_block
+fe_blocks_per_checkpoint: 2
+
+# one checkpoint per forecast step around the forecast engine: only the step input is kept
+# until the backward (one more forecast-engine forward per step)
+fe_checkpoint_per_step: True
+
+# reshard the forecast-engine weights after forward instead of keeping them gathered
+# requires: training_config.forecast.pushforward off (it relies on gathered weights)
+fe_reshard_after_forward: True
+
 # decoder: project keys/values once per cell, then select each cell's 9 neighbours by index
 # instead of copying them
 decoder_gather_after_kv_projection: True
 
+# run the decoder over this many groups of cells (smaller flash-attn backward scratch)
+decoder_num_chunks: 4
+
 # keep the source tokens on the GPU in the mixed-precision dtype, as the embedding uses them
 source_tokens_in_mixed_precision: True
 
-# checkpoint each block of the local-to-global adapter
-ae_adapter_checkpoint: True
+# keep the source tokens in pinned CPU memory; each stream's embedding copies them to the GPU
+# (also in its recompute)
+source_tokens_on_cpu: True
 
-# run the stream-embedding layers over this many chunks of patches (bounds the backward burst;
-# 4 measured on the lowres operan config)
+# run the stream-embedding layers over this many chunks of patches (bounds the backward burst)
 embed_num_chunks: 4
+
+# one checkpoint per chunk of patches, patch embedding included: the backward rebuilds one
+# chunk at a time and nothing of the size of a whole stream is kept
+# requires: embed_num_chunks > 1
+embed_checkpoint_per_chunk: True
 
 # copy the embedded tokens into cell order with index_copy_ (1D index) instead of scatter_
 embed_index_copy: True
 
-# run the decoder over this many groups of cells (smaller flash-attn backward scratch;
-# 2 measured on the lowres operan config)
-decoder_num_chunks: 2
+# one outer checkpoint per local-assimilation chunk (one more local forward)
+ae_local_checkpoint_outer: True
+
+# checkpoint each block of the local-to-global adapter
+ae_adapter_checkpoint: True
+
+# EMA weights in pinned CPU memory
+# requires: FSDP (distributed.data_parallel.with_fsdp, several GPUs) and
+#   validation_config.validate_with_ema.enabled (otherwise there is no EMA model)
+ema_on_cpu: True
+
+# FSDP keeps weights, gradients and AdamW states in pinned CPU memory, the optimizer step runs
+# on the CPU (rounds differently from the GPU step; fsdp_cpu_offload_num_threads, default 16,
+# torch threads so the step does not compete with the data-loader workers)
+# requires: FSDP (distributed.data_parallel.with_fsdp, several GPUs) and
+#   mixed_precision_dtype bf16 (the loss scaler needed for fp16 is skipped)
+fsdp_cpu_offload: True
+
+# free each batch before the next one is copied to the GPU (a reference cycle otherwise keeps
+# it alive until the next garbage collection: +1.7 GiB on random steps)
+train_gc_collect_every_step: True

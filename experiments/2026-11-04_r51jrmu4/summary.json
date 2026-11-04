@@ -1,0 +1,18 @@
+{
+ "run": "r51jrmu4",
+ "job": "2683977",
+ "date": "2026-11-04",
+ "state": "COMPLETED",
+ "elapsed": "00:04:21",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml + config_memory_profiling.yml",
+ "steps": 3,
+ "s_per_step": null,
+ "gpu_peak_gib": 7.46,
+ "host_rss_gib": 0.0,
+ "source_gb_per_sample": null,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "final, allocator snapshot (3 steps)"
+}
