@@ -44,8 +44,6 @@ from weathergen.utils.dataloader_profile import (
 from weathergen.utils.distributed import SpatialParallelContext, get_rank, is_root
 
 type AnyDataReader = DataReaderBase | DataReaderAnemoi | DataReaderObs
-
-
 type StreamName = str
 
 logger = logging.getLogger(__name__)
