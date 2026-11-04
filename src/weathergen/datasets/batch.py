@@ -60,7 +60,7 @@ class Sample:
         for stream_name in stream_names:
             self.streams_data[stream_name] = None
 
-    def to_device(self, device) -> None:
+    def to_device(self, device, source_dtype=None) -> None:
         for key in self.meta_info.keys():
             self.meta_info[key].mask = (
                 self.meta_info[key].mask.to(device, non_blocking=True)
@@ -70,7 +70,7 @@ class Sample:
 
         for key, val in self.streams_data.items():
             if val is not None:
-                self.streams_data[key] = val.to_device(device)
+                self.streams_data[key] = val.to_device(device, source_dtype)
 
     def is_empty(self) -> bool:
         """
@@ -180,9 +180,9 @@ class BatchSamples:
     def __len__(self) -> int:
         return len(self.samples)
 
-    def to_device(self, device):
+    def to_device(self, device, source_dtype=None):
         for sample in self.samples:
-            sample.to_device(device)
+            sample.to_device(device, source_dtype)
 
         self.tokens_lens = (
             self.tokens_lens.to(device, non_blocking=True) if self.tokens_lens is not None else None
@@ -334,13 +334,13 @@ class ModelBatch:
 
         return self
 
-    def to_device(self, device):  # -> ModelBatch
+    def to_device(self, device, source_dtype=None):  # -> ModelBatch
         """
-        Move batch to device
+        Move batch to device; ``source_dtype``, if given, is the dtype of the source tokens there
         """
 
-        self.source_samples.to_device(device)
-        self.target_samples.to_device(device)
+        self.source_samples.to_device(device, source_dtype)
+        self.target_samples.to_device(device, source_dtype)
 
         self.device = device
 

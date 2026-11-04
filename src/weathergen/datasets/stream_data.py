@@ -138,7 +138,7 @@ class StreamData:
 
         return self
 
-    def to_device(self, device: str) -> None:
+    def to_device(self, device: str, source_dtype: torch.dtype | None = None) -> None:
         """
         Move data to GPU
 
@@ -146,6 +146,8 @@ class StreamData:
         ----------
         device : str
             Device the data is moved/mapped to.
+        source_dtype : torch.dtype | None
+            If given, the source tokens are converted to it on the device.
 
         Returns
         -------
@@ -160,7 +162,7 @@ class StreamData:
         # move to device if source data is present
         if not np.array([s is None for s in self.source_tokens_cells]).all():
             self.source_tokens_cells = [
-                s.to(dv, non_blocking=True) for s in self.source_tokens_cells
+                s.to(dv, dtype=source_dtype, non_blocking=True) for s in self.source_tokens_cells
             ]
             self.source_tokens_lens = [s.to(dv, non_blocking=True) for s in self.source_tokens_lens]
 

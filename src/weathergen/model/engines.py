@@ -13,6 +13,7 @@ import math
 import torch
 import torch.nn as nn
 from omegaconf import OmegaConf
+from torch.distributed.fsdp import FSDPModule
 from torch.utils.checkpoint import checkpoint
 
 from weathergen.common.config import Config
@@ -31,6 +32,33 @@ from weathergen.model.embeddings import (
 from weathergen.model.layers import MLP
 from weathergen.model.utils import ActivationFactory
 from weathergen.utils.utils import get_dtype
+
+
+def checkpoint_layers(layers, per_block: bool, x, *args):
+    """Run ``layers`` with one activation checkpoint per layer or, with ``per_block``, per block
+    (an attention layer and the layers up to the next one): half as many inputs are saved for
+    the backward pass, with the same math."""
+    attention = (MultiSelfAttentionHead, MultiSelfAttentionHeadLocal, MultiSelfAttentionHeadVarlen)
+    groups: list[list[torch.nn.Module]] = []
+    for layer in layers:
+        if not groups or not per_block or isinstance(layer, attention):
+            groups.append([])
+        groups[-1].append(layer)
+    for group in groups:
+        x = checkpoint(_run_layers, group, x, *args, use_reentrant=False)
+    return x
+
+
+def _run_layers(layers, x, *args):
+    # FSDP gathers a module's weights only for its own backward, so a recompute over several
+    # modules has to gather the weights of the others first
+    if len(layers) > 1:
+        for layer in layers:
+            if isinstance(layer, FSDPModule):
+                layer.unshard()
+    for layer in layers:
+        x = layer(x) if isinstance(layer, torch.nn.LayerNorm) else layer(x, *args)
+    return x
 
 
 class EmbeddingEngine(torch.nn.Module):
@@ -242,9 +270,8 @@ class LocalAssimilationEngine(torch.nn.Module):
             )
 
     def forward(self, tokens_c, cell_lens_c):
-        for block in self.ae_local_blocks:
-            tokens_c = checkpoint(block, tokens_c, cell_lens_c, use_reentrant=False)
-        return tokens_c
+        per_block = self.cf.get("checkpoint_per_block", False)
+        return checkpoint_layers(self.ae_local_blocks, per_block, tokens_c, cell_lens_c)
 
 
 class Local2GlobalAssimilationEngine(torch.nn.Module):
@@ -631,12 +658,8 @@ class ForecastingEngine(torch.nn.Module):
                 tokens = tokens + torch.randn_like(tokens) * torch.norm(tokens) * noise_std
 
         aux_info = None
-        for _b_idx, block in enumerate(self.fe_blocks):
-            if isinstance(block, torch.nn.modules.normalization.LayerNorm):
-                tokens = checkpoint(block, tokens, use_reentrant=False)
-            else:
-                tokens = checkpoint(block, tokens, coords, aux_info, use_reentrant=False)
-        return tokens
+        per_block = self.cf.get("checkpoint_per_block", False)
+        return checkpoint_layers(self.fe_blocks, per_block, tokens, coords, aux_info)
 
 
 class EnsPredictionHead(torch.nn.Module):
@@ -778,7 +801,8 @@ class TargetPredictionEngineClassic(nn.Module):
                 )
             )
 
-    def forward(self, latent, output, latent_lens, output_lens, coordinates):
+    def forward(self, latent, output, latent_lens, output_lens, coordinates, latent_index=None):
+        """``latent_index``: if given, the key/value tokens are ``latent[latent_index]``."""
         tc_tokens = output
         tcs_lens = output_lens
         tokens_stream = latent
@@ -789,6 +813,8 @@ class TargetPredictionEngineClassic(nn.Module):
             if self.cf.pred_self_attention and ib % 3 == 1:
                 tc_tokens = checkpoint(block, tc_tokens, tcs_lens, tcs_aux, use_reentrant=False)
             else:
+                # the cross-attention takes latent_index; the MLP reads its last argument as aux
+                index = (latent_index,) if isinstance(block, MultiCrossAttentionHeadVarlen) else ()
                 tc_tokens = checkpoint(
                     block,
                     tc_tokens,
@@ -796,6 +822,7 @@ class TargetPredictionEngineClassic(nn.Module):
                     tcs_lens,
                     tokens_lens,
                     tcs_aux,
+                    *index,
                     use_reentrant=False,
                 )
         return tc_tokens

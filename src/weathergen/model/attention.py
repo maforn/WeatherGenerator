@@ -394,7 +394,10 @@ class MultiCrossAttentionHeadVarlen(torch.nn.Module):
         self.dtype = attention_dtype
         assert with_flash, "Only flash attention supported at the moment"
 
-    def forward(self, x_q, x_kv, x_q_lens=None, x_kv_lens=None, ada_ln_aux=None):
+    def forward(self, x_q, x_kv, x_q_lens=None, x_kv_lens=None, ada_ln_aux=None, x_kv_index=None):
+        """``x_kv_index``: if given, the key/value tokens are ``x_kv[x_kv_index]``; the rows are
+        selected after the (row-wise) normalization and projections, which gives the same keys
+        and values without materializing the selected input rows."""
         if self.with_residual:
             x_q_in = x_q
         # normalise in the dtype of the inputs so autocast does not promote the prologue to
@@ -413,6 +416,8 @@ class MultiCrossAttentionHeadVarlen(torch.nn.Module):
         s = [x_kv.shape[0], self.num_heads, self.dim_head_proj]
         ks = norm_in_input_dtype(self.lnorm_k, self.proj_heads_k(x_kv).reshape(s)).to(self.dtype)
         vs = self.proj_heads_v(x_kv).reshape(s)
+        if x_kv_index is not None:
+            ks, vs = ks[x_kv_index], vs[x_kv_index]
 
         # set dropout rate according to training/eval mode as required by flash_attn
         dropout_rate = self.dropout_rate if self.training else 0.0
