@@ -704,10 +704,9 @@ class Model(torch.nn.Module):
         # collapse along input step dimension. `sum` carries an autocast float32 cast policy,
         # so it would otherwise widen a bfloat16 latent here; the accumulation is worth doing
         # in float32, the storage is not.
-        # NOTE: currently a no-op. The latent already arrives float32 -- it is seeded from a
-        # float32 parameter in `encoder.py:Encoder.assimilate_local` and nothing narrows it
-        # since FSDP stopped casting forward inputs -- so this only guards against the
-        # promotion, it does not narrow the rollout. Fix the source, not this line.
+        # The latent arrives in the mixed-precision dtype (`latent_dtype` in
+        # `Encoder.assimilate_local`); the forecast engine widens it to float32 at its
+        # fe_layer_norm_after_blocks LayerNorm (under autocast layer_norm returns float32).
         tokens = tokens.reshape(shape).sum(axis=1).to(tokens.dtype)
 
         # Allow for pushforward trick
@@ -720,7 +719,18 @@ class Model(torch.nn.Module):
                 tokens = self.forecast_engine(tokens, step, model_params.rope_coords)
                 continue
 
-            tokens = self.forecast_engine(tokens, step, model_params.rope_coords)
+            if self.cf.get("fe_checkpoint_per_step", False):
+                # keep only the step input for the backward, which reruns this step's forecast
+                # engine (with its own checkpoints inside) before going through it
+                tokens = checkpoint(
+                    self.forecast_engine,
+                    tokens,
+                    step,
+                    model_params.rope_coords,
+                    use_reentrant=False,
+                )
+            else:
+                tokens = self.forecast_engine(tokens, step, model_params.rope_coords)
             # decoder predictions
             output = self.predict_decoders(model_params, step, tokens, batch, output)
             # latent predictions (raw and with SSL heads)

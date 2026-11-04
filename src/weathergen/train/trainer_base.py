@@ -128,6 +128,9 @@ class TrainerBase:
                 print(f"Running on device {device}")
 
             backend = torch.distributed.get_default_backend_for_device(device)
+            # collectives on CPU-offloaded FSDP shards (grad-norm clipping, full state dict)
+            if cf.get("fsdp_cpu_offload", False) or cf.get("ema_on_cpu", False):
+                backend = f"cpu:gloo,{device.type}:{backend}"
             torch.distributed.init_process_group(
                 backend=backend,
                 world_size=world_size,

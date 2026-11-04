@@ -34,14 +34,17 @@ from weathergen.model.utils import ActivationFactory
 from weathergen.utils.utils import get_dtype
 
 
-def checkpoint_layers(layers, per_block: bool, x, *args):
-    """Run ``layers`` with one activation checkpoint per layer or, with ``per_block``, per block
-    (an attention layer and the layers up to the next one): half as many inputs are saved for
-    the backward pass, with the same math."""
+def checkpoint_layers(layers, per_block: bool, x, *args, blocks_per_checkpoint: int = 1):
+    """Run ``layers`` with one activation checkpoint per layer or, with ``per_block``, per
+    ``blocks_per_checkpoint`` blocks (a block: an attention layer and the layers up to the next
+    one): half as many inputs (or fewer) are saved for the backward pass, with the same math."""
     attention = (MultiSelfAttentionHead, MultiSelfAttentionHeadLocal, MultiSelfAttentionHeadVarlen)
     groups: list[list[torch.nn.Module]] = []
+    num_blocks = 0
     for layer in layers:
-        if not groups or not per_block or isinstance(layer, attention):
+        starts_group = isinstance(layer, attention) and num_blocks % blocks_per_checkpoint == 0
+        num_blocks += isinstance(layer, attention)
+        if not groups or not per_block or starts_group:
             groups.append([])
         groups[-1].append(layer)
     for group in groups:
@@ -97,6 +100,7 @@ class EmbeddingEngine(torch.nn.Module):
                     unembed_mode=self.cf.embed_unembed_mode,
                     stream_name=stream_name,
                     num_chunks=self.cf.get("embed_num_chunks", 1),
+                    checkpoint_chunks=self.cf.get("embed_checkpoint_per_chunk", False),
                 )
             elif si["embed"]["net"] == "linear":
                 self.embeds[stream_name] = StreamEmbedLinear(
@@ -111,8 +115,9 @@ class EmbeddingEngine(torch.nn.Module):
         num_steps_input = batch.get_num_source_steps()
 
         num_tokens = torch.sum(batch.tokens_lens, 2).flatten().sum().item()
+        dev = batch.get_device()
         tokens_all = torch.empty(
-            (num_tokens, self.cf.ae_local_dim_embed), dtype=self.dtype, device=batch.get_device()
+            (num_tokens, self.cf.ae_local_dim_embed), dtype=self.dtype, device=dev
         )
 
         # iterate over all streams
@@ -127,13 +132,12 @@ class EmbeddingEngine(torch.nn.Module):
             if all(s is None for s in sdata):
                 continue
 
-            sdata = torch.cat(sdata).to(tokens_all.dtype)
             # skip empty stream
-            if sdata.numel() == 0:
+            if sum(s.numel() for s in sdata) == 0:
                 continue
 
             # embedding from physical space to per patch latent representation
-            x_embeds += [self.embeds[stream_name](sdata).flatten(0, 1)]
+            x_embeds += [self._embed_stream(stream_name, sdata, dev)]
 
         # switch from stream to cell-based ordering and apply per cell positional encoding
 
@@ -167,6 +171,12 @@ class EmbeddingEngine(torch.nn.Module):
         tokens_all = tokens_all + pe_embed[pe_idxs]
 
         return tokens_all
+
+    def _embed_stream(self, stream_name, sdata, device):
+        # collected source tokens of one stream -> per patch latent tokens; with
+        # source_tokens_on_cpu they are copied to the GPU here, also in the recompute
+        sdata = torch.cat([s.to(device, non_blocking=True) for s in sdata]).to(self.dtype)
+        return self.embeds[stream_name](sdata).flatten(0, 1)
 
     def get_pe_idxs_vectorized(self, batch):
         """
@@ -677,7 +687,10 @@ class ForecastingEngine(torch.nn.Module):
 
         aux_info = None
         per_block = self.cf.get("checkpoint_per_block", False)
-        return checkpoint_layers(self.fe_blocks, per_block, tokens, coords, aux_info)
+        n = self.cf.get("fe_blocks_per_checkpoint", 1)
+        return checkpoint_layers(
+            self.fe_blocks, per_block, tokens, coords, aux_info, blocks_per_checkpoint=n
+        )
 
 
 class EnsPredictionHead(torch.nn.Module):

@@ -138,7 +138,9 @@ class StreamData:
 
         return self
 
-    def to_device(self, device: str, source_dtype: torch.dtype | None = None) -> None:
+    def to_device(
+        self, device: str, source_dtype: torch.dtype | None = None, source_on_cpu: bool = False
+    ) -> None:
         """
         Move data to GPU
 
@@ -148,6 +150,8 @@ class StreamData:
             Device the data is moved/mapped to.
         source_dtype : torch.dtype | None
             If given, the source tokens are converted to it on the device.
+        source_on_cpu : bool
+            Keep the source tokens in pinned CPU memory; the embedding copies them to the GPU.
 
         Returns
         -------
@@ -161,9 +165,15 @@ class StreamData:
 
         # move to device if source data is present
         if not np.array([s is None for s in self.source_tokens_cells]).all():
-            self.source_tokens_cells = [
-                s.to(dv, dtype=source_dtype, non_blocking=True) for s in self.source_tokens_cells
-            ]
+            if source_on_cpu:
+                self.source_tokens_cells = [
+                    s.to(dtype=source_dtype).pin_memory() for s in self.source_tokens_cells
+                ]
+            else:
+                self.source_tokens_cells = [
+                    s.to(dv, dtype=source_dtype, non_blocking=True)
+                    for s in self.source_tokens_cells
+                ]
             self.source_tokens_lens = [s.to(dv, non_blocking=True) for s in self.source_tokens_lens]
 
             self.source_idxs_embed = [s.to(dv, non_blocking=True) for s in self.source_idxs_embed]

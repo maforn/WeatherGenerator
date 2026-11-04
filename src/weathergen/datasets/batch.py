@@ -60,7 +60,7 @@ class Sample:
         for stream_name in stream_names:
             self.streams_data[stream_name] = None
 
-    def to_device(self, device, source_dtype=None) -> None:
+    def to_device(self, device, source_dtype=None, source_on_cpu=False) -> None:
         for key in self.meta_info.keys():
             self.meta_info[key].mask = (
                 self.meta_info[key].mask.to(device, non_blocking=True)
@@ -70,7 +70,7 @@ class Sample:
 
         for key, val in self.streams_data.items():
             if val is not None:
-                self.streams_data[key] = val.to_device(device, source_dtype)
+                self.streams_data[key] = val.to_device(device, source_dtype, source_on_cpu)
 
     def is_empty(self) -> bool:
         """
@@ -180,9 +180,9 @@ class BatchSamples:
     def __len__(self) -> int:
         return len(self.samples)
 
-    def to_device(self, device, source_dtype=None):
+    def to_device(self, device, source_dtype=None, source_on_cpu=False):
         for sample in self.samples:
-            sample.to_device(device, source_dtype)
+            sample.to_device(device, source_dtype, source_on_cpu)
 
         self.tokens_lens = (
             self.tokens_lens.to(device, non_blocking=True) if self.tokens_lens is not None else None
@@ -334,13 +334,14 @@ class ModelBatch:
 
         return self
 
-    def to_device(self, device, source_dtype=None):  # -> ModelBatch
+    def to_device(self, device, source_dtype=None, source_on_cpu=False):  # -> ModelBatch
         """
-        Move batch to device; ``source_dtype``, if given, is the dtype of the source tokens there
+        Move batch to device; ``source_dtype``, if given, is the dtype of the source tokens there;
+        with ``source_on_cpu`` they stay in pinned CPU memory
         """
 
-        self.source_samples.to_device(device, source_dtype)
-        self.target_samples.to_device(device, source_dtype)
+        self.source_samples.to_device(device, source_dtype, source_on_cpu)
+        self.target_samples.to_device(device, source_dtype, source_on_cpu)
 
         self.device = device
 
