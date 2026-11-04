@@ -93,6 +93,44 @@ def shm_usage(path="/dev/shm"):
     return usage.used, usage.total
 
 
+def numa_memory(root="/sys/devices/system/node"):
+    """Per-NUMA-node memory, split into CPU-attached memory and memory-only nodes.
+
+    On GH200 the GPU HBM is onlined as NUMA nodes without CPUs, so ``hbm`` is GPU memory and
+    ``cpu`` is the host LPDDR. ``used`` excludes reclaimable file cache but keeps shared memory
+    (``/dev/shm``): ``MemTotal - MemFree - FilePages + Shmem``. Returns None without sysfs.
+    """
+    base = Path(root)
+    totals = {"cpu": [0, 0], "hbm": [0, 0]}
+    found = False
+    for node in sorted(base.glob("node[0-9]*")):
+        try:
+            fields = {}
+            for line in (node / "meminfo").read_text().splitlines():
+                parts = line.split()
+                # "Node 0 MemTotal:   123 kB"
+                if len(parts) >= 4 and parts[2].endswith(":"):
+                    fields[parts[2][:-1]] = int(parts[3]) * 1024
+            cpus = (node / "cpulist").read_text().strip()
+        except (OSError, ValueError):
+            continue
+        if "MemTotal" not in fields:
+            continue
+        found = True
+        used = (
+            fields["MemTotal"]
+            - fields.get("MemFree", 0)
+            - fields.get("FilePages", 0)
+            + fields.get("Shmem", 0)
+        )
+        kind = "cpu" if cpus else "hbm"
+        totals[kind][0] += used
+        totals[kind][1] += fields["MemTotal"]
+    if not found:
+        return None
+    return {kind: {"used": used, "total": total} for kind, (used, total) in totals.items()}
+
+
 class SampleProfiler:
     """One JSONL record per attempted sample, including samples rejected as invalid.
 
@@ -178,7 +216,8 @@ class MemoryTimeline:
     ``full_memory=True`` adds honest host totals: USS (pages only this process owns) and PSS
     (shared pages split between the processes mapping them) for the rank and its workers, read
     from ``/proc/<pid>/smaps_rollup`` via psutil, plus node-wide used memory
-    (``MemTotal - MemAvailable``, which includes ``/dev/shm``). Columns are added only then.
+    (``MemTotal - MemAvailable``, which includes ``/dev/shm``) and, from sysfs NUMA nodes, host
+    (CPU-attached) vs GPU HBM memory, see ``numa_memory``. Columns are added only then.
     """
 
     fields = (
@@ -207,6 +246,10 @@ class MemoryTimeline:
         "workers_pss_bytes",
         "node_used_bytes",
         "node_total_bytes",
+        "cpu_mem_used_bytes",
+        "cpu_mem_total_bytes",
+        "hbm_mem_used_bytes",
+        "hbm_mem_total_bytes",
     )
 
     def __init__(
@@ -311,6 +354,11 @@ class MemoryTimeline:
             node_used, node_total = vm.total - vm.available, vm.total
         except (AttributeError, self.psutil.Error):
             node_used, node_total = None, None
+        numa = numa_memory()
+
+        def numa_value(kind, key):
+            return None if numa is None or numa[kind]["total"] == 0 else numa[kind][key]
+
         return {
             "rank_uss_bytes": getattr(rank_mem, "uss", None),
             "rank_pss_bytes": getattr(rank_mem, "pss", None),
@@ -318,6 +366,10 @@ class MemoryTimeline:
             "workers_pss_bytes": total(worker_mems, "pss"),
             "node_used_bytes": node_used,
             "node_total_bytes": node_total,
+            "cpu_mem_used_bytes": numa_value("cpu", "used"),
+            "cpu_mem_total_bytes": numa_value("cpu", "total"),
+            "hbm_mem_used_bytes": numa_value("hbm", "used"),
+            "hbm_mem_total_bytes": numa_value("hbm", "total"),
         }
 
     def start(self):

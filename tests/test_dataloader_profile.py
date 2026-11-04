@@ -181,6 +181,26 @@ class TimelineTests(unittest.TestCase):
         self.assertIsNone(row["rank_pss_bytes"])
         self.assertIsNone(row["node_used_bytes"])
 
+    def test_numa_memory_splits_cpu_and_hbm_nodes(self):
+        with tempfile.TemporaryDirectory() as root:
+            for node, cpus, total, free, files, shmem in (
+                (0, "0-71", 1000, 100, 300, 200),
+                (1, "", 500, 400, 0, 0),
+            ):
+                path = Path(root) / f"node{node}"
+                path.mkdir()
+                (path / "cpulist").write_text(cpus + "\n")
+                (path / "meminfo").write_text(
+                    f"Node {node} MemTotal: {total} kB\nNode {node} MemFree: {free} kB\n"
+                    f"Node {node} FilePages: {files} kB\nNode {node} Shmem: {shmem} kB\n"
+                )
+            numa = profile.numa_memory(root)
+        self.assertEqual(numa["cpu"], {"used": 800 * 1024, "total": 1000 * 1024})
+        self.assertEqual(numa["hbm"], {"used": 100 * 1024, "total": 500 * 1024})
+
+    def test_numa_memory_without_sysfs(self):
+        self.assertIsNone(profile.numa_memory("/nonexistent/sysfs/node"))
+
     def test_bad_interval_rejected(self):
         with patch.dict(sys.modules, {"psutil": fake_psutil(FakeProcess())}):
             with self.assertRaises(ValueError):
