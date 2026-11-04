@@ -1,0 +1,14 @@
+{
+ "run": "oq8xiir6",
+ "job": "2678020",
+ "date": "2026-11-04",
+ "state": "COMPLETED",
+ "elapsed": "00:30:21",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_bf16_workers8_100steps.yml",
+ "steps": 100,
+ "s_per_step": 13.91,
+ "gpu_peak_gib": 83.09,
+ "host_rss_gib": 98.5,
+ "error": "",
+ "note": "level6 bf16 8 workers 100 steps full memory"
+}

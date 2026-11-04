@@ -144,13 +144,13 @@ First run a short level-6 feasibility check on one node; if it fits, use a
 resolution override, and record the complete effective configuration. Profiling
 must be implemented first.
 
-Status (2026-11-03): level 6 at 8+ workers exhausts the booster's 239 GiB `/dev/shm`
-(9.2 GiB fp32 per sample). Recommended level-6 setup is `exp_level6_bf16_workers9.yml`
-(all flags + `source_tokens_bf16`, 9 workers, prefetch 1): 13.8 s/step (`k2rsep95`),
-/dev/shm peak 174 GiB, about GPU-bound. See `experiments/martin/LOG.md`.
-The 100-step repeat (`azjgvr5m`, 13.7 s/step) with `profile_memory_full` showed node memory
-(MemTotal − MemAvailable, which on GH200 includes GPU HBM) reaching 857.9 of 858 GiB: it ran without
-OOM but with no margin, so 8 workers may be the safer level-6 setting.
+Status (2026-11-04): without bf16, level 6 at 8+ workers exhausts the booster's 239 GiB
+`/dev/shm` (9.2 GiB fp32 per sample). Recommended level-6 setup: all flags + `source_tokens_bf16`,
+**8 workers**, prefetch 1 (`exp_level6_bf16_workers8_100steps.yml`, run `oq8xiir6`): 13.9 s/step,
+about GPU-bound, /dev/shm peak 154 GiB, node memory never below 38 GiB available. 9 workers is
+1.7% faster (within noise) but left 0.02 GiB available (`azjgvr5m`). See `experiments/martin/LOG.md`.
+On GH200 nodes `node_used` (MemTotal − MemAvailable) counts host LPDDR (478 GiB) plus GPU HBM
+(380 GiB); the NUMA columns separate the two.
 
 Compare optimization correctness and GPU peaks **within the same resolution**.
 Do not require level 6 to match level 5's loss or 29.31 GiB GPU peak. A short run
