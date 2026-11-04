@@ -38,7 +38,7 @@ def payload_bytes(obj, max_groups=12):
     stack = [(obj, ())]
     while stack:
         item, path = stack.pop()
-        if item is None or isinstance(item, (str, bytes, int, float, bool)):
+        if item is None or isinstance(item, str | bytes | int | float | bool):
             continue
         kind, nbytes = None, 0
         module = type(item).__module__
@@ -69,7 +69,7 @@ def payload_bytes(obj, max_groups=12):
         seen_obj.add(id(item))
         if isinstance(item, dict):
             children = item.items()
-        elif isinstance(item, (list, tuple, set, frozenset)):
+        elif isinstance(item, list | tuple | set | frozenset):
             children = ((None, x) for x in item)
         elif hasattr(item, "__dict__") or hasattr(item, "__slots__"):
             names = list(getattr(item, "__dict__", {}))

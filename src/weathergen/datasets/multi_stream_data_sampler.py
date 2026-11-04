@@ -46,24 +46,6 @@ from weathergen.utils.distributed import SpatialParallelContext, get_rank, is_ro
 type AnyDataReader = DataReaderBase | DataReaderAnemoi | DataReaderObs
 
 
-def cast_source_tokens(batch: ModelBatch, dtype: torch.dtype) -> None:
-    """Cast every floating source token tensor of ``batch`` to ``dtype`` in place.
-
-    Used by ``optimizations.source_tokens_bf16``. EmbeddingEngine.forward already casts source
-    tokens to the mixed-precision dtype (bf16) before the first layer, so doing it here yields
-    the same model input while halving what workers put in /dev/shm. Runs after NaN masking
-    and validity checks.
-    """
-    for sample in batch.source_samples.samples:
-        for stream_data in sample.streams_data.values():
-            if stream_data is None:
-                continue
-            stream_data.source_tokens_cells = [
-                t.to(dtype) if t is not None and t.is_floating_point() else t
-                for t in stream_data.source_tokens_cells
-            ]
-
-
 type StreamName = str
 
 logger = logging.getLogger(__name__)
@@ -948,8 +930,6 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                         local_sources_empty if self.spatial_parallel.size == 1 else False
                     ) or batch.is_nan()
                     not_valid = not_valid or (batch.targets_empty() if "masking" in mode else False)
-                    if not not_valid and self.optimizations.get("source_tokens_bf16", False):
-                        cast_source_tokens(batch, torch.bfloat16)
                     if profiler:
                         profiler.valid = not not_valid
                         if self.profile_payload_bytes:

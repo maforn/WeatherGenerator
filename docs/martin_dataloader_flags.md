@@ -10,8 +10,13 @@ original code path. Model, GPU processing, pinning and `to_device` are untouched
 | | Before | After | Run IDs |
 | --- | --- | --- | --- |
 | **Level 5**, 100 steps, 12 workers | 4.67 s/step, 10 stalls (largest 39 s), job 12:51 | **2.88 s/step (−38%)**, 0 stalls, job 9:20 | `jnsctk9d` → `svxaue1j` |
-| Level 5 host memory (summed RSS peak) | 390 GiB | 386 GiB (335 GiB with `source_tokens_bf16`) | `va54ajr5` |
-| **Level 6**, 8 workers + bf16 | 27.5 s/step (4 workers, flags off; 8+ workers crash: `/dev/shm` full) | **13.9 s/step (−50%)**, ≥ 38 GiB node memory free | `a5z733w1` → `oq8xiir6` |
+| Level 5 host memory (summed RSS peak) | 390 GiB | 386 GiB (335 GiB with bf16 source tokens in the workers¹) | `va54ajr5` |
+| **Level 6**, 5 workers | 27.5 s/step (4 workers, flags off; 8+ workers crash: `/dev/shm` full) | **22.1 s/step (−20%)** | `a5z733w1` → `k6i6mdyp` |
+| **Level 6**, 8 workers + bf16 source tokens¹ | | **13.9 s/step (−50%)**, ≥ 38 GiB node memory free | `a5z733w1` → `oq8xiir6` |
+
+¹ Measured with a prototype flag that cast source tokens to bf16 in the loader workers. The team
+version of that change is `source_tokens_in_mixed_precision` on branch `alejandro/bf16-worker`;
+it is not part of this branch. See [bf16 source tokens](#bf16-source-tokens-in-the-workers).
 
 - Loss stays within same-seed run-to-run noise; CUDA allocator snapshots of the level-5 flags
   match the reference on all 67,797 allocations (same GPU peak).
@@ -25,9 +30,9 @@ original code path. Model, GPU processing, pinning and `to_device` are untouched
 Overlays on `config/config_operan_georing_avhrr_forecasting_lowres.yml`:
 
 - `config/dphpc_dataloader_all.yml`: level 5. Even worker split + 4 reader + 4 tokenizer flags,
-  12 workers. Adding `source_tokens_bf16: true` is verified too (`va54ajr5`).
-- `config/dphpc_dataloader_level6.yml`: level 6. All flags + `source_tokens_bf16`, 8 workers,
-  `prefetch_factor: 1`.
+  12 workers.
+- `config/dphpc_dataloader_level6.yml`: level 6. All flags, 5 workers, `prefetch_factor: 1`.
+  Raise to 8 workers once bf16 source tokens in the workers are available (see below).
 
 Both enable profiling (it costs nothing measurable); drop the `profile_*` keys to disable it.
 
@@ -41,7 +46,6 @@ their original behaviour.
 | --- | --- | --- | --- |
 | `target_requested_fields_only` | Build only the target fields the caller uses; currently the values path builds and discards coordinate encodings. Less calculation and temporary storage. | Almost identical | Part of tokenizer group: prep −11%, worker RSS +6% (`em2wu8xf`) |
 | `skip_train_inverse_indices` | Skip sorting indices that training immediately discards. Keep them for evaluation. | Almost identical | Part of tokenizer group (`em2wu8xf`) |
-| `source_tokens_bf16` | Cast source tokens to bf16 in the worker, after NaN masking and validity checks. `EmbeddingEngine.forward` already casts them to the bf16 mixed-precision dtype, so the model input is bit-identical while each sample in `/dev/shm` halves (level 6: 9.2 GiB, 98% source tokens, `pi3kavlj`). Only valid while `mixed_precision_dtype: bf16`. Throughput metrics that count source bytes (`utils/performance.py`) will report half. | Same (checked by `exp_level6_bf16_workers5`) | Loss check PASS (`njkjo655` vs `k6i6mdyp`: per-step mean \|Δ\| 0.0001). /dev/shm 185 → 96 GiB at 5 workers; enables 9 workers at level 6 (`k2rsep95`): 22.1 → 13.8 s/step (−37%), ~GPU-bound. |
 | `anemoi_avoid_dtype_copy` | Avoid copying an already-float32 array just to request float32 again. Verify ownership before sharing storage. | Almost identical | Part of reader group: read 7.75→4.16 s, worker RSS −3% (`kawac1qm`) |
 | `skip_all_valid_filter_copy` | When every row passes a filter, reuse the array instead of copying every row. Keep filtering when any row fails. | Almost identical | Part of reader group (`kawac1qm`) |
 | `tokenize_coords_only` | During space-time grouping, copy only coordinates when the next operation uses only coordinates. | Almost identical | Part of tokenizer group (`em2wu8xf`) |
@@ -50,8 +54,20 @@ their original behaviour.
 | `obs_single_read` | Read the union of observation columns once. May avoid repeated decompression; an extra combined buffer could instead raise memory. Inspect storage chunks first. | Almost identical | Part of reader group (`kawac1qm`) |
 | `anemoi_select_vars` | Select needed variables before materializing data, in both ordinary and Operan readers. Disk savings depend on storage chunks and reader support. | Almost identical | Part of reader group (`kawac1qm`) |
 
-`source_tokens_bf16` is only valid while `mixed_precision_dtype: bf16`, because the model casts
-source tokens to that dtype before use. Byte metrics in `utils/performance.py` then report half.
+### bf16 source tokens in the workers
+
+Not part of this branch: the team implementation is `source_tokens_in_mixed_precision` on
+`alejandro/bf16-worker`. The measurements below were taken with an equivalent prototype
+(`source_tokens_bf16`, kept on `martin/backup-dump`) and are evidence for that change.
+`EmbeddingEngine.forward` already casts source tokens to the mixed-precision dtype, so the model
+input is bit-identical while each sample in `/dev/shm` halves (level 6: 9.2 GiB, 98% source tokens,
+`pi3kavlj`).
+
+- Loss: per-step mean |Δ| 0.0001 at level 6 (`njkjo655` vs `k6i6mdyp`); level 5 within run-to-run
+  noise (`va54ajr5` vs `svxaue1j`, 0.0084 vs repeat pairs 0.0058/0.0077).
+- `/dev/shm`: 185 → 96 GiB at level 6 with 5 workers; level 5 peak 87 GiB, summed RSS 386 → 335 GiB.
+- Level 6 workers: 8 now fit, 22.1 → 13.9 s/step (`oq8xiir6`); 9 left 0.02 GiB available (`azjgvr5m`).
+- GPU peak: level 6 82.2 → 77.7 GiB (no fp32 copy on the GPU); level 5 unchanged (29.3 vs 29.8).
 
 ### Loader setting
 
@@ -103,11 +119,12 @@ Level 6 can change token padding, CPU preparation, model work and GPU memory.
 Four times as many cells does not imply exactly four times the memory or time.
 Treat this as a separate resolution experiment, retaining level 5 as a reference.
 
-Status (2026-11-04): without bf16, level 6 at 8+ workers exhausts the booster's 239 GiB
-`/dev/shm` (9.2 GiB fp32 per sample). Recommended level-6 setup: all flags + `source_tokens_bf16`,
-**8 workers**, prefetch 1 (`config/dphpc_dataloader_level6.yml`, run `oq8xiir6`): 13.9 s/step,
-about GPU-bound, /dev/shm peak 154 GiB, node memory never below 38 GiB available. 9 workers is
-1.7% faster (within noise) but left 0.02 GiB available (`azjgvr5m`). See `experiments/martin/LOG.md`.
+Status (2026-11-04): with fp32 source tokens, level 6 at 8+ workers exhausts the booster's 239 GiB
+`/dev/shm` (9.2 GiB per sample; 6 would use ~92%), so `config/dphpc_dataloader_level6.yml` uses 5 workers (22.1
+s/step, `k6i6mdyp`). With bf16 source tokens in the workers, **8 workers**, prefetch 1 reach 13.9
+s/step, about GPU-bound, /dev/shm peak 154 GiB, node memory never below 38 GiB available
+(`oq8xiir6`). 9 workers is 1.7% faster (within noise) but left 0.02 GiB available (`azjgvr5m`).
+See `experiments/martin/LOG.md`.
 On GH200 nodes `node_used` (MemTotal − MemAvailable) counts host LPDDR (478 GiB) plus GPU HBM
 (380 GiB); the NUMA columns separate the two.
 

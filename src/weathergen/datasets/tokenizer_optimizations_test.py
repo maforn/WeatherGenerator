@@ -38,7 +38,7 @@ def assert_equal(a, b):
         torch.testing.assert_close(a, b, rtol=0, atol=0, equal_nan=True)
     elif isinstance(a, np.ndarray):  # noqa: TID251 (runtime type check, not an annotation)
         np.testing.assert_array_equal(a, b)
-    elif isinstance(a, (tuple, list)):
+    elif isinstance(a, tuple | list):
         assert len(a) == len(b)
         for first, second in zip(a, b, strict=True):
             assert_equal(first, second)
