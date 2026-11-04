@@ -51,6 +51,7 @@ Log in once with `ssh jupiter` (MFA), then:
 minion run train                                    # baseline: BASE + CONFIG from the Makefile, 1 node, 30 min
 minion run train --arg "CONFIG=config/my_test.yml"  # your own overlay on the same base
 minion run train --arg "CONFIG=config/optimizations.yml"  # with the GPU memory optimizations (turn each on/off there)
+minion run train --arg "CONFIG=config/dataloader_optimizations.yml"  # with the data-loader optimizations (docs/dataloader-optimizations.md)
 minion run train --arg "NODES=2 TIME=01:00:00"
 minion run profile                                  # same, with Nsight Systems profiling
 minion run queue

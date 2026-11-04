@@ -1,0 +1,20 @@
+# The same nine data-loader optimizations as config/dataloader_optimizations.yml, plus worker
+# settings for HEALPix level 6 on one JUPITER node.
+# 22.1 s/step instead of 27.5 s (4 workers, no flags). Each fp32 sample takes 9.2 GiB of /dev/shm,
+# so 8+ workers run out of node memory; keep 5. With source_tokens_in_mixed_precision cast in the
+# loader workers (alejandro/bf16-worker) samples halve and 8 workers fit (13.9 s/step).
+healpix_level: 6
+data_loading:
+  num_workers: 5
+  # one sample queued per worker instead of two: halves the samples waiting in /dev/shm
+  prefetch_factor: 1
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True

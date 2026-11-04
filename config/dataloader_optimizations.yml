@@ -1,0 +1,22 @@
+# Data-loader optimizations, each off when missing (the old code path). All nine on the operan
+# config, level 5, 12 workers: 4.67 -> 2.88 s/step, same losses. See docs/dataloader-optimizations.md
+data_loading:
+  optimizations:
+    # spread leftover batches one per worker instead of giving them all to the last worker
+    even_workset_split: True
+    # Anemoi/Operan readers: select the needed variables before loading the array
+    anemoi_select_vars: True
+    # Anemoi/Operan readers: no copy when the array is already float32
+    anemoi_avoid_dtype_copy: True
+    # obs reader: one read of the needed columns instead of three
+    obs_single_read: True
+    # NaN filter: reuse the arrays when every row is valid
+    skip_all_valid_filter_copy: True
+    # tokenizer: copy only coordinates where only coordinates are used
+    tokenize_coords_only: True
+    # tokenizer: build each source token tensor in place instead of pieces + torch.stack
+    source_direct_build: True
+    # targets: only build the fields the loss requests
+    target_requested_fields_only: True
+    # training: skip sorting indices that only evaluation needs
+    skip_train_inverse_indices: True

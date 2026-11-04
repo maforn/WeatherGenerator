@@ -33,7 +33,7 @@ from weathergen.datasets.utils import (
     get_tokens_lens,
 )
 from weathergen.readers_extra.registry import get_extra_reader
-from weathergen.train.utils import Stage, get_batch_size_from_config
+from weathergen.train.utils import TRAIN, Stage, get_batch_size_from_config
 from weathergen.utils.distributed import SpatialParallelContext, is_root
 
 type AnyDataReader = DataReaderBase | DataReaderAnemoi | DataReaderObs
@@ -75,9 +75,11 @@ def collect_datasources(stream_datasets: list, idx: int, type: str, rng) -> IORe
             assert False, "invalid value for argument `type`"
 
         # get source (of potentially multi-step length)
-        rdata = (
-            get_reader_data(idx).shuffle(rng, shuffle, num_subset).remove_nan_coords_and_geoinfos()
-        )
+        rdata = get_reader_data(idx).shuffle(rng, shuffle, num_subset)
+        if ds.optimizations.get("skip_all_valid_filter_copy", False):
+            rdata = rdata.remove_nan_coords_and_geoinfos(skip_all_valid_filter_copy=True)
+        else:
+            rdata = rdata.remove_nan_coords_and_geoinfos()
         rdata.data = normalize_channels(rdata.data)
         rdata.geoinfos = ds.normalize_geoinfos(rdata.geoinfos)
         rdatas += [rdata]
@@ -99,6 +101,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
+        self.optimizations = cf.data_loading.get("optimizations", {})
         self.mask_value = 0.0
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
@@ -117,6 +120,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.masker,
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
+            optimizations=self.optimizations,
         )
         if self.spatial_parallel.size > 1:
             logger.info(
@@ -285,6 +289,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                         + f" from stream config {stream_name}.",
                     )
                 ds = dataset(filename=filename, **kwargs)
+                ds.optimizations = self.optimizations
 
                 streams_datasets[stream_name].readers += [ds]
 
@@ -526,6 +531,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     token_data,
                     (time_win_target.start, time_win_target.end),
                     target_mask,
+                    need_inverse_indices=self._stage != TRAIN,
                 )
 
                 stream_data.add_target_values(
@@ -873,11 +879,19 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             # note the rng seed is not touched here: each worker derives its own seed from
             # the base seed in _derive_rng_seed(), keyed by rank, worker id and mini epoch
             # split workload
-            per_worker = (local_end - local_start) // worker_info.num_workers
-            iter_start = local_start + worker_info.id * per_worker
-            iter_end = iter_start + per_worker
-            if worker_info.id + 1 == worker_info.num_workers:
-                iter_end = local_end
+            if self.optimizations.get("even_workset_split", False):
+                # Split complete batches so batch_size > 1 cannot create extra batches.
+                count, remainder = divmod(len(self) // self.batch_size, worker_info.num_workers)
+                start_batch = worker_info.id * count + min(worker_info.id, remainder)
+                count += int(worker_info.id < remainder)
+                iter_start = local_start + start_batch * self.batch_size
+                iter_end = iter_start + count * self.batch_size
+            else:
+                per_worker = (local_end - local_start) // worker_info.num_workers
+                iter_start = local_start + worker_info.id * per_worker
+                iter_end = iter_start + per_worker
+                if worker_info.id + 1 == worker_info.num_workers:
+                    iter_end = local_end
             logger.info(
                 f"{self.spatial_parallel.ddp_rank}::{worker_info.id}"
                 + f" : dataset [{local_start},{local_end}) : [{iter_start},{iter_end})"
