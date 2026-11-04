@@ -1,0 +1,14 @@
+{
+ "run": "azjgvr5m",
+ "job": "2662605",
+ "date": "2026-11-03",
+ "state": "COMPLETED",
+ "elapsed": "00:30:02",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_bf16_workers9_100steps.yml",
+ "steps": 100,
+ "s_per_step": 13.68,
+ "gpu_peak_gib": 77.71,
+ "host_rss_gib": 107.4,
+ "error": "",
+ "note": "level6 bf16 9 workers 100 steps full memory"
+}

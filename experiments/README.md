@@ -6,6 +6,8 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Notes |
 |---|---|---|---|---|---|---|---|---|
+| [azjgvr5m](2026-11-03_azjgvr5m/) | 2026-11-03 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_bf16_workers9_100steps.yml | COMPLETED | 100 | 13.68 | 77.71 | 107.4 | level6 bf16 9 workers 100 steps full memory |
+| [va54ajr5](2026-11-03_va54ajr5/) | 2026-11-03 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level5_bf16_shm.yml | COMPLETED | 100 | 2.84 | 29.8 | 79.2 | level5 bf16 shm measurement |
 | [k2rsep95](2026-11-02_k2rsep95/) | 2026-11-02 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_bf16_workers9.yml | COMPLETED | 40 | 13.84 | 77.74 | 105.3 | level6 bf16 source tokens |
 | [njkjo655](2026-11-02_njkjo655/) | 2026-11-02 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_bf16_workers5.yml | COMPLETED | 40 | 22.68 | 77.67 |  | level6 bf16 source tokens |
 | [k6i6mdyp](2026-11-02_k6i6mdyp/) | 2026-11-02 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_all_workers5.yml | COMPLETED | 40 | 22.14 | 82.19 | 87.8 | level 6 all flags 5 workers |

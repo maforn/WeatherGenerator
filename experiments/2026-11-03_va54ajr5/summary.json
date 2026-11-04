@@ -1,0 +1,14 @@
+{
+ "run": "va54ajr5",
+ "job": "2662585",
+ "date": "2026-11-03",
+ "state": "COMPLETED",
+ "elapsed": "00:09:33",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_level5_bf16_shm.yml",
+ "steps": 100,
+ "s_per_step": 2.84,
+ "gpu_peak_gib": 29.8,
+ "host_rss_gib": 79.2,
+ "error": "",
+ "note": "level5 bf16 shm measurement"
+}
