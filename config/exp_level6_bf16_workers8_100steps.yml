@@ -1,0 +1,49 @@
+# Martin data-loader experiment: level 6, all flags + bf16, 8 workers (instead of 9), 100 steps.
+# azjgvr5m (9 workers) ran node MemAvailable down to 0.02 GiB; 8 workers should free ~45 GiB.
+# Checks speed (vs 13.7 s/step at 9 workers; prep ~108 s / 8 = 13.5 s per sample vs GPU ~12-13 s)
+# and headroom, with profile_memory_full incl. NUMA host (LPDDR) vs GPU HBM columns.
+# Same sample count as azjgvr5m but different worker split; loss = trend only. Submit with 00:45:00.
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+  # writes <run_dir>/dataloader_profile/: per-sample stage times, loader waits, memory CSV
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  profile_memory_full: True
+  num_workers: 8
+  prefetch_factor: 1
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True
+    source_tokens_bf16: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 100 steps
+  samples_per_mini_epoch: 400
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
+
+healpix_level: 6
