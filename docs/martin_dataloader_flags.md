@@ -72,6 +72,12 @@ configurations keep PyTorch's default (2). Use 1 at level 6, where each sample o
 Summarize or compare runs with
 `python scripts/analyze_dataloader_profile.py --run <dir> --baseline <dir> --output <plots>`.
 
+## Results page
+
+`docs/martin_dataloader_results.html` is a standalone page for the team (open it in a browser):
+headline numbers, interactive "what is in host memory over time" views for level 5 before/after
+and level 6, and every run behind the numbers.
+
 ## Plots
 
 - `scripts/plot_memory_view.py --run <dir>`: what is in host memory over time, stacked by
