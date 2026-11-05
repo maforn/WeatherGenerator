@@ -25,3 +25,7 @@ embed_index_copy: True
 # run the decoder over this many groups of cells (smaller flash-attn backward scratch;
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
+
+# 'block' readout of the stream embedding as one batched matmul over the channels instead of
+# a loop over them (same parameters, equal up to bf16 rounding)
+embed_readout_batched: True
