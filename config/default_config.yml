@@ -150,6 +150,11 @@ data_loading :
   # If this happens, you can disable the flag, but performance will drop on GH200.
   memory_pinning: True
 
+  # data-loader optimizations, each off when missing or False
+  optimizations:
+    # training: skip the inverse-index sort of the targets; only evaluation uses it
+    skip_train_inverse_indices: False
+
 
 # config for training
 training_config:

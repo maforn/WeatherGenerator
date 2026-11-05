@@ -46,8 +46,10 @@ class TokenizerMasking(Tokenizer):
         masker: Masker,
         source_cell_start: int = 0,
         source_cell_end: int | None = None,
+        optimizations: dict | None = None,
     ):
         super().__init__(healpix_level)
+        self.optimizations = optimizations or {}
         self.masker = masker
         self.rng = None
         self.token_size = None
@@ -215,6 +217,7 @@ class TokenizerMasking(Tokenizer):
         token_data,
         time_win: tuple,
         cell_mask,
+        need_inverse_indices: bool = True,
     ):
         # create tokenization index
         (idxs_cells, idxs_cells_lens) = token_data
@@ -239,7 +242,10 @@ class TokenizerMasking(Tokenizer):
         )
 
         idxs_ord_inv = None
-        if data.numel() > 0:
+        compute_inverse = need_inverse_indices or not self.optimizations.get(
+            "skip_train_inverse_indices", False
+        )
+        if data.numel() > 0 and compute_inverse:
             # flatten per-token indices into one flat list
             idxs_flat = torch.cat([idxs for idxs_cell in idxs_cells for idxs in idxs_cell])
             # compute indices for inversion

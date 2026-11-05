@@ -33,7 +33,7 @@ from weathergen.datasets.utils import (
     get_tokens_lens,
 )
 from weathergen.readers_extra.registry import get_extra_reader
-from weathergen.train.utils import Stage, get_batch_size_from_config
+from weathergen.train.utils import TRAIN, Stage, get_batch_size_from_config
 from weathergen.utils.distributed import SpatialParallelContext, is_root
 
 type AnyDataReader = DataReaderBase | DataReaderAnemoi | DataReaderObs
@@ -99,6 +99,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
+        self.optimizations = cf.data_loading.get("optimizations", {})
         self.mask_value = 0.0
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
@@ -117,6 +118,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.masker,
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
+            optimizations=self.optimizations,
         )
         if self.spatial_parallel.size > 1:
             logger.info(
@@ -526,6 +528,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     token_data,
                     (time_win_target.start, time_win_target.end),
                     target_mask,
+                    need_inverse_indices=self._stage != TRAIN,
                 )
 
                 stream_data.add_target_values(
