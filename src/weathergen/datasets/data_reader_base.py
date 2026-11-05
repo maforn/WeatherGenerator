@@ -331,6 +331,8 @@ class DataReaderBase(metaclass=ABCMeta):
 
         self.time_window_handler = tw_handler
         self.stream_info = stream_info
+        # Populated by the sampler after construction; old callers retain all defaults.
+        self.optimizations = {}
         self.target_channel_weights = None
 
     def init_empty(self) -> None:

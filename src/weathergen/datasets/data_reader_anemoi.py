@@ -213,7 +213,10 @@ class DataReaderAnemoi(DataReaderTimestep):
         # subsetting is pushed to the ctor via frequency argument; this also ensures that no sub-
         # sampling is required here
         try:
-            data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32)
+            if self.optimizations.get("anemoi_avoid_dtype_copy", False):
+                data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32, copy=False)
+            else:
+                data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32)
         except MissingDateError as e:
             _logger.debug(f"Date not present in anemoi dataset: {str(e)}. Skipping.")
             return ReaderData.empty(

@@ -150,6 +150,11 @@ data_loading :
   # If this happens, you can disable the flag, but performance will drop on GH200.
   memory_pinning: True
 
+  # data-loader optimizations, each off when missing or False
+  optimizations:
+    # Anemoi and Operan readers: no astype(float32) copy when the data is already float32
+    anemoi_avoid_dtype_copy: False
+
 
 # config for training
 training_config:
