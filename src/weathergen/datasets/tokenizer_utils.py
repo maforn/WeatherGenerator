@@ -352,6 +352,8 @@ def tokenize_apply_mask_target(
     hpy_verts_local,
     hpy_nctrs,
     enc_time,
+    need_values=True,
+    need_coords=True,
 ):
     """
     Apply masking to the data.
@@ -386,12 +388,22 @@ def tokenize_apply_mask_target(
 
     idxs_data = torch.cat(idxs_data)
 
-    # apply mask
+    # Keep the original allocation and computation order when both fields are requested.
     datetimes = np.atleast_1d(rdata.datetimes[idxs_data])
-    datetimes_enc = enc_time(datetimes, time_win)
-    geoinfos = rdata.geoinfos[idxs_data]
-    coords = rdata.coords[idxs_data]
-    data = rdata.data[idxs_data]
+    if need_coords and need_values:
+        datetimes_enc = enc_time(datetimes, time_win)
+        geoinfos = rdata.geoinfos[idxs_data]
+        coords = rdata.coords[idxs_data]
+        data = rdata.data[idxs_data]
+    else:
+        coords = rdata.coords[idxs_data]
+        data = rdata.data[idxs_data] if need_values else None
+        if not need_coords:
+            if mask_channels is not None:
+                raise AssertionError("to be implemented")
+            return data, datetimes, coords, None, None
+        datetimes_enc = enc_time(datetimes, time_win)
+        geoinfos = rdata.geoinfos[idxs_data]
 
     if mask_channels is not None:
         assert False, "to be implemented"
