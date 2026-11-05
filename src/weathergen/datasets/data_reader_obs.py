@@ -271,14 +271,17 @@ class DataReaderObs(DataReaderBase):
         start_row = self.indices_start[idx]
         end_row = self.indices_end[idx]
 
-        coords = self.data.oindex[start_row:end_row, self.coords_idx]
+        # one read of all columns: coords, geoinfos and data share the rows (and zarr chunks)
+        num_coords, num_geoinfos = len(self.coords_idx), len(self.geoinfo_idx)
+        columns = np.concatenate([self.coords_idx, self.geoinfo_idx, channels_idx]).astype(int)
+        block = self.data.oindex[start_row:end_row, columns]
+        coords = block[:, :num_coords]
         geoinfos = (
-            self.data.oindex[start_row:end_row, self.geoinfo_idx]
-            if len(self.geoinfo_idx) > 0
+            block[:, num_coords : num_coords + num_geoinfos]
+            if num_geoinfos > 0
             else np.zeros((coords.shape[0], 0), np.float32)
         )
-
-        data = self.data.oindex[start_row:end_row, channels_idx]
+        data = block[:, num_coords + num_geoinfos :]
         datetimes = self.dt[start_row:end_row][:, 0]
 
         # indices_start, indices_end above work with [t_start, t_end] and violate

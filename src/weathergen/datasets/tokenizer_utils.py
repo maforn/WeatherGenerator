@@ -496,38 +496,38 @@ def get_target_coords_local(
     geoinfo_offset += target_geoinfos.shape[1]
 
     ref = torch.tensor([1.0, 0.0, 0.0])
-
-    vls = torch.repeat_interleave(verts_local, masked_points_per_cell, dim=0).transpose(0, 1)
+    # local coordinates of the other vertices of a point's cell, per vertex
+    nv = verts_local.shape[-1]
 
     zi = 0
     a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + 3)] = ref - local(verts00_rots)
 
     zi = 3
-    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + vls.shape[-1])] = vls[0]
+    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + nv)] = verts_local[cell, 0]
 
     zi = 15
     a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + 3)] = ref - local(verts10_rots)
 
     zi = 18
-    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + vls.shape[-1])] = vls[1]
+    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + nv)] = verts_local[cell, 1]
 
     zi = 30
     a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + 3)] = ref - local(verts11_rots)
 
     zi = 33
-    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + vls.shape[-1])] = vls[2]
+    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + nv)] = verts_local[cell, 2]
 
     zi = 45
     a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + 3)] = ref - local(verts01_rots)
 
     zi = 48
-    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + vls.shape[-1])] = vls[3]
+    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + nv)] = verts_local[cell, 3]
 
     zi = 60
     a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + 3)] = ref - local(vertsmm_rots)
 
     zi = 63
-    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + vls.shape[-1])] = vls[4]
+    a[..., (geoinfo_offset + zi) : (geoinfo_offset + zi + nv)] = verts_local[cell, 4]
 
     tcs_ctrs = torch.cat([ref - local(vecs_to_rots(c).to(torch.float32)) for c in nctrs], -1)
     zi = 75
