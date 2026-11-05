@@ -216,6 +216,7 @@ def tokenize_spacetime(
     pad_tokens=True,
     cell_start=0,
     cell_end=None,
+    coords_only=False,
 ):
     """Tokenize respecting an intrinsic time step in the data, i.e. each time step is tokenized
     separately
@@ -231,18 +232,30 @@ def tokenize_spacetime(
     for _, t in enumerate(t_unique):
         # data for current time step
         mask = t == rdata.datetimes
-        rdata_cur = IOReaderData(
-            rdata.coords[mask], rdata.geoinfos[mask], rdata.data[mask], rdata.datetimes[mask]
-        )
-        idxs_cur, idxs_cur_lens = tokenize_space(
-            rdata_cur,
-            token_size,
-            hl,
-            pad_tokens,
-            offset_step,
-            cell_start,
-            cell_end,
-        )
+        if coords_only:
+            # Spatial tokenization only inspects coordinates; avoid copying the data channels.
+            idxs_cur, idxs_cur_lens = hpy_splits(
+                rdata.coords[mask],
+                token_size=token_size,
+                hl=hl,
+                pad_tokens=pad_tokens,
+                offset_step=offset_step,
+                cell_start=cell_start,
+                cell_end=cell_end,
+            )
+        else:
+            rdata_cur = IOReaderData(
+                rdata.coords[mask], rdata.geoinfos[mask], rdata.data[mask], rdata.datetimes[mask]
+            )
+            idxs_cur, idxs_cur_lens = tokenize_space(
+                rdata_cur,
+                token_size,
+                hl,
+                pad_tokens,
+                offset_step,
+                cell_start,
+                cell_end,
+            )
 
         # collect data for all time steps
         idxs_cells = [t + tc for t, tc in zip(idxs_cells, idxs_cur, strict=True)]

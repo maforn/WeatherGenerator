@@ -46,8 +46,10 @@ class TokenizerMasking(Tokenizer):
         masker: Masker,
         source_cell_start: int = 0,
         source_cell_end: int | None = None,
+        optimizations: dict | None = None,
     ):
         super().__init__(healpix_level)
+        self.optimizations = optimizations or {}
         self.masker = masker
         self.rng = None
         self.token_size = None
@@ -90,6 +92,9 @@ class TokenizerMasking(Tokenizer):
                 tokens += [(None, None)]
                 continue
             # tokenize data
+            tokenize_kwargs = {}
+            if tok_spacetime and self.optimizations.get("tokenize_coords_only", False):
+                tokenize_kwargs["coords_only"] = True
             idxs_cells, idxs_cells_lens = tok(
                 readerdata_to_torch(rdata),
                 token_size,
@@ -97,6 +102,7 @@ class TokenizerMasking(Tokenizer):
                 pad_tokens,
                 cell_start=cell_start,
                 cell_end=cell_end,
+                **tokenize_kwargs,
             )
             tokens += [(idxs_cells, idxs_cells_lens)]
 

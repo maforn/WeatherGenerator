@@ -99,6 +99,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
+        self.optimizations = cf.data_loading.get("optimizations", {})
         self.mask_value = 0.0
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
@@ -117,6 +118,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.masker,
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
+            optimizations=self.optimizations,
         )
         if self.spatial_parallel.size > 1:
             logger.info(
