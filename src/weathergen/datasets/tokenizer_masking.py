@@ -46,8 +46,10 @@ class TokenizerMasking(Tokenizer):
         masker: Masker,
         source_cell_start: int = 0,
         source_cell_end: int | None = None,
+        optimizations: dict | None = None,
     ):
         super().__init__(healpix_level)
+        self.optimizations = optimizations or {}
         self.masker = masker
         self.rng = None
         self.token_size = None
@@ -171,6 +173,7 @@ class TokenizerMasking(Tokenizer):
             time_win,
             self.hpy_verts_rots_source[-1][self.source_cell_start : self.source_cell_end],
             encode_times_source,
+            direct_build=self.optimizations.get("source_direct_build", False),
         )
 
         return (source_tokens_cells, source_tokens_lens)

@@ -176,7 +176,7 @@ class StreamData:
         step: int,
         ss_raw: IOReaderData,
         ss_lens: torch.Tensor,
-        ss_cells: list,
+        ss_cells: list | torch.Tensor,
         is_spoof: bool,
     ) -> None:
         """
@@ -202,7 +202,9 @@ class StreamData:
 
         self.source_raw[step] = ss_raw
         self.source_tokens_lens[step] = ss_lens
-        self.source_tokens_cells[step] = torch.stack(ss_cells)
+        self.source_tokens_cells[step] = (
+            ss_cells if isinstance(ss_cells, torch.Tensor) else torch.stack(ss_cells)
+        )
 
         idx = torch.isnan(self.source_tokens_cells[step])
         self.source_tokens_cells[step][idx] = self.mask_value

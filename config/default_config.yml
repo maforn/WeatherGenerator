@@ -150,6 +150,12 @@ data_loading :
   # If this happens, you can disable the flag, but performance will drop on GH200.
   memory_pinning: True
 
+  # data-loader optimizations, each off when missing or False
+  optimizations:
+    # source tokens: gather straight from the arrays and keep one tensor instead of padded copies,
+    # torch.split and torch.stack
+    source_direct_build: False
+
 
 # config for training
 training_config:

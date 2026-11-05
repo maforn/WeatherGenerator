@@ -262,6 +262,7 @@ def tokenize_apply_mask_source(
     time_win,
     hpy_verts_rots,
     enc_time,
+    direct_build=False,
 ):
     """
     Apply masking to the data.
@@ -299,17 +300,33 @@ def tokenize_apply_mask_source(
     # idxs_cells -> idxs_tokens -> idxs_data has been prepared so
     # that the zero-index is used to add the padding to the tokens to ensure fixed size
     times_enc = enc_time(rdata.datetimes, time_win)
-    zeros_like = torch.zeros_like
-    datetimes_enc_padded = torch.cat([zeros_like(times_enc[0]).unsqueeze(0), times_enc])
-    geoinfos_padded = torch.cat([zeros_like(rdata.geoinfos[0]).unsqueeze(0), rdata.geoinfos])
-    coords_padded = torch.cat([zeros_like(rdata.coords[0]).unsqueeze(0), rdata.coords])
-    data_padded = torch.cat([zeros_like(rdata.data[0]).unsqueeze(0), rdata.data])
+    if direct_build:
+        # Gather directly from the original arrays and replace padding positions with zeros.
+        # Keep the same padded coordinates (including the legacy first-point handling below).
+        padding = idxs_data == 0
+        gather_indices = (idxs_data - 1).clamp_min(0)
 
-    # apply mask
-    datetimes = datetimes_enc_padded[idxs_data]
-    geoinfos = geoinfos_padded[idxs_data]
-    coords = coords_padded[idxs_data]
-    data = data_padded[idxs_data]
+        def gather_padded(values):
+            result = values[gather_indices]
+            result[padding] = 0
+            return result
+
+        datetimes = gather_padded(times_enc)
+        geoinfos = gather_padded(rdata.geoinfos)
+        coords = gather_padded(rdata.coords)
+        data = gather_padded(rdata.data)
+    else:
+        zeros_like = torch.zeros_like
+        datetimes_enc_padded = torch.cat([zeros_like(times_enc[0]).unsqueeze(0), times_enc])
+        geoinfos_padded = torch.cat([zeros_like(rdata.geoinfos[0]).unsqueeze(0), rdata.geoinfos])
+        coords_padded = torch.cat([zeros_like(rdata.coords[0]).unsqueeze(0), rdata.coords])
+        data_padded = torch.cat([zeros_like(rdata.data[0]).unsqueeze(0), rdata.data])
+
+        # apply mask
+        datetimes = datetimes_enc_padded[idxs_data]
+        geoinfos = geoinfos_padded[idxs_data]
+        coords = coords_padded[idxs_data]
+        data = data_padded[idxs_data]
 
     if mask_channels is not None:
         assert False, "to be implemented"
@@ -334,7 +351,12 @@ def tokenize_apply_mask_source(
     # split up tensor into tokens
     # TODO: idxs_data_lens is currently only defined when mask_tokens is not None
     idxs_data_lens = idxs_data_lens.tolist()
-    tokens_cells = torch.split(tokens, idxs_data_lens)
+    if direct_build and len(set(idxs_data_lens)) == 1:
+        # All padded source tokens have one size. Preserve this contiguous allocation
+        # through StreamData.add_source instead of splitting and then stacking a copy.
+        tokens_cells = tokens.reshape(len(idxs_data_lens), idxs_data_lens[0], tokens.shape[-1])
+    else:
+        tokens_cells = torch.split(tokens, idxs_data_lens)
 
     return tokens_cells, tokens_per_cell
 
