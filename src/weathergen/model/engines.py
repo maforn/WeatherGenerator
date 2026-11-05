@@ -96,6 +96,7 @@ class EmbeddingEngine(torch.nn.Module):
                     norm_type=self.cf.norm_type,
                     unembed_mode=self.cf.embed_unembed_mode,
                     stream_name=stream_name,
+                    num_chunks=self.cf.get("embed_num_chunks", 1),
                 )
             elif si["embed"]["net"] == "linear":
                 self.embeds[stream_name] = StreamEmbedLinear(
@@ -152,10 +153,15 @@ class EmbeddingEngine(torch.nn.Module):
 
         else:
             scatter_idxs = self.get_scatter_idxs_vectorized(batch)
-            scatter_idxs = scatter_idxs.unsqueeze(1).repeat((1, self.cf.ae_local_dim_embed))
 
             # actual scatter operation and apply per cell positional encoding
-            tokens_all.scatter_(0, scatter_idxs, torch.cat(x_embeds))
+            if self.cf.get("embed_index_copy", False):
+                # same result with the 1D row index but without repeating
+                tokens_all.index_copy_(0, scatter_idxs, torch.cat(x_embeds))
+            else:
+                # original path (default)
+                scatter_idxs = scatter_idxs.unsqueeze(1).repeat((1, self.cf.ae_local_dim_embed))
+                tokens_all.scatter_(0, scatter_idxs, torch.cat(x_embeds))                          
 
         pe_idxs = self.get_pe_idxs_vectorized(batch)
         tokens_all = tokens_all + pe_embed[pe_idxs]
@@ -336,13 +342,25 @@ class Local2GlobalAssimilationEngine(torch.nn.Module):
             )
 
     def forward(self, tokens_c, tokens_global_c, q_cells_lens_c, cell_lens_c):
+        # checkpoint per block, as in LocalAssimilationEngine
+        with_checkpoint = self.cf.get("ae_adapter_checkpoint", False)
         for block in self.ae_adapter:
-            tokens_global_c = block(
-                tokens_global_c,
-                tokens_c,
-                q_cells_lens_c,
-                cell_lens_c,
-            )
+            if with_checkpoint:
+                tokens_global_c = checkpoint(
+                    block,
+                    tokens_global_c,
+                    tokens_c,
+                    q_cells_lens_c,
+                    cell_lens_c,
+                    use_reentrant=False,
+                )
+            else:
+                tokens_global_c = block(
+                    tokens_global_c,
+                    tokens_c,
+                    q_cells_lens_c,
+                    cell_lens_c,
+                )
         return tokens_global_c
 
 

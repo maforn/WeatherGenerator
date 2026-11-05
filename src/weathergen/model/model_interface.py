@@ -145,6 +145,12 @@ def init_model_and_shard(
             ),
         }
 
+        # with decoder_num_chunks > 1 every decoder module runs once per chunk, so its
+        # parameters are all-gathered once per chunk.
+        # TODO: measure creating reshard_after_forward=False (peak memory and step time) with
+        # decoder_num_chunks > 1, at higher HEALPix levels and across nodes: one all-gather
+        # instead of one per chunk, but the full decoder parameters stay on every GPU until
+        # the backward.
         for module in model.target_token_engines.modules():
             if isinstance(module, modules_to_shard):
                 fully_shard(module, **full_precision_fsdp_kwargs)

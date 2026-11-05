@@ -32,6 +32,7 @@ class StreamEmbedTransformer(torch.nn.Module):
         norm_type="LayerNorm",
         unembed_mode="full",
         stream_name="stream_embed",
+        num_chunks=1,
     ):
         """Constructor
 
@@ -40,6 +41,8 @@ class StreamEmbedTransformer(torch.nn.Module):
                  (num_tokens x dim_embed) to dim_out, allowing for mixing between channels/columns
           block : per-channel/column unembedding network
                 (which is hence a block-sparse form of full)
+        num_chunks : number of pieces the input patches are split into and embedded one after
+                the other, to bound the per-layer recompute + backward burst (see forward)
         """
 
         super(StreamEmbedTransformer, self).__init__()
@@ -54,6 +57,7 @@ class StreamEmbedTransformer(torch.nn.Module):
         self.num_blocks = num_blocks
         self.num_heads = num_heads
         self.unembed_mode = unembed_mode
+        self.num_chunks = num_chunks
 
         norm = torch.nn.LayerNorm if norm_type == "LayerNorm" else RMSNorm
 
@@ -112,6 +116,17 @@ class StreamEmbedTransformer(torch.nn.Module):
         # regardless) and whose output is retained as the first block's checkpoint input
         x = peh(self.embed(x_in.transpose(-2, -1)))
 
+        # Patches (dim 0) are embedded independently, so we can chunk them to reduce the
+        # memory spike. 2 chunks is already enough for a relevant reduction.
+        if self.num_chunks > 1 and x.shape[0] > 1:
+            chunks = [c for c in x.tensor_split(self.num_chunks) if c.shape[0] > 0]
+            x = torch.cat([self._layers(c) for c in chunks])
+        else:
+            x = self._layers(x)
+
+        return checkpoint(self.readout, x, use_reentrant=False)
+
+    def _layers(self, x):
         # One checkpoint per layer, not one per (attention, MLP) pair. Pairing them retains
         # one boundary activation per block instead of two, but the recompute then has to
         # rebuild a whole block's graph before the backward consumes any of it, and every
@@ -121,8 +136,7 @@ class StreamEmbedTransformer(torch.nn.Module):
         # expensive one; it does not change how much is recomputed.
         for layer in self.layers:
             x = checkpoint(layer, x, use_reentrant=False)
-
-        return checkpoint(self.readout, x, use_reentrant=False)
+        return x
 
     def readout(self, x):
         """
