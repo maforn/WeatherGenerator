@@ -150,6 +150,10 @@ data_loading :
   # If this happens, you can disable the flag, but performance will drop on GH200.
   memory_pinning: True
 
+  # samples each loader worker keeps queued (PyTorch default 2 when unset); lower it when
+  # samples are large, e.g. 1 at HEALPix level 6 to bound /dev/shm
+  # prefetch_factor: 2
+
 
 # config for training
 training_config:
