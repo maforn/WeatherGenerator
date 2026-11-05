@@ -24,10 +24,10 @@ MODULES := { type module >/dev/null 2>&1 || . "$$LMOD_ROOT/lmod/init/bash"; } &&
 	module load Stages/2025 GCCcore/.13.3.0 Python/3.12.3 &&
 comma := ,
 
-.PHONY: help init check test train profile snapshot
+.PHONY: help init check test train profile snapshot scalene-data scalene-train
 
 help: ## show this help
-	@grep -hE '^[a-z]+:.*##' $(MAKEFILE_LIST) | awk 'BEGIN {FS=":.*##"}; {printf "  %-9s %s\n", $$1, $$2}'
+	@grep -hE '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk 'BEGIN {FS=":.*##"}; {printf "  %-14s %s\n", $$1, $$2}'
 
 # Slurm jobs only get the variables launch-slurm.py exports, and the job script reads
 # BUDGET_ACCOUNTS from ~/.bashrc (platform-env.py fails without it).
@@ -56,3 +56,25 @@ profile: ## like train, with Nsight Systems profiling
 
 snapshot: ## like train, but 3 steps with a CUDA allocator snapshot (scripts/analyze_memory_snapshot.py)
 	$(MAKE) train CONFIG="$(CONFIG)$(comma)config/config_memory_profiling.yml"
+
+# Scalene: line-level CPU (Python and native), memory and GPU profiles, run on a compute node.
+# View: `.venv/bin/python -m scalene view --cli -r <json>`, or `--standalone` for one HTML file.
+SCALENE := uv pip install --python .venv/bin/python -q scalene &&
+SCALENE_DIR := profiling/scalene
+BATCHES ?= 3
+STEPS ?= 30
+SCALENE_CONFIGS := --base-config $(BASE) --config $(subst $(comma), ,$(CONFIG))
+
+scalene-data: ## Scalene CPU + memory profile of building BATCHES batches (no workers, no GPU)
+	mkdir -p $(SCALENE_DIR)
+	$(MODULES) $(SCALENE) srun -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 1 --time 00:40:00 \
+		.venv/bin/python -m scalene run --memory --profile-only weathergen --program-path . \
+		-o $(SCALENE_DIR)/data.json scripts/profile_data_loading.py --- $(SCALENE_CONFIGS) \
+		--batches $(BATCHES) --checksum $(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))
+
+scalene-train: ## Scalene CPU + GPU profile of rank 0 of a 1-node training of STEPS steps
+	mkdir -p $(SCALENE_DIR)
+	$(MODULES) $(SCALENE) srun -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 4 --cpus-per-task=72 \
+		--gres=gpu:4 --time $(TIME) scripts/scalene_task.sh $(SCALENE_DIR)/train.json train \
+		$(SCALENE_CONFIGS) --options training_config.samples_per_mini_epoch=$(shell echo $$(($(STEPS) * 4))) \
+		$(subst $(comma), ,$(OPTIONS))

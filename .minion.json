@@ -18,6 +18,8 @@
         "test": "make test",
         "profile": "make profile $MINION_ARGS",
         "snapshot": "make snapshot $MINION_ARGS",
+        "scalene-data": "make scalene-data $MINION_ARGS",
+        "scalene-train": "make scalene-train $MINION_ARGS",
         "queue": "squeue --me"
       }
     }
