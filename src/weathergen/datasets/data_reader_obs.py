@@ -287,12 +287,15 @@ class DataReaderObs(DataReaderBase):
         t_win = self.time_window_handler.window(idx)
         t_mask = np.logical_and(datetimes >= t_win.start, datetimes < t_win.end)
 
-        rdata = ReaderData(
-            coords=coords[t_mask],
-            geoinfos=geoinfos[t_mask],
-            data=data[t_mask],
-            datetimes=datetimes[t_mask],
-        )
+        if self.optimizations.get("skip_all_valid_filter_copy", False) and t_mask.all():
+            rdata = ReaderData(coords, geoinfos, data, datetimes)
+        else:
+            rdata = ReaderData(
+                coords=coords[t_mask],
+                geoinfos=geoinfos[t_mask],
+                data=data[t_mask],
+                datetimes=datetimes[t_mask],
+            )
 
         dtr = self.time_window_handler.window(idx)
         check_reader_data(rdata, dtr)

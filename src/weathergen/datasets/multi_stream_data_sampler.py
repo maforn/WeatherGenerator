@@ -75,9 +75,11 @@ def collect_datasources(stream_datasets: list, idx: int, type: str, rng) -> IORe
             assert False, "invalid value for argument `type`"
 
         # get source (of potentially multi-step length)
-        rdata = (
-            get_reader_data(idx).shuffle(rng, shuffle, num_subset).remove_nan_coords_and_geoinfos()
-        )
+        rdata = get_reader_data(idx).shuffle(rng, shuffle, num_subset)
+        if ds.optimizations.get("skip_all_valid_filter_copy", False):
+            rdata = rdata.remove_nan_coords_and_geoinfos(skip_all_valid_filter_copy=True)
+        else:
+            rdata = rdata.remove_nan_coords_and_geoinfos()
         rdata.data = normalize_channels(rdata.data)
         rdata.geoinfos = ds.normalize_geoinfos(rdata.geoinfos)
         rdatas += [rdata]
@@ -99,6 +101,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
+        self.optimizations = cf.data_loading.get("optimizations", {})
         self.mask_value = 0.0
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
@@ -285,6 +288,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                         + f" from stream config {stream_name}.",
                     )
                 ds = dataset(filename=filename, **kwargs)
+                ds.optimizations = self.optimizations
 
                 streams_datasets[stream_name].readers += [ds]
 
