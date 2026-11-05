@@ -150,6 +150,12 @@ data_loading :
   # If this happens, you can disable the flag, but performance will drop on GH200.
   memory_pinning: True
 
+  # data-loader optimizations, each off when missing or False
+  optimizations:
+    # observation reader: one read of the needed columns instead of three
+    # (coordinates, geoinfos, channels)
+    obs_single_read: False
+
 
 # config for training
 training_config:
