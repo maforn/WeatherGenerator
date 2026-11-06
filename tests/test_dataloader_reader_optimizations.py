@@ -73,7 +73,8 @@ class ReaderOptimizationTests(unittest.TestCase):
             actual = optimized._get(0, [4, 2, 4])
             self.assert_reader_equal(expected, actual)
             self.assertEqual(len(optimized.data.reads), 1)
-            self.assertEqual(len(original.data.reads), 2 if empty_geo else 3)
+            # andres/scalene reads all columns once without the flag too (b180dc36)
+            self.assertEqual(len(original.data.reads), 1)
             actual.data[:] = -100
             self.assertGreaterEqual(optimized.data.values.min(), 0)
 
