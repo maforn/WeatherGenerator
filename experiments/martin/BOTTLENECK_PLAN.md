@@ -84,9 +84,13 @@ TRAIN_CFG=$BASE_CFG,config/optimizations.yml,config/exp_bn_loader.yml,config/exp
 - **S5:** the read is CPU work (obs reader 12.8% native vs 2.3% system time), not waiting on storage.
 - **A (`ykm2kcxf`):** GPU-bound at level 5 (loader wait 1.3%), 4.33 s/step against 2.84–2.88 s
   before Andres's GPU options. The loader has 3.6× headroom with 12 workers.
-- **Open, not in the plan:** fewer workers at level 5 (e.g. 4–6) would show how much host memory
-  the faster loader frees. Andres's GPU options without the rest would show whether they cause the
-  +50% step time. Both need Martin's OK.
+- **Added (Martin's OK, 2026-11-06), queued after C:**
+  - **NOOPT:** `$B,config/exp_bn_loader.yml,config/exp_bn_profile.yml,config/exp_bn_nogpuopts.yml`,
+    30 min. A without `optimizations.yml`. It keeps only the bf16 worker tokens and the per-step
+    gc, so the loader payload stays the same. Answers whether the GPU options cause the +50%
+    step time.
+  - **W4:** `$TRAIN_CFG,config/exp_bn_workers4.yml`, 30 min. A with 4 workers. Answers how much
+    host memory 8 fewer workers free, and whether the GPU stays fed.
 
 ## How each run is judged
 - **GPU-bound:** loader wait per step ≈ 0 (`loader_wait_rank*.jsonl`), and step time = GPU step.
