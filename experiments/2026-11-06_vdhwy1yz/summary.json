@@ -1,0 +1,14 @@
+{
+ "run": "vdhwy1yz",
+ "job": "2704860",
+ "date": "2026-11-06",
+ "state": "COMPLETED",
+ "elapsed": "00:10:55",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_even_workset_split.yml",
+ "steps": 100,
+ "s_per_step": 3.23,
+ "gpu_peak_gib": 29.33,
+ "host_rss_gib": 92.9,
+ "error": "",
+ "note": ""
+}

@@ -6,6 +6,16 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Notes |
 |---|---|---|---|---|---|---|---|---|
+| [mit3pxf0](2026-11-06_mit3pxf0/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_skip_train_inverse_indices.yml | COMPLETED | 100 | 4.42 | 29.31 | 56.0 |  |
+| [dom75441](2026-11-06_dom75441/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_target_requested_fields_only.yml | COMPLETED | 100 | 4.16 | 29.31 | 77.5 |  |
+| [t1te97ff](2026-11-06_t1te97ff/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_source_direct_build.yml | COMPLETED | 100 | 4.3 | 29.31 | 92.8 |  |
+| [cv2iljv2](2026-11-06_cv2iljv2/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_tokenize_coords_only.yml | COMPLETED | 100 | 4.4 | 29.31 | 93.1 |  |
+| [ko1zio6z](2026-11-06_ko1zio6z/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_skip_all_valid_filter_copy.yml | COMPLETED | 100 | 4.39 | 29.31 | 67.9 |  |
+| [fm6x4ski](2026-11-06_fm6x4ski/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_obs_single_read.yml | COMPLETED | 100 | 4.01 | 29.31 | 60.5 |  |
+| [hq52fbnw](2026-11-06_hq52fbnw/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_anemoi_avoid_dtype_copy.yml | COMPLETED | 100 | 4.57 | 29.31 | 93.4 |  |
+| [zi2h7d7a](2026-11-06_zi2h7d7a/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_anemoi_select_vars.yml | COMPLETED | 100 | 4.36 | 29.31 | 84.1 |  |
+| [vdhwy1yz](2026-11-06_vdhwy1yz/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_even_workset_split.yml | COMPLETED | 100 | 3.23 | 29.33 | 92.9 |  |
+| [spcoicgc](2026-11-06_spcoicgc/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_single_baseline.yml | COMPLETED | 100 | 4.58 | 29.31 | 90.1 |  |
 | [oq8xiir6](2026-11-04_oq8xiir6/) | 2026-11-04 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_bf16_workers8_100steps.yml | COMPLETED | 100 | 13.91 | 83.09 | 98.5 | level6 bf16 8 workers 100 steps full memory |
 | [azjgvr5m](2026-11-03_azjgvr5m/) | 2026-11-03 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level6_bf16_workers9_100steps.yml | COMPLETED | 100 | 13.68 | 77.71 | 107.4 | level6 bf16 9 workers 100 steps full memory |
 | [va54ajr5](2026-11-03_va54ajr5/) | 2026-11-03 | config_operan_georing_avhrr_forecasting_lowres.yml + exp_level5_bf16_shm.yml | COMPLETED | 100 | 2.84 | 29.8 | 79.2 | level5 bf16 shm measurement |
