@@ -11,7 +11,7 @@ needs optimizing. Results feed Alejandro's plots for the 20 Nov meeting.
   - Today every rank of a spatial group reads and normalizes the full sample and tokenizes the
     full-sphere target. Only source tokenization is cut to the rank's cells.
 - **Shared:** the weekly budget, about 12 node-hours left until Thu 2026-11-12 16:00. Martin's
-  part is about 3.5–4.
+  part is about 4.5–5.
 
 ## What we already know (no new runs)
 - **Read per sample doesn't depend on concurrency or level:**
@@ -23,21 +23,29 @@ needs optimizing. Results feed Alejandro's plots for the 20 Nov meeting.
   After them, read becomes a larger share of the remaining time.
 - **Host memory at level 6:**
   - /dev/shm ≈ ranks × workers × prefetch × sample size. Samples are 9.2 GiB in fp32.
-  - Workers on this branch still yield fp32 (Andres casts in `to_device`), so 5 workers is the
-    maximum at prefetch 1.
-  - Level 7 would be ~37 GiB per sample, so only ~1 worker per rank fits. That is the likely
-    cause of Yuejiang's CPU OOM.
+  - fp32 allows 5 workers at prefetch 1; worker-side bf16 allows 8 (oq8xiir6), which is merged
+    in here (see Setup).
+  - Level 7 would be ~37 GiB per sample in fp32 (~18 in bf16), so only ~1–2 workers per rank
+    fit. That is the likely cause of Yuejiang's CPU OOM.
+  - The 7 GiB GPU peak from Andres's options frees no host memory. Some of them use more:
+    `source_tokens_on_cpu`, `ema_on_cpu` and `fsdp_cpu_offload` keep tensors in pinned host
+    memory.
 
 ## Setup (laptop, done)
-- **Branch:** `martin/exp/bottleneck` (local only), worktree `wg-martin-bottleneck`, which is
-  `andres/scalene` plus `martin/main` merged in (profiling and loader flags).
+- **Branch:** `martin/exp/bottleneck` (local only), worktree `wg-martin-bottleneck`. It is
+  `andres/scalene` plus two merges:
+  - `martin/main`: profiling and loader flags;
+  - `alejandro/bf16-worker`: workers yield bf16 source tokens when
+    `source_tokens_in_mixed_precision` is on, which `config/optimizations.yml` does. The model
+    input is unchanged (njkjo655).
   - Tokenizer output is bit-identical to Andres's base in 5184/5184 synthetic cases.
   - Unit tests: only the 6 seed-test failures that already exist upstream.
 - **Overlays:**
   - `config/exp_bn_loader.yml`: all loader flags.
   - `config/exp_bn_profile.yml`: loader profiling with full memory and payload bytes.
-  - `config/exp_bn_level6.yml`: 5 workers, prefetch 1.
-  - `config/exp_bn_level7.yml`: 1 worker, prefetch 1, 10 steps.
+  - `config/exp_bn_level6.yml`: 8 workers, prefetch 1.
+  - `config/exp_bn_level7.yml`: 2 workers, prefetch 1, 10 steps.
+  - `config/exp_bn_workers{16,24}.yml`: level-5 worker sweep.
 - **`scripts/martin_submit_jupiter.sh`:**
   - `SRC_DIR`/`REMOTE_DIR` sync this worktree into its own JUPITER directory.
   - `TARGET=scalene-data` runs scalene.
@@ -62,12 +70,15 @@ TRAIN_CFG=$BASE_CFG,config/optimizations.yml,config/exp_bn_loader.yml,config/exp
 | S6 | scalene-data, level 6 | same, `+config/exp_bn_level6.yml`, `SCALENE_DIR=profiling/scalene/l6` | ≤40 min | What grows with the level |
 | S7 | scalene-data, level 7 | same, `+config/exp_bn_level7.yml`, `SCALENE_DIR=profiling/scalene/l7` | ≤40 min | Seconds and peak memory per level-7 sample; sizes D |
 | A | train, level 5, 100 steps | `scripts/martin_submit_jupiter.sh $TRAIN_CFG 00:30:00` | 30 min | New reference: GPU- or loader-bound with Andres's loader and GPU options? |
+| A16 | train, level 5, 16 workers | `... $TRAIN_CFG,config/exp_bn_workers16.yml 00:30:00` | 30 min | Do more workers still help with Andres's ~3.8× faster loader? Host-memory cost per worker |
+| A24 | train, level 5, 24 workers (conditional) | `... $TRAIN_CFG,config/exp_bn_workers24.yml 00:30:00` | 30 min | Only if A16 still waits on the loader and leaves ≥ ~100 GiB MemAvailable |
 | C | train, level 6, 100 steps | `... $TRAIN_CFG,config/exp_bn_level6.yml 00:45:00` | 45 min | Same at 3× tokenize/build; /dev/shm and node memory |
 | D | train, level 7, 10 steps | `... $TRAIN_CFG,config/exp_bn_level7.yml 01:00:00` | ≤60 min | Does it run? Host OOM, /dev/shm, GPU OOM, or just slow? |
 
 - The S runs are one job each, the trains two (with cleanup). Keep ≤3 queued/running.
 - Before D, check S7. If one sample takes more than 15 min, drop D to 5 steps. If the peak is
   above about 200 GiB, stop and discuss.
+- If A is already GPU-bound (no loader wait), skip A24: more workers cannot help.
 
 ## How each run is judged
 - **GPU-bound:** loader wait per step ≈ 0 (`loader_wait_rank*.jsonl`), and step time = GPU step.

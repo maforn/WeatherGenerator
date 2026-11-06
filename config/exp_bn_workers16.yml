@@ -1,0 +1,5 @@
+# Bottleneck study, level-5 worker sweep: 16 workers per rank (A runs the default 12).
+# Ran without host-memory trouble before (c9cfzjqg, fp32). Andres's options add pinned host
+# memory (source_tokens_on_cpu, ema_on_cpu, fsdp_cpu_offload): check node MemAvailable.
+data_loading:
+  num_workers: 16

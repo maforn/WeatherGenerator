@@ -1,7 +1,7 @@
-# Bottleneck study, HEALPix level 6. Workers still yield fp32 source tokens on this branch
-# (source_tokens_in_mixed_precision casts in to_device), ~9.2 GiB per sample: 5 workers with
-# prefetch 1 is the largest setting that fit /dev/shm (k6i6mdyp).
+# Bottleneck study, HEALPix level 6. With alejandro/bf16-worker merged, workers yield bf16
+# source tokens (~4.7 GiB per sample instead of 9.2): 8 workers with prefetch 1 fit /dev/shm
+# and left >= 37 GiB node memory (oq8xiir6); 9 left 0.02 GiB (azjgvr5m).
 healpix_level: 6
 data_loading:
-  num_workers: 5
+  num_workers: 8
   prefetch_factor: 1

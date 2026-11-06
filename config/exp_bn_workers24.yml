@@ -1,0 +1,4 @@
+# Bottleneck study, level-5 worker sweep: 24 workers per rank. Submit only if the 16-worker run
+# left enough node memory (>= ~100 GiB MemAvailable) and the loader still waited.
+data_loading:
+  num_workers: 24
