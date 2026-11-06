@@ -2,15 +2,33 @@
 # Serialized JUPITER submission: lock -> sync -> budget check -> queue check -> make train -> unlock.
 # Usage: scripts/martin_submit_jupiter.sh <config> [TIME] [extra launcher/sbatch args...]
 #   e.g. ... config/exp_x.yml 00:30:00 --dependency=afterok:<jobid>
+# <config> is make's CONFIG: comma-separated overlays on BASE.
+# Environment:
+#   SRC_DIR=<local checkout>   default $LOCAL/WeatherGenerator (a worktree for other branches)
+#   REMOTE_DIR=<dir under $R>  default WeatherGenerator; give each branch its own directory,
+#                              since rsync without --delete would mix two branches' files
+#   TARGET=train|scalene-data  default train; scalene-data runs `make scalene-data` (one srun
+#                              job, no cleanup job) in the background on the login node
+#   MAKEVARS="K=V ..."         extra make variables, e.g. "OPTIONS=healpix_level=6
+#                              SCALENE_DIR=profiling/scalene/l6 BATCHES=3"
 # Needs an open SSH session (ETH VPN, ssh-add, `ssh jupiter exit` for MFA). Run from anywhere.
 set -euo pipefail
 CONFIG="$1"; TIME="${2:-00:30:00}"; shift $(( $# >= 2 ? 2 : $# )); EXTRA="$*"
 # Each submission adds a training job plus a cleanup job. launch-slurm.py ignores
 # `--cleanup-scripts no` for plain train submissions (observed 2026-11-01), so always count 2.
-NEW_JOBS=2
+TARGET="${TARGET:-train}"
+MAKEVARS="${MAKEVARS:-}"
+case "$TARGET" in
+  train) NEW_JOBS=2 ;;
+  scalene-data) NEW_JOBS=1 ;;
+  *) echo "ABORT: unknown TARGET '$TARGET'"; exit 2 ;;
+esac
 R=/e/scratch/weatherai/maranonpaliz1
 LOCK="$R/.submit.lock.d"
 LOCAL=/Users/martinmaranon2/DPHPC
+SRC_DIR="${SRC_DIR:-$LOCAL/WeatherGenerator}"
+REMOTE_DIR="${REMOTE_DIR:-WeatherGenerator}"
+W="$R/$REMOTE_DIR"
 SSH="ssh -o BatchMode=yes jupiter"
 
 # mkdir is atomic: exactly one submitter can create the lock directory.
@@ -24,10 +42,14 @@ echo "lock acquired"
 # pushed; launch-slurm.py would copy them into every job dir). No --delete: never remove remote files.
 rsync -az --checksum --exclude .git --exclude .venv --exclude profiling --exclude .pytest_cache \
   --exclude .ruff_cache --exclude __pycache__ --exclude .DS_Store --exclude experiments \
-  "$LOCAL/WeatherGenerator/" "jupiter:$R/WeatherGenerator/"
-echo "synced WeatherGenerator"
+  "$SRC_DIR/" "jupiter:$W/"
+echo "synced $SRC_DIR -> $W"
+# make train/scalene need this directory's own .venv (editable install of its src/)
+if ! $SSH "test -x '$W/.venv/bin/python'"; then
+  echo "ABORT: no $W/.venv; run 'make init' there first (builds an environment, ask Martin)"; exit 6
+fi
 
-CHECK=$($SSH "cd $R/WeatherGenerator && make check 2>&1")
+CHECK=$($SSH "cd $W && make check 2>&1")
 echo "$CHECK"
 BUDGET=$(echo "$CHECK" | sed -n 's/^BUDGET_ACCOUNTS=//p' | tail -1)
 BASHRC=$($SSH "bash -lc 'grep -h \"^export BUDGET_ACCOUNTS=\" ~/.bashrc | tail -1'" | sed 's/.*=//')
@@ -44,5 +66,12 @@ if (( NJOBS + NEW_JOBS > MAX_JOBS )); then
 fi
 echo "queue ok ($NJOBS jobs)"
 
-$SSH "cd $R/WeatherGenerator && make train CONFIG=$CONFIG NODES=1 TIME=$TIME ARGS=\"$EXTRA\" 2>&1"
+if [[ "$TARGET" == train ]]; then
+  $SSH "cd $W && make train CONFIG=$CONFIG NODES=1 TIME=$TIME ARGS=\"$EXTRA\" $MAKEVARS 2>&1"
+else
+  LOG="profiling/scalene/$(date -u +%Y%m%dT%H%M%SZ).log"
+  $SSH "cd $W && mkdir -p profiling/scalene && nohup make scalene-data CONFIG=$CONFIG $MAKEVARS \
+    > $LOG 2>&1 < /dev/null &"
+  echo "scalene-data started in the background; log: $W/$LOG"
+fi
 $SSH "squeue --me"

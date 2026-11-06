@@ -1,0 +1,15 @@
+# Bottleneck study (martin/exp/bottleneck): all of Martin's loader options on top of
+# andres/scalene's loader. obs_single_read is a no-op here (Andres's reader always reads once).
+# Used alone by `make scalene-data` and together with exp_bn_profile.yml by training runs.
+data_loading:
+  rng_seed: 1
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True

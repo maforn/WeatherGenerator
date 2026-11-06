@@ -1,0 +1,9 @@
+# Bottleneck study, HEALPix level 7 (Yuejiang's CPU OOM). Expected ~4x the level-6 sample
+# (~37 GiB fp32), so 1 worker per rank with prefetch 1. 10 steps; resize from the level-7
+# scalene-data result (seconds and peak memory per batch) before submitting.
+healpix_level: 7
+data_loading:
+  num_workers: 1
+  prefetch_factor: 1
+training_config:
+  samples_per_mini_epoch: 40

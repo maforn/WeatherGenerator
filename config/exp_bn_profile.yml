@@ -1,0 +1,8 @@
+# Bottleneck study: loader profiling for training runs (writes <run_dir>/dataloader_profile/).
+# Not for `make scalene-data` (single process, no run directory).
+data_loading:
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  profile_memory_full: True
+  profile_payload_bytes: True
