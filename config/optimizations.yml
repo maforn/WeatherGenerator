@@ -26,7 +26,8 @@ decoder_gather_after_kv_projection: True
 # run the decoder over this many groups of cells (smaller flash-attn backward scratch)
 decoder_num_chunks: 4
 
-# keep the source tokens on the GPU in the mixed-precision dtype, as the embedding uses them
+# convert the source tokens to the mixed-precision dtype in the data loader workers, as the
+# embedding uses them: half the size in shared memory, the host-to-device copy and on the GPU
 source_tokens_in_mixed_precision: True
 
 # keep the source tokens in pinned CPU memory; each stream's embedding copies them to the GPU

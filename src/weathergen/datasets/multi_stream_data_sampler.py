@@ -42,6 +42,7 @@ from weathergen.utils.dataloader_profile import (
     profile_output_dir,
 )
 from weathergen.utils.distributed import SpatialParallelContext, get_rank, is_root
+from weathergen.utils.utils import get_dtype
 
 type AnyDataReader = DataReaderBase | DataReaderAnemoi | DataReaderObs
 type StreamName = str
@@ -54,6 +55,18 @@ FORECAST_DEFAULTS = {
     "policy": None,
     "num_steps": np.array([0], dtype=np.int32),
 }
+
+
+def get_source_tokens_dtype(cf: Config) -> torch.dtype | None:
+    """
+    Dtype the data loader workers convert the source tokens to, None to keep them as they are.
+
+    With ``source_tokens_in_mixed_precision`` the tokens are converted to the mixed-precision
+    dtype, which the embedding casts them to first anyway, so the model input is unchanged.
+    """
+    if not cf.get("source_tokens_in_mixed_precision", False):
+        return None
+    return get_dtype(cf.mixed_precision_dtype)
 
 
 def collect_datasources(
@@ -121,6 +134,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self.profile_directory = profile_output_dir(cf) if self.profile_timing else None
         self.profile_rank = get_rank()
         self.mask_value = 0.0
+        self.source_dtype = get_source_tokens_dtype(cf)
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
         # initialise healpic
@@ -599,6 +613,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             num_output_steps,
             self.num_healpix_cells,
             source_num_healpix_cells=self.spatial_parallel.local_num_cells,
+            source_dtype=self.source_dtype,
         )
 
         stream_data = self._build_stream_data_input(
