@@ -1,0 +1,5 @@
+# Bottleneck study, level 5 with 4 workers per rank (A ran 12 and had 3.6x loader headroom:
+# 13.7 s/sample, 0.24 samples/s used). How much host memory do 8 fewer workers free, and does
+# 4 workers (~0.29 samples/s/rank) still keep the GPU fed?
+data_loading:
+  num_workers: 4

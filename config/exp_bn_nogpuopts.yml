@@ -1,0 +1,6 @@
+# Bottleneck study: run A without Andres's GPU options, to see whether they cause A's +50% step
+# time (4.33 s vs 2.84-2.88 s). Use INSTEAD of config/optimizations.yml. Keeps the two options
+# that do not change the model's GPU work, so the loader payload stays the same as A:
+# bf16 source tokens from the workers (loss-identical, njkjo655) and the per-step gc.
+source_tokens_in_mixed_precision: True
+train_gc_collect_every_step: True
