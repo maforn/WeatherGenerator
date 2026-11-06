@@ -84,6 +84,11 @@ TRAIN_CFG=$BASE_CFG,config/optimizations.yml,config/exp_bn_loader.yml,config/exp
 - **S5:** the read is CPU work (obs reader 12.8% native vs 2.3% system time), not waiting on storage.
 - **A (`ykm2kcxf`):** GPU-bound at level 5 (loader wait 1.3%), 4.33 s/step against 2.84–2.88 s
   before Andres's GPU options. The loader has 3.6× headroom with 12 workers.
+- **S6/S7:** read is flat across levels; source tokenization grows ×3 (L6) and ×11 (L7). The
+  process peak is 1.6 / 12.5 / **72 GiB** at L5/6/7, in source tokenization (`tokenizer_utils.py`
+  :365 cat, :332 gather, :485 per-point rotation matrices 60 GiB). 113 s per level-7 sample.
+  - **D as planned (2 workers) would need ~575 GiB of host RAM**, above the plan's 200 GiB stop
+    line. On hold for Martin.
 - **Added (Martin's OK, 2026-11-06), queued after C:**
   - **NOOPT:** `$B,config/exp_bn_loader.yml,config/exp_bn_profile.yml,config/exp_bn_nogpuopts.yml`,
     30 min. A without `optimizations.yml`. It keeps only the bf16 worker tokens and the per-step
