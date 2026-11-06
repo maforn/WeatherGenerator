@@ -70,8 +70,11 @@ if [[ "$TARGET" == train ]]; then
   $SSH "cd $W && make train CONFIG=$CONFIG NODES=1 TIME=$TIME ARGS=\"$EXTRA\" $MAKEVARS 2>&1"
 else
   LOG="profiling/scalene/$(date -u +%Y%m%dT%H%M%SZ).log"
-  $SSH "cd $W && mkdir -p profiling/scalene && nohup make scalene-data CONFIG=$CONFIG $MAKEVARS \
-    > $LOG 2>&1 < /dev/null &"
+  # The ( ... & ) subshell exits at once and every descriptor is redirected, so ssh returns
+  # (a bare `cd && ... &` backgrounds the whole chain, which keeps the channel open and the
+  # lock held until the job ends; seen 2026-11-06 with job 2718460).
+  $SSH "cd $W && mkdir -p profiling/scalene && (nohup make scalene-data CONFIG=$CONFIG \
+    $MAKEVARS > $LOG 2>&1 < /dev/null &) > /dev/null 2>&1 < /dev/null"
   echo "scalene-data started in the background; log: $W/$LOG"
 fi
 $SSH "squeue --me"
