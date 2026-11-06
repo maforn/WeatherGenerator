@@ -10,7 +10,9 @@
 import dataclasses
 import logging
 import pathlib
+import time
 from collections.abc import Sequence
+from contextlib import nullcontext
 
 import numpy as np
 import torch
@@ -33,8 +35,13 @@ from weathergen.datasets.utils import (
     get_tokens_lens,
 )
 from weathergen.readers_extra.registry import get_extra_reader
-from weathergen.train.utils import Stage, get_batch_size_from_config
-from weathergen.utils.distributed import SpatialParallelContext, is_root
+from weathergen.train.utils import TRAIN, Stage, get_batch_size_from_config
+from weathergen.utils.dataloader_profile import (
+    SampleProfiler,
+    payload_bytes,
+    profile_output_dir,
+)
+from weathergen.utils.distributed import SpatialParallelContext, get_rank, is_root
 
 type AnyDataReader = DataReaderBase | DataReaderAnemoi | DataReaderObs
 type StreamName = str
@@ -49,7 +56,9 @@ FORECAST_DEFAULTS = {
 }
 
 
-def collect_datasources(stream_datasets: list, idx: int, type: str, rng) -> IOReaderData:
+def collect_datasources(
+    stream_datasets: list, idx: int, type: str, rng, profiler=None, stream_name=""
+) -> IOReaderData:
     """
     Utility function to collect all sources / targets from streams list
 
@@ -75,11 +84,15 @@ def collect_datasources(stream_datasets: list, idx: int, type: str, rng) -> IORe
             assert False, "invalid value for argument `type`"
 
         # get source (of potentially multi-step length)
-        rdata = (
-            get_reader_data(idx).shuffle(rng, shuffle, num_subset).remove_nan_coords_and_geoinfos()
-        )
-        rdata.data = normalize_channels(rdata.data)
-        rdata.geoinfos = ds.normalize_geoinfos(rdata.geoinfos)
+        with profiler.measure(stream_name, "read") if profiler else nullcontext():
+            rdata = get_reader_data(idx).shuffle(rng, shuffle, num_subset)
+            if ds.optimizations.get("skip_all_valid_filter_copy", False):
+                rdata = rdata.remove_nan_coords_and_geoinfos(skip_all_valid_filter_copy=True)
+            else:
+                rdata = rdata.remove_nan_coords_and_geoinfos()
+        with profiler.measure(stream_name, "normalize") if profiler else nullcontext():
+            rdata.data = normalize_channels(rdata.data)
+            rdata.geoinfos = ds.normalize_geoinfos(rdata.geoinfos)
         rdatas += [rdata]
 
     return IOReaderData.combine(rdatas)
@@ -99,6 +112,14 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
+        self.optimizations = cf.data_loading.get("optimizations", {})
+        self.profile_timing = cf.data_loading.get("profile_timing", False)
+        # bytes of tensors/arrays each yielded sample carries (what reaches /dev/shm)
+        self.profile_payload_bytes = self.profile_timing and cf.data_loading.get(
+            "profile_payload_bytes", False
+        )
+        self.profile_directory = profile_output_dir(cf) if self.profile_timing else None
+        self.profile_rank = get_rank()
         self.mask_value = 0.0
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
@@ -117,6 +138,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.masker,
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
+            optimizations=self.optimizations,
         )
         if self.spatial_parallel.size > 1:
             logger.info(
@@ -285,6 +307,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                         + f" from stream config {stream_name}.",
                     )
                 ds = dataset(filename=filename, **kwargs)
+                ds.optimizations = self.optimizations
 
                 streams_datasets[stream_name].readers += [ds]
 
@@ -526,6 +549,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     token_data,
                     (time_win_target.start, time_win_target.end),
                     target_mask,
+                    need_inverse_indices=self._stage != TRAIN,
                 )
 
                 stream_data.add_target_values(
@@ -601,7 +625,15 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
 
         return stream_data
 
-    def _get_data_windows(self, base_idx, num_forecast_steps, num_steps_input_max, stream_ds):
+    def _get_data_windows(
+        self,
+        base_idx,
+        num_forecast_steps,
+        num_steps_input_max,
+        stream_ds,
+        profiler=None,
+        stream_name="",
+    ):
         """
         Collect all data needed for current stream to potentially amortize costs by
         generating multiple samples
@@ -613,7 +645,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
         for idx in range(base_idx - num_steps_input_max + 1, base_idx + 1):
             # TODO: check that we are not out of bounds when we go back in time
 
-            rdata = collect_datasources(stream_ds, idx, "source", self.rng)
+            rdata = collect_datasources(stream_ds, idx, "source", self.rng, profiler, stream_name)
 
             if rdata.is_empty():
                 # work around for https://github.com/pytorch/pytorch/issues/158719
@@ -636,7 +668,9 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
         for timestep_idx in range(self.output_offset, num_output_steps):
             step_forecast_dt = base_idx + (self.time_step * timestep_idx) // self.step_timedelta
 
-            rdata = collect_datasources(stream_ds, step_forecast_dt, "target", self.rng)
+            rdata = collect_datasources(
+                stream_ds, step_forecast_dt, "target", self.rng, profiler, stream_name
+            )
 
             if rdata.is_empty():
                 # work around for https://github.com/pytorch/pytorch/issues/158719
@@ -694,7 +728,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
 
         return batch
 
-    def _get_batch(self, idx: int, num_forecast_steps: int):
+    def _get_batch(self, idx: int, num_forecast_steps: int, profiler=None):
         """
         Assemble a batch using the sample corresponding to idx
         """
@@ -743,60 +777,91 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             # in source and target channels; overlap in one window when self.output_offset=0
             i_max = input_steps.max().item()
             (input_data, output_data) = self._get_data_windows(
-                idx, num_forecast_steps, i_max, stream_ds
+                idx, num_forecast_steps, i_max, stream_ds, profiler, stream_name
             )
 
             # tokenize windows
             # *_tokens = [ (cells_idx, cells_idx_lens), ... ] with length = #time_steps
-            input_tokens = self.tokenizer.get_tokens_windows(
-                stream_info, input_data, True, local_source=True
-            )
-            output_tokens = self.tokenizer.get_tokens_windows(stream_info, output_data, False)
-
-            for sidx, source_mask in enumerate(source_masks.masks):
-                # Map each source to its target
-                tidx = source_to_target[sidx].item()
-                sdata = self._build_stream_data(
-                    source_select,
-                    idx,
-                    num_forecast_steps,
-                    stream_info,
-                    source_masks.metadata[sidx].params.get("num_steps_input", 1),
-                    input_data,
-                    output_data,
-                    input_tokens,
-                    output_tokens,
-                    output_mask=target_masks.masks[tidx],
-                    input_mask=source_mask,
+            with profiler.measure(stream_name, "tokenize") if profiler else nullcontext():
+                input_tokens = self.tokenizer.get_tokens_windows(
+                    stream_info, input_data, True, local_source=True
                 )
+                output_tokens = self.tokenizer.get_tokens_windows(stream_info, output_data, False)
 
-                batch.add_source_stream(sidx, tidx, stream_name, sdata, source_masks.metadata[sidx])
+            with profiler.measure(stream_name, "build") if profiler else nullcontext():
+                for sidx, source_mask in enumerate(source_masks.masks):
+                    # Map each source to its target
+                    tidx = source_to_target[sidx].item()
+                    sdata = self._build_stream_data(
+                        source_select,
+                        idx,
+                        num_forecast_steps,
+                        stream_info,
+                        source_masks.metadata[sidx].params.get("num_steps_input", 1),
+                        input_data,
+                        output_data,
+                        input_tokens,
+                        output_tokens,
+                        output_mask=target_masks.masks[tidx],
+                        input_mask=source_mask,
+                    )
 
-            # for t_idx, mask in enumerate(source_masks):
-            for tidx, target_mask in enumerate(target_masks.masks):
-                # depending on the mode, the the streamdata obj to have the target mask applied to
-                # the inputs. Hence the target mask is also the source mask here.
-                sdata = self._build_stream_data(
-                    target_select,
-                    idx,
-                    num_forecast_steps,
-                    stream_info,
-                    target_masks.metadata[tidx].params.get("num_steps_input", 1),
-                    input_data,
-                    output_data,
-                    input_tokens,
-                    output_tokens,
-                    output_mask=target_mask,
-                    input_mask=target_mask,
+                    batch.add_source_stream(
+                        sidx, tidx, stream_name, sdata, source_masks.metadata[sidx]
+                    )
+
+                # for t_idx, mask in enumerate(source_masks):
+                for tidx, target_mask in enumerate(target_masks.masks):
+                    # depending on the mode, the the streamdata obj to have the target mask
+                    # applied to the inputs. Hence the target mask is also the source mask here.
+                    sdata = self._build_stream_data(
+                        target_select,
+                        idx,
+                        num_forecast_steps,
+                        stream_info,
+                        target_masks.metadata[tidx].params.get("num_steps_input", 1),
+                        input_data,
+                        output_data,
+                        input_tokens,
+                        output_tokens,
+                        output_mask=target_mask,
+                        input_mask=target_mask,
+                    )
+                    target_metadata = target_masks.metadata[tidx]
+                    # also want to add the mask to the metadata
+                    target_metadata.mask = target_mask
+                    # Map target to all source students
+                    student_indices = [
+                        s_idx for s_idx, tid in enumerate(source_to_target) if tid == tidx
+                    ]
+                    batch.add_target_stream(
+                        tidx, student_indices, stream_name, sdata, target_metadata
+                    )
+
+            if profiler:
+                source_bytes = 0
+                source_tokens = 0
+                for sample in batch.source_samples.samples:
+                    built = sample.streams_data[stream_name]
+                    if built is not None:
+                        for tensor in built.source_tokens_cells:
+                            if tensor is None:
+                                continue
+                            source_bytes += tensor.numel() * tensor.element_size()
+                            source_tokens += tensor.shape[0]
+                # Target token groups before masking; not target point count.
+                target_tokens = sum(
+                    len(cell)
+                    for tokens, _ in output_tokens
+                    if tokens is not None
+                    for cell in tokens
                 )
-                target_metadata = target_masks.metadata[tidx]
-                # also want to add the mask to the metadata
-                target_metadata.mask = target_mask
-                # Map target to all source students
-                student_indices = [
-                    s_idx for s_idx, tid in enumerate(source_to_target) if tid == tidx
-                ]
-                batch.add_target_stream(tidx, student_indices, stream_name, sdata, target_metadata)
+                profiler.add_stream(
+                    stream_name,
+                    source_bytes=source_bytes,
+                    source_tokens=source_tokens,
+                    target_tokens=target_tokens,
+                )
 
         source_in_steps = input_steps.max().item()
         target_in_steps = np.array([tc.get("num_steps_input", 1) for _, tc in target_cfgs.items()])
@@ -833,19 +898,40 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                 idx: TIndex = perms[idx_raw % perms.shape[0]]
                 idx_raw += 1
 
-                batch = self._get_batch(idx, num_forecast_steps)
+                profiler = None
+                if self.profile_timing:
+                    worker = torch.utils.data.get_worker_info()
+                    profiler = SampleProfiler(
+                        self.profile_directory,
+                        rank=self.profile_rank,
+                        worker_id=-1 if worker is None else worker.id,
+                        stage=str(self._stage),
+                        mini_epoch=self.mini_epoch,
+                        sample_id=int(idx),
+                    )
+                with profiler if profiler else nullcontext():
+                    if profiler:
+                        started = time.perf_counter()
+                        batch = self._get_batch(idx, num_forecast_steps, profiler=profiler)
+                        profiler.get_batch_seconds = time.perf_counter() - started
+                    else:
+                        batch = self._get_batch(idx, num_forecast_steps)
 
-                # ensure the batch is valid, i.e. not completely empty and no NaN values
-                # student teacher has no classical targets
-                mode = self.mode_cfg.get("training_mode")
-                # A valid global sample may have no observations in one rank's
-                # local source domain. All spatial ranks must still emit the
-                # same sample and enter encoder collectives in lockstep.
-                local_sources_empty = batch.sources_empty()
-                not_valid = (
-                    local_sources_empty if self.spatial_parallel.size == 1 else False
-                ) or batch.is_nan()
-                not_valid = not_valid or (batch.targets_empty() if "masking" in mode else False)
+                    # ensure the batch is valid, i.e. not completely empty and no NaN values
+                    # student teacher has no classical targets
+                    mode = self.mode_cfg.get("training_mode")
+                    # A valid global sample may have no observations in one rank's
+                    # local source domain. All spatial ranks must still emit the
+                    # same sample and enter encoder collectives in lockstep.
+                    local_sources_empty = batch.sources_empty()
+                    not_valid = (
+                        local_sources_empty if self.spatial_parallel.size == 1 else False
+                    ) or batch.is_nan()
+                    not_valid = not_valid or (batch.targets_empty() if "masking" in mode else False)
+                    if profiler:
+                        profiler.valid = not not_valid
+                        if self.profile_payload_bytes:
+                            profiler.payload = payload_bytes(batch)
 
                 # skip completely empty batch item or when all targets are empty -> no grad
                 if not_valid:
@@ -873,11 +959,19 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             # note the rng seed is not touched here: each worker derives its own seed from
             # the base seed in _derive_rng_seed(), keyed by rank, worker id and mini epoch
             # split workload
-            per_worker = (local_end - local_start) // worker_info.num_workers
-            iter_start = local_start + worker_info.id * per_worker
-            iter_end = iter_start + per_worker
-            if worker_info.id + 1 == worker_info.num_workers:
-                iter_end = local_end
+            if self.optimizations.get("even_workset_split", False):
+                # Split complete batches so batch_size > 1 cannot create extra batches.
+                count, remainder = divmod(len(self) // self.batch_size, worker_info.num_workers)
+                start_batch = worker_info.id * count + min(worker_info.id, remainder)
+                count += int(worker_info.id < remainder)
+                iter_start = local_start + start_batch * self.batch_size
+                iter_end = iter_start + count * self.batch_size
+            else:
+                per_worker = (local_end - local_start) // worker_info.num_workers
+                iter_start = local_start + worker_info.id * per_worker
+                iter_end = iter_start + per_worker
+                if worker_info.id + 1 == worker_info.num_workers:
+                    iter_end = local_end
             logger.info(
                 f"{self.spatial_parallel.ddp_rank}::{worker_info.id}"
                 + f" : dataset [{local_start},{local_end}) : [{iter_start},{iter_end})"

@@ -31,6 +31,7 @@ from torch.utils.checkpoint import set_checkpoint_debug_enabled
 import weathergen.common.config as config
 from weathergen.common.config import Config
 from weathergen.datasets.batch import ModelBatch
+from weathergen.datasets.loader_options import loader_options
 from weathergen.datasets.multi_stream_data_sampler import MultiStreamDataSampler
 from weathergen.model.ema import EMAModel
 from weathergen.model.model_interface import (
@@ -54,6 +55,7 @@ from weathergen.train.utils import (
     get_batch_size_from_config,
     get_target_idxs_from_cfg,
 )
+from weathergen.utils.dataloader_iteration import profile_loader_iteration
 from weathergen.utils.distributed import get_spatial_parallel_size, is_root
 from weathergen.utils.performance import (
     MemoryTracker,
@@ -298,12 +300,7 @@ class Trainer(TrainerBase):
         self.dataset = MultiStreamDataSampler(cf, self.training_cfg, stage=TRAIN)
         self.dataset_val = MultiStreamDataSampler(cf, self.validation_cfg, stage=VAL)
 
-        loader_params = {
-            "batch_size": None,
-            "batch_sampler": None,
-            "shuffle": False,
-            "num_workers": cf.data_loading.num_workers,
-        }
+        loader_params = loader_options(cf.data_loading)
         self.data_loader = torch.utils.data.DataLoader(self.dataset, **loader_params, sampler=None)
         self.data_loader_validation = torch.utils.data.DataLoader(
             self.dataset_val, **loader_params, sampler=None
@@ -501,13 +498,21 @@ class Trainer(TrainerBase):
         # training loop
         self.t_start = time.time()
         gc_every_step = self.cf.get("train_gc_collect_every_step", False)
-        for bidx, batch in enumerate(dataset_iter):
-            self._train_batch(batch, bidx, mini_epoch)
-            if gc_every_step:
-                # free the batch before the next one is copied to the GPU, also when a
-                # reference cycle keeps it alive until the next garbage collection
-                del batch
-                gc.collect()
+        with profile_loader_iteration(
+            cf,
+            dataset_iter,
+            self.device,
+            TRAIN,
+            mini_epoch,
+            other_iterators=(getattr(self.data_loader_validation, "_iterator", None),),
+        ) as batches:
+            for bidx, batch in enumerate(batches):
+                self._train_batch(batch, bidx, mini_epoch)
+                if gc_every_step:
+                    # free the batch before the next one is copied to the GPU, also when a
+                    # reference cycle keeps it alive until the next garbage collection
+                    del batch
+                    gc.collect()
 
         self.dataset.advance()
 
@@ -523,82 +528,94 @@ class Trainer(TrainerBase):
 
         num_samples_write = mode_cfg.get("output", {}).get("num_samples", 0) * batch_size
 
-        with torch.no_grad():
-            # print progress bar but only in interactive mode, i.e. when without ddp
-            with tqdm.tqdm(
-                total=len(self.data_loader_validation),
-                disable=self.cf.distributed.data_parallel.with_ddp,
-            ) as pbar:
-                for bidx, batch in enumerate(dataset_val_iter):
-                    batch.to_device(self.device)
+        with profile_loader_iteration(
+            cf,
+            dataset_val_iter,
+            self.device,
+            VAL,
+            mini_epoch,
+            other_iterators=(getattr(self.data_loader, "_iterator", None),),
+        ) as batches:
+            with torch.no_grad():
+                # print progress bar but only in interactive mode, i.e. when without ddp
+                with tqdm.tqdm(
+                    total=len(self.data_loader_validation),
+                    disable=self.cf.distributed.data_parallel.with_ddp,
+                ) as pbar:
+                    for bidx, batch in enumerate(batches):
+                        batch.to_device(self.device)
 
-                    # evaluate model
-                    with torch.autocast(
-                        device_type=f"cuda:{cf.local_rank}",
-                        dtype=self.mixed_precision_dtype,
-                        enabled=cf.with_mixed_precision,
-                    ):
-                        if self.ema_model is None:
-                            preds = self.model(
-                                self.model_params,
-                                batch.get_source_samples(),
-                            )
-                        else:
-                            preds = self.ema_model.forward_eval(
-                                self.model_params,
-                                batch.get_source_samples(),
-                            )
+                        # evaluate model
+                        with torch.autocast(
+                            device_type=f"cuda:{cf.local_rank}",
+                            dtype=self.mixed_precision_dtype,
+                            enabled=cf.with_mixed_precision,
+                        ):
+                            if self.ema_model is None:
+                                preds = self.model(
+                                    self.model_params,
+                                    batch.get_source_samples(),
+                                )
+                            else:
+                                preds = self.ema_model.forward_eval(
+                                    self.model_params,
+                                    batch.get_source_samples(),
+                                )
 
-                        targets_and_auxs = {}
-                        for loss_name, target_aux in self.target_and_aux_calculators_val.items():
-                            target_idxs = get_target_idxs_from_cfg(mode_cfg, loss_name)
-                            targets_and_auxs[loss_name] = target_aux.compute(
-                                self.cf.general.istep,
-                                batch.get_target_samples(target_idxs),
-                                self.model_params,
-                                self.model,
-                            )
+                            targets_and_auxs = {}
+                            for (
+                                loss_name,
+                                target_aux,
+                            ) in self.target_and_aux_calculators_val.items():
+                                target_idxs = get_target_idxs_from_cfg(mode_cfg, loss_name)
+                                targets_and_auxs[loss_name] = target_aux.compute(
+                                    self.cf.general.istep,
+                                    batch.get_target_samples(target_idxs),
+                                    self.model_params,
+                                    self.model,
+                                )
 
-                    _ = self.loss_calculator_val.compute_loss(
-                        preds=preds,
-                        targets_and_aux=targets_and_auxs,
-                        metadata=extract_batch_metadata(batch),
-                    )
-
-                    # log output
-                    if bidx < num_samples_write:
-                        # denormalization function for data
-                        denormalize_data_fct = (
-                            (lambda x0, x1: x1)
-                            if mode_cfg.get("output", {}).get("normalized_samples", False)
-                            else self.dataset_val.denormalize_target_channels
-                        )
-                        # write output
-                        write_output(
-                            self.cf,
-                            mode_cfg,
-                            batch_size,
-                            mini_epoch,
-                            bidx,
-                            denormalize_data_fct,
-                            batch,
-                            preds,
-                            targets_and_auxs,
+                        _ = self.loss_calculator_val.compute_loss(
+                            preds=preds,
+                            targets_and_aux=targets_and_auxs,
+                            metadata=extract_batch_metadata(batch),
                         )
 
-                    pbar.update(batch_size)
+                        # log output
+                        if bidx < num_samples_write:
+                            # denormalization function for data
+                            denormalize_data_fct = (
+                                (lambda x0, x1: x1)
+                                if mode_cfg.get("output", {}).get("normalized_samples", False)
+                                else self.dataset_val.denormalize_target_channels
+                            )
+                            # write output
+                            write_output(
+                                self.cf,
+                                mode_cfg,
+                                batch_size,
+                                mini_epoch,
+                                bidx,
+                                denormalize_data_fct,
+                                batch,
+                                preds,
+                                targets_and_auxs,
+                            )
 
-                    if (bidx * batch_size) > mode_cfg.samples_per_mini_epoch:
-                        break
+                        pbar.update(batch_size)
 
-                self._log_terminal(0, mini_epoch, VAL)
-                # close the memory window covering validation and merge its peak
-                # into the validation metrics record, so its peak is not
-                # attributed to the subsequent checkpoint save or training step
-                mem_metrics = self.memory_tracker.collect(window="validation")
-                self._log(VAL, extra_metrics=mem_metrics)
+                        if (bidx * batch_size) > mode_cfg.samples_per_mini_epoch:
+                            break
 
-        # avoid that there is a systematic bias in the validation subset
+                    self._log_terminal(0, mini_epoch, VAL)
+                    # close the memory window covering validation and merge its peak
+                    # into the validation metrics record, so its peak is not
+                    # attributed to the subsequent checkpoint save or training step
+                    mem_metrics = self.memory_tracker.collect(window="validation")
+                    self._log(VAL, extra_metrics=mem_metrics)
+
+            # avoid that there is a systematic bias in the validation subset
+
         self.dataset_val.advance()
 
     def _get_full_model_state_dict(self):

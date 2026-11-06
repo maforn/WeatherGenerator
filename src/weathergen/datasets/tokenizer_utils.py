@@ -214,6 +214,7 @@ def tokenize_spacetime(
     pad_tokens=True,
     cell_start=0,
     cell_end=None,
+    coords_only=False,
 ):
     """Tokenize respecting an intrinsic time step in the data, i.e. each time step is tokenized
     separately
@@ -229,18 +230,30 @@ def tokenize_spacetime(
     for _, t in enumerate(t_unique):
         # data for current time step
         mask = t == rdata.datetimes
-        rdata_cur = IOReaderData(
-            rdata.coords[mask], rdata.geoinfos[mask], rdata.data[mask], rdata.datetimes[mask]
-        )
-        idxs_cur, idxs_cur_lens = tokenize_space(
-            rdata_cur,
-            token_size,
-            hl,
-            pad_tokens,
-            offset_step,
-            cell_start,
-            cell_end,
-        )
+        if coords_only:
+            # Spatial tokenization only inspects coordinates; avoid copying the data channels.
+            idxs_cur, idxs_cur_lens = hpy_splits(
+                rdata.coords[mask],
+                token_size=token_size,
+                hl=hl,
+                pad_tokens=pad_tokens,
+                offset_step=offset_step,
+                cell_start=cell_start,
+                cell_end=cell_end,
+            )
+        else:
+            rdata_cur = IOReaderData(
+                rdata.coords[mask], rdata.geoinfos[mask], rdata.data[mask], rdata.datetimes[mask]
+            )
+            idxs_cur, idxs_cur_lens = tokenize_space(
+                rdata_cur,
+                token_size,
+                hl,
+                pad_tokens,
+                offset_step,
+                cell_start,
+                cell_end,
+            )
 
         # collect data for all time steps
         idxs_cells = [t + tc for t, tc in zip(idxs_cells, idxs_cur, strict=True)]
@@ -271,6 +284,7 @@ def tokenize_apply_mask_source(
     time_win,
     hpy_verts_rots,
     enc_time,
+    direct_build=False,
 ):
     """
     Apply masking to the data.
@@ -308,17 +322,33 @@ def tokenize_apply_mask_source(
     # idxs_cells -> idxs_tokens -> idxs_data has been prepared so
     # that the zero-index is used to add the padding to the tokens to ensure fixed size
     times_enc = enc_time(rdata.datetimes, time_win)
-    zeros_like = torch.zeros_like
-    datetimes_enc_padded = torch.cat([zeros_like(times_enc[0]).unsqueeze(0), times_enc])
-    geoinfos_padded = torch.cat([zeros_like(rdata.geoinfos[0]).unsqueeze(0), rdata.geoinfos])
-    coords_padded = torch.cat([zeros_like(rdata.coords[0]).unsqueeze(0), rdata.coords])
-    data_padded = torch.cat([zeros_like(rdata.data[0]).unsqueeze(0), rdata.data])
+    if direct_build:
+        # Gather directly from the original arrays and replace padding positions with zeros.
+        # Keep the same padded coordinates (including the legacy first-point handling below).
+        padding = idxs_data == 0
+        gather_indices = (idxs_data - 1).clamp_min(0)
 
-    # apply mask
-    datetimes = datetimes_enc_padded[idxs_data]
-    geoinfos = geoinfos_padded[idxs_data]
-    coords = coords_padded[idxs_data]
-    data = data_padded[idxs_data]
+        def gather_padded(values):
+            result = values[gather_indices]
+            result[padding] = 0
+            return result
+
+        datetimes = gather_padded(times_enc)
+        geoinfos = gather_padded(rdata.geoinfos)
+        coords = gather_padded(rdata.coords)
+        data = gather_padded(rdata.data)
+    else:
+        zeros_like = torch.zeros_like
+        datetimes_enc_padded = torch.cat([zeros_like(times_enc[0]).unsqueeze(0), times_enc])
+        geoinfos_padded = torch.cat([zeros_like(rdata.geoinfos[0]).unsqueeze(0), rdata.geoinfos])
+        coords_padded = torch.cat([zeros_like(rdata.coords[0]).unsqueeze(0), rdata.coords])
+        data_padded = torch.cat([zeros_like(rdata.data[0]).unsqueeze(0), rdata.data])
+
+        # apply mask
+        datetimes = datetimes_enc_padded[idxs_data]
+        geoinfos = geoinfos_padded[idxs_data]
+        coords = coords_padded[idxs_data]
+        data = data_padded[idxs_data]
 
     if mask_channels is not None:
         assert False, "to be implemented"
@@ -337,7 +367,12 @@ def tokenize_apply_mask_source(
     # split up tensor into tokens
     # TODO: idxs_data_lens is currently only defined when mask_tokens is not None
     idxs_data_lens = idxs_data_lens.tolist()
-    tokens_cells = torch.split(tokens, idxs_data_lens)
+    if direct_build and len(set(idxs_data_lens)) == 1:
+        # All padded source tokens have one size. Preserve this contiguous allocation
+        # through StreamData.add_source instead of splitting and then stacking a copy.
+        tokens_cells = tokens.reshape(len(idxs_data_lens), idxs_data_lens[0], tokens.shape[-1])
+    else:
+        tokens_cells = torch.split(tokens, idxs_data_lens)
 
     return tokens_cells, tokens_per_cell
 
@@ -355,6 +390,8 @@ def tokenize_apply_mask_target(
     hpy_verts_local,
     hpy_nctrs,
     enc_time,
+    need_values=True,
+    need_coords=True,
 ):
     """
     Apply masking to the data.
@@ -389,12 +426,22 @@ def tokenize_apply_mask_target(
 
     idxs_data = torch.cat(idxs_data)
 
-    # apply mask
+    # Keep the original allocation and computation order when both fields are requested.
     datetimes = np.atleast_1d(rdata.datetimes[idxs_data])
-    datetimes_enc = enc_time(datetimes, time_win)
-    geoinfos = rdata.geoinfos[idxs_data]
-    coords = rdata.coords[idxs_data]
-    data = rdata.data[idxs_data]
+    if need_coords and need_values:
+        datetimes_enc = enc_time(datetimes, time_win)
+        geoinfos = rdata.geoinfos[idxs_data]
+        coords = rdata.coords[idxs_data]
+        data = rdata.data[idxs_data]
+    else:
+        coords = rdata.coords[idxs_data]
+        data = rdata.data[idxs_data] if need_values else None
+        if not need_coords:
+            if mask_channels is not None:
+                raise AssertionError("to be implemented")
+            return data, datetimes, coords, None, None
+        datetimes_enc = enc_time(datetimes, time_win)
+        geoinfos = rdata.geoinfos[idxs_data]
 
     if mask_channels is not None:
         assert False, "to be implemented"

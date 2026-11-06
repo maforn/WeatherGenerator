@@ -1,0 +1,52 @@
+# Martin data-loader recommended config for HEALPix level 6 (verified 2026-11-02, run k6i6mdyp).
+# Even split + 8 reader/tokenizer flags, 5 workers, prefetch_factor 1: 22.1 s/step (k6i6mdyp) vs
+# 27.5 s at 4 workers without flags. With fp32 source tokens each sample is 9.2 GiB in /dev/shm:
+# 8+ workers overflow the booster's 239 GiB (6 would use ~92%). Once source tokens are converted
+# to bf16 in the loader workers (branch alejandro/bf16-worker, flag
+# source_tokens_in_mixed_precision), samples halve and 8 workers fit: 13.9 s/step, >= 38 GiB node
+# memory free (oq8xiir6, measured with an equivalent prototype). Then set num_workers: 8.
+# Profiling on; drop profile_* to disable.
+# Use with --base-config config/config_operan_georing_avhrr_forecasting_lowres.yml.
+profiling:
+  memory_profiling: False
+  pytorch_profiling: False
+  only_profiling: False
+
+train_logging:
+  memory_tracking: True
+  throughput_tracking: True
+  metrics: 1
+  terminal: 10
+
+data_loading:
+  rng_seed: 1
+  # writes <run_dir>/dataloader_profile/: per-sample stage times, loader waits, memory CSV
+  profile_timing: True
+  profile_memory_timeline: True
+  profile_memory_interval_seconds: 0.5
+  profile_memory_full: True
+  num_workers: 5
+  prefetch_factor: 1
+  optimizations:
+    even_workset_split: True
+    anemoi_select_vars: True
+    anemoi_avoid_dtype_copy: True
+    obs_single_read: True
+    skip_all_valid_filter_copy: True
+    tokenize_coords_only: True
+    source_direct_build: True
+    target_requested_fields_only: True
+    skip_train_inverse_indices: True
+
+training_config:
+  start_date: 2017-06-01T00:00
+  num_mini_epochs: 1
+  # 1 sample per GPU x 4 GPUs -> 100 steps
+  samples_per_mini_epoch: 400
+
+validation_config:
+  samples_per_mini_epoch: 4
+
+norm_type: "RMSNorm"
+
+healpix_level: 6

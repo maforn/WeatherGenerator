@@ -232,3 +232,6 @@ models
 results
 reports
 metric_plots
+# CUDA allocator snapshots (~20 MB each); kept locally, rendered to *_memory_viz.html
+experiments/martin/*/profiling_traces/
+experiments/martin/*/*_memory_viz.html
