@@ -70,8 +70,8 @@ TRAIN_CFG=$BASE_CFG,config/optimizations.yml,config/exp_bn_loader.yml,config/exp
 | S6 | scalene-data, level 6 | same, `+config/exp_bn_level6.yml`, `SCALENE_DIR=profiling/scalene/l6` | ≤40 min | What grows with the level |
 | S7 | scalene-data, level 7 | same, `+config/exp_bn_level7.yml`, `SCALENE_DIR=profiling/scalene/l7` | ≤40 min | Seconds and peak memory per level-7 sample; sizes D |
 | A | train, level 5, 100 steps | `scripts/martin_submit_jupiter.sh $TRAIN_CFG 00:30:00` | 30 min | New reference: GPU- or loader-bound with Andres's loader and GPU options? |
-| A16 | train, level 5, 16 workers | `... $TRAIN_CFG,config/exp_bn_workers16.yml 00:30:00` | 30 min | Do more workers still help with Andres's ~3.8× faster loader? Host-memory cost per worker |
-| A24 | train, level 5, 24 workers (conditional) | `... $TRAIN_CFG,config/exp_bn_workers24.yml 00:30:00` | 30 min | Only if A16 still waits on the loader and leaves ≥ ~100 GiB MemAvailable |
+| A16 | train, level 5, 16 workers | `... $TRAIN_CFG,config/exp_bn_workers16.yml 00:30:00` | 30 min | **Skipped:** A was GPU-bound with 3.6× loader headroom (LOG.md `ykm2kcxf`) |
+| A24 | train, level 5, 24 workers (conditional) | `... $TRAIN_CFG,config/exp_bn_workers24.yml 00:30:00` | 30 min | **Skipped** (same reason) |
 | C | train, level 6, 100 steps | `... $TRAIN_CFG,config/exp_bn_level6.yml 00:45:00` | 45 min | Same at 3× tokenize/build; /dev/shm and node memory |
 | D | train, level 7, 10 steps | `... $TRAIN_CFG,config/exp_bn_level7.yml 01:00:00` | ≤60 min | Does it run? Host OOM, /dev/shm, GPU OOM, or just slow? |
 
@@ -79,6 +79,14 @@ TRAIN_CFG=$BASE_CFG,config/optimizations.yml,config/exp_bn_loader.yml,config/exp
 - Before D, check S7. If one sample takes more than 15 min, drop D to 5 steps. If the peak is
   above about 200 GiB, stop and discuss.
 - If A is already GPU-bound (no loader wait), skip A24: more workers cannot help.
+
+## Results so far (2026-11-06)
+- **S5:** the read is CPU work (obs reader 12.8% native vs 2.3% system time), not waiting on storage.
+- **A (`ykm2kcxf`):** GPU-bound at level 5 (loader wait 1.3%), 4.33 s/step against 2.84–2.88 s
+  before Andres's GPU options. The loader has 3.6× headroom with 12 workers.
+- **Open, not in the plan:** fewer workers at level 5 (e.g. 4–6) would show how much host memory
+  the faster loader frees. Andres's GPU options without the rest would show whether they cause the
+  +50% step time. Both need Martin's OK.
 
 ## How each run is judged
 - **GPU-bound:** loader wait per step ≈ 0 (`loader_wait_rank*.jsonl`), and step time = GPU step.
