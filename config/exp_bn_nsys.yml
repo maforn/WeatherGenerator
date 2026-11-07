@@ -1,0 +1,7 @@
+# Nsight Systems run at level 7 (submit with --nsys-profiling, i.e. `make profile`): 2 steps.
+# The private nsys_profiling.sh records 120-240 s after launch, which at level 7 covers the
+# end of the first-batch wait and the first ~75-80 s of step 0 (both forward pauses and most of
+# the first backward pause seen in SNAP7 ft98r6re). Nothing after 240 s is recorded.
+training_config:
+  # 1 sample per GPU x 4 GPUs -> 2 steps
+  samples_per_mini_epoch: 8
