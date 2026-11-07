@@ -6,6 +6,7 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Host memory per rank GiB | Source GB/sample | Data loading, s per step | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|
+| [bb2w5nyg](2026-11-07_bb2w5nyg/) | 2026-11-07 | config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + exp_bn_loader.yml + exp_bn_profile.yml + exp_bn_nogpuopts.yml | COMPLETED | 100 | 2.84 | 28.16 | 54.9 |  | 1.22 |  | bottleneck NOOPT: level 5 without GPU options, 12 workers |
 | [pv39uted](2026-11-07_pv39uted/) | 2026-11-07 | config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml + exp_bn_loader.yml + exp_bn_profile.yml + exp_bn_level6.yml | COMPLETED | 100 | 15.87 | 21.02 | 76.7 |  | 4.68 |  | bottleneck C: level 6, andres/scalene + GPU options + bf16 workers, 8 workers |
 | [ykm2kcxf](2026-11-06_ykm2kcxf/) | 2026-11-06 | config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml + exp_bn_loader.yml + exp_bn_profile.yml | COMPLETED | 100 | 4.19 | 7.49 | 58.7 |  | 1.22 |  | bottleneck A: level 5, andres/scalene + GPU options + bf16 workers, 12 workers |
 | [jmbpdvci](2026-11-04_jmbpdvci/) | 2026-11-04 | config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml | COMPLETED | 100 | 5.17 | 7.49 | 86.4 |  | 1.21 |  | final: config/optimizations.yml on this branch (verification of tn6df0qr) |
