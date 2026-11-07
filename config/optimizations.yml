@@ -26,8 +26,6 @@ embed_index_copy: True
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
 
-# data-loader optimizations, each off when missing
-data_loading:
-  optimizations:
-    # time-window and NaN filters: reuse the arrays when every row is kept instead of copying them
-    skip_all_valid_filter_copy: True
+# data loader: the time-window and NaN filters reuse the arrays when every row is kept, instead
+# of copying them
+skip_all_valid_filter_copy: True
