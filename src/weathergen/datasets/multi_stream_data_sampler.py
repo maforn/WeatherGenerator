@@ -76,7 +76,9 @@ def collect_datasources(stream_datasets: list, idx: int, type: str, rng) -> IORe
 
         # get source (of potentially multi-step length)
         rdata = (
-            get_reader_data(idx).shuffle(rng, shuffle, num_subset).remove_nan_coords_and_geoinfos()
+            get_reader_data(idx)
+            .shuffle(rng, shuffle, num_subset)
+            .remove_nan_coords_and_geoinfos(ds.skip_all_valid_filter_copy)
         )
         rdata.data = normalize_channels(rdata.data)
         rdata.geoinfos = ds.normalize_geoinfos(rdata.geoinfos)
@@ -285,6 +287,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                         + f" from stream config {stream_name}.",
                     )
                 ds = dataset(filename=filename, **kwargs)
+                ds.skip_all_valid_filter_copy = cf.get("skip_all_valid_filter_copy", False)
 
                 streams_datasets[stream_name].readers += [ds]
 
