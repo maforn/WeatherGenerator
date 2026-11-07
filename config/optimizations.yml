@@ -26,9 +26,6 @@ embed_index_copy: True
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
 
-# data-loader optimizations, each off when missing
-data_loading:
-  optimizations:
-    # observation reader: one read of the needed columns instead of three
-    # (coordinates, geoinfos, channels)
-    obs_single_read: True
+# data loader: the observation reader reads the needed columns once instead of three times
+# (coordinates, geoinfos, channels)
+obs_single_read: True

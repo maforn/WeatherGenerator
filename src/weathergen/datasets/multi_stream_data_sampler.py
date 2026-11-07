@@ -99,7 +99,6 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
-        self.optimizations = cf.data_loading.get("optimizations", {})
         self.mask_value = 0.0
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
@@ -286,7 +285,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                         + f" from stream config {stream_name}.",
                     )
                 ds = dataset(filename=filename, **kwargs)
-                ds.optimizations = self.optimizations
+                ds.obs_single_read = cf.get("obs_single_read", False)
 
                 streams_datasets[stream_name].readers += [ds]
 
