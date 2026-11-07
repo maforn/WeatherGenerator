@@ -26,8 +26,6 @@ embed_index_copy: True
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
 
-# data-loader optimizations, each off when missing
-data_loading:
-  optimizations:
-    # targets: build only the fields each caller uses (coordinates or values), not both twice
-    target_requested_fields_only: True
+# data loader: build only the target fields each caller uses (coordinates or values), not both
+# twice
+target_requested_fields_only: True

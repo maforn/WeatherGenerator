@@ -46,10 +46,10 @@ class TokenizerMasking(Tokenizer):
         masker: Masker,
         source_cell_start: int = 0,
         source_cell_end: int | None = None,
-        optimizations: dict | None = None,
+        target_requested_fields_only: bool = False,
     ):
         super().__init__(healpix_level)
-        self.optimizations = optimizations or {}
+        self.target_requested_fields_only = target_requested_fields_only
         self.masker = masker
         self.rng = None
         self.token_size = None
@@ -206,7 +206,7 @@ class TokenizerMasking(Tokenizer):
             self.hpy_verts_local_target,
             self.hpy_nctrs_target,
             encode_times_target,
-            need_values=not self.optimizations.get("target_requested_fields_only", False),
+            need_values=not self.target_requested_fields_only,
         )
 
         return (coords_local, coords_per_cell)
@@ -239,7 +239,7 @@ class TokenizerMasking(Tokenizer):
             self.hpy_verts_local_target,
             self.hpy_nctrs_target,
             encode_times_target,
-            need_coords=not self.optimizations.get("target_requested_fields_only", False),
+            need_coords=not self.target_requested_fields_only,
         )
 
         idxs_ord_inv = None
