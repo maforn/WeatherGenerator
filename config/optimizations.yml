@@ -25,3 +25,7 @@ embed_index_copy: True
 # run the decoder over this many groups of cells (smaller flash-attn backward scratch;
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
+
+# data loader: split complete batches evenly over the loader workers; the remainder goes one each
+# to the first workers instead of all to the last one
+even_workset_split: True
