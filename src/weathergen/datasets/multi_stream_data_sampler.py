@@ -99,7 +99,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
-        self.optimizations = cf.data_loading.get("optimizations", {})
+        self.even_workset_split = cf.get("even_workset_split", False)
         self.mask_value = 0.0
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
@@ -875,13 +875,12 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             # note the rng seed is not touched here: each worker derives its own seed from
             # the base seed in _derive_rng_seed(), keyed by rank, worker id and mini epoch
             # split workload
-            if self.optimizations.get("even_workset_split", False):
-                # Split complete batches so batch_size > 1 cannot create extra batches.
-                count, remainder = divmod(len(self) // self.batch_size, worker_info.num_workers)
-                start_batch = worker_info.id * count + min(worker_info.id, remainder)
-                count += int(worker_info.id < remainder)
-                iter_start = local_start + start_batch * self.batch_size
-                iter_end = iter_start + count * self.batch_size
+            if self.even_workset_split:
+                # whole batches per worker, the remainder one each to the first workers
+                wid = worker_info.id
+                count, rest = divmod(len(self) // self.batch_size, worker_info.num_workers)
+                iter_start = local_start + (wid * count + min(wid, rest)) * self.batch_size
+                iter_end = iter_start + (count + (wid < rest)) * self.batch_size
             else:
                 per_worker = (local_end - local_start) // worker_info.num_workers
                 iter_start = local_start + worker_info.id * per_worker
