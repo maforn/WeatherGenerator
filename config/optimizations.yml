@@ -48,3 +48,7 @@ embed_readout_batched: True
 # data loader: the Anemoi and Operan readers convert and transpose only the variables the stream
 # uses (the read is unchanged: each zarr chunk holds all variables of a time step)
 anemoi_select_vars: True
+
+# free each batch before the next one is copied to the GPU (a reference cycle otherwise keeps
+# it alive until the next garbage collection: +1.7 GiB on random steps)
+train_gc_collect_every_step: True

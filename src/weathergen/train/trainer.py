@@ -10,6 +10,7 @@
 # nor does it submit to any jurisdiction.
 import contextlib
 import copy
+import gc
 import logging
 import time
 from contextlib import nullcontext
@@ -487,8 +488,14 @@ class Trainer(TrainerBase):
 
         # training loop
         self.t_start = time.time()
+        gc_every_step = self.cf.get("train_gc_collect_every_step", False)
         for bidx, batch in enumerate(dataset_iter):
             self._train_batch(batch, bidx, mini_epoch)
+            if gc_every_step:
+                # free the batch before the next one is copied to the GPU, also when a
+                # reference cycle keeps it alive until the next garbage collection
+                del batch
+                gc.collect()
 
         self.dataset.advance()
 
