@@ -1,9 +1,10 @@
-# Bottleneck study, HEALPix level 7 (Yuejiang's CPU OOM). Expected ~4x the level-6 sample
-# (~18 GiB bf16), so 2 workers per rank with prefetch 1. 10 steps; resize from the level-7
-# scalene-data result (seconds and peak memory per batch) before submitting.
+# Bottleneck study, HEALPix level 7 (Yuejiang's CPU OOM). S7 (scalene, one process): 113 s per
+# sample and a 72 GiB process peak in source tokenization, so 2 workers x 4 ranks (~575 GiB)
+# cannot fit the node's 478 GiB of CPU RAM. 1 worker per rank (~290 GiB of worker peaks if they
+# coincide, plus /dev/shm and the ranks) is the "see what breaks" run. 10 steps.
 healpix_level: 7
 data_loading:
-  num_workers: 2
+  num_workers: 1
   prefetch_factor: 1
 training_config:
   samples_per_mini_epoch: 40
