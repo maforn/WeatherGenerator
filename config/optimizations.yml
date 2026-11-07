@@ -25,3 +25,7 @@ embed_index_copy: True
 # run the decoder over this many groups of cells (smaller flash-attn backward scratch;
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
+
+# data loader: the Anemoi and Operan readers convert and transpose only the variables the stream
+# uses (the read is unchanged: each zarr chunk holds all variables of a time step)
+anemoi_select_vars: True

@@ -285,6 +285,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                         + f" from stream config {stream_name}.",
                     )
                 ds = dataset(filename=filename, **kwargs)
+                ds.anemoi_select_vars = cf.get("anemoi_select_vars", False)
 
                 streams_datasets[stream_name].readers += [ds]
 
