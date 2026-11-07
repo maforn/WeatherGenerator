@@ -41,7 +41,7 @@ class _StubSampler:
     def __init__(self, length, batch_size, even, ddp_rank):
         self.len = length
         self.batch_size = batch_size
-        self.optimizations = {"even_workset_split": even}
+        self.even_workset_split = even
         self.spatial_parallel = types.SimpleNamespace(ddp_rank=ddp_rank, ddp_world_size=2)
 
     def __len__(self):

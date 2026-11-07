@@ -97,7 +97,7 @@ ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap:
 <header class="prose" style="display:flex;flex-direction:column;gap:12px">
   <div class="eyebrow">WeatherGenerator · JUPITER booster · 1 node, 4 × GH200</div>
   <h1>Data-loader speedup: what changed and what is in memory</h1>
-  <p class="lede">Batch preparation (disk to <code>yield batch</code>) is now fast enough that training waits on the GPU, not on data, at HEALPix level 5 and level 6. Model inputs are unchanged, loss stays within run-to-run noise, and everything is opt-in through <code>data_loading.optimizations</code>.</p>
+  <p class="lede">Batch preparation (disk to <code>yield batch</code>) is now fast enough that training waits on the GPU, not on data, at HEALPix level 5 and level 6. Model inputs are unchanged, loss stays within run-to-run noise, and everything is opt-in through flat config keys, each off when missing.</p>
 </header>
 
 <div class="facts" role="list">
@@ -121,7 +121,7 @@ ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap:
 <section>
   <div class="prose" style="display:flex;flex-direction:column;gap:10px">
     <h2>Every flag and setting we tried</h2>
-    <p>All optimizations sit under <code>data_loading.optimizations</code> and default to off, so old configs behave exactly as before. Effects are at level 5 against the profiled baseline <span class="mono">jnsctk9d</span> (per-sample prep 40.0 s per worker, 4.67 s/step) unless noted. The reader and tokenizer flags were measured as two groups of four, so their effects are per group; no single flag inside a group was measured on its own.</p>
+    <p>All optimizations are flat top-level config keys (read with <code>cf.get</code>) and default to off, so old configs behave exactly as before. Effects are at level 5 against the profiled baseline <span class="mono">jnsctk9d</span> (per-sample prep 40.0 s per worker, 4.67 s/step) unless noted. The reader and tokenizer flags were measured as two groups of four, so their effects are per group; no single flag inside a group was measured on its own.</p>
   </div>
   <div class="table-wrap">
   <table>

@@ -423,26 +423,20 @@ def tokenize_apply_mask_target(
 
     idxs_data = torch.cat(idxs_data)
 
-    # Keep the original allocation and computation order when both fields are requested.
+    # apply mask
     datetimes = np.atleast_1d(rdata.datetimes[idxs_data])
-    if need_coords and need_values:
-        datetimes_enc = enc_time(datetimes, time_win)
-        geoinfos = rdata.geoinfos[idxs_data]
-        coords = rdata.coords[idxs_data]
-        data = rdata.data[idxs_data]
-    else:
-        coords = rdata.coords[idxs_data]
-        data = rdata.data[idxs_data] if need_values else None
-        if not need_coords:
-            if mask_channels is not None:
-                raise AssertionError("to be implemented")
-            return data, datetimes, coords, None, None
-        datetimes_enc = enc_time(datetimes, time_win)
-        geoinfos = rdata.geoinfos[idxs_data]
+    coords = rdata.coords[idxs_data]
+    data = rdata.data[idxs_data] if need_values else None
 
     if mask_channels is not None:
         assert False, "to be implemented"
         # data = data_padded[ : channel_mask]
+
+    if not need_coords:  # the caller uses only the values
+        return data, datetimes, coords, None, None
+
+    datetimes_enc = enc_time(datetimes, time_win)
+    geoinfos = rdata.geoinfos[idxs_data]
 
     num_tokens_per_cell = [len(idxs) for idxs in idxs_cells_lens]
     mask_tokens_per_cell = torch.split(torch.from_numpy(mask_tokens), num_tokens_per_cell)

@@ -85,11 +85,11 @@ def collect_datasources(
 
         # get source (of potentially multi-step length)
         with profiler.measure(stream_name, "read") if profiler else nullcontext():
-            rdata = get_reader_data(idx).shuffle(rng, shuffle, num_subset)
-            if ds.optimizations.get("skip_all_valid_filter_copy", False):
-                rdata = rdata.remove_nan_coords_and_geoinfos(skip_all_valid_filter_copy=True)
-            else:
-                rdata = rdata.remove_nan_coords_and_geoinfos()
+            rdata = (
+                get_reader_data(idx)
+                .shuffle(rng, shuffle, num_subset)
+                .remove_nan_coords_and_geoinfos(ds.skip_all_valid_filter_copy)
+            )
         with profiler.measure(stream_name, "normalize") if profiler else nullcontext():
             rdata.data = normalize_channels(rdata.data)
             rdata.geoinfos = ds.normalize_geoinfos(rdata.geoinfos)
@@ -112,7 +112,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
-        self.optimizations = cf.data_loading.get("optimizations", {})
+        self.even_workset_split = cf.get("even_workset_split", False)
         self.profile_timing = cf.data_loading.get("profile_timing", False)
         # bytes of tensors/arrays each yielded sample carries (what reaches /dev/shm)
         self.profile_payload_bytes = self.profile_timing and cf.data_loading.get(
@@ -138,7 +138,10 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.masker,
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
-            optimizations=self.optimizations,
+            tokenize_coords_only=cf.get("tokenize_coords_only", False),
+            source_direct_build=cf.get("source_direct_build", False),
+            target_requested_fields_only=cf.get("target_requested_fields_only", False),
+            skip_train_inverse_indices=cf.get("skip_train_inverse_indices", False),
         )
         if self.spatial_parallel.size > 1:
             logger.info(
@@ -307,7 +310,10 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                         + f" from stream config {stream_name}.",
                     )
                 ds = dataset(filename=filename, **kwargs)
-                ds.optimizations = self.optimizations
+                ds.obs_single_read = cf.get("obs_single_read", False)
+                ds.skip_all_valid_filter_copy = cf.get("skip_all_valid_filter_copy", False)
+                ds.anemoi_select_vars = cf.get("anemoi_select_vars", False)
+                ds.anemoi_avoid_dtype_copy = cf.get("anemoi_avoid_dtype_copy", False)
 
                 streams_datasets[stream_name].readers += [ds]
 
@@ -959,13 +965,12 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             # note the rng seed is not touched here: each worker derives its own seed from
             # the base seed in _derive_rng_seed(), keyed by rank, worker id and mini epoch
             # split workload
-            if self.optimizations.get("even_workset_split", False):
-                # Split complete batches so batch_size > 1 cannot create extra batches.
-                count, remainder = divmod(len(self) // self.batch_size, worker_info.num_workers)
-                start_batch = worker_info.id * count + min(worker_info.id, remainder)
-                count += int(worker_info.id < remainder)
-                iter_start = local_start + start_batch * self.batch_size
-                iter_end = iter_start + count * self.batch_size
+            if self.even_workset_split:
+                # whole batches per worker, the remainder one each to the first workers
+                wid = worker_info.id
+                count, rest = divmod(len(self) // self.batch_size, worker_info.num_workers)
+                iter_start = local_start + (wid * count + min(wid, rest)) * self.batch_size
+                iter_end = iter_start + (count + (wid < rest)) * self.batch_size
             else:
                 per_worker = (local_end - local_start) // worker_info.num_workers
                 iter_start = local_start + worker_info.id * per_worker

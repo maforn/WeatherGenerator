@@ -1,9 +1,9 @@
 # Martin's data-loader optimizations
 
 Faster batch preparation (disk → `yield batch`) with no change to model inputs or learning
-behaviour. Everything is opt-in: every optimization is a default-off
-`data_loading.optimizations.<flag>` read with `.get(...)`, so existing configurations keep the
-original code path. Model, GPU processing, pinning and `to_device` are untouched.
+behaviour. Everything is opt-in: every optimization is a default-off top-level config key, read
+as `cf.get("<flag>", False)` like the GPU options in `config/optimizations.yml`, so existing
+configurations keep the original code path. Model, GPU processing, pinning and `to_device` are untouched.
 
 ## Results (JUPITER, 1 node, 4 × GH200, seed 1)
 
@@ -38,9 +38,10 @@ Both enable profiling (it costs nothing measurable); drop the `profile_*` keys t
 
 ## Flag reference
 
-Every optimization defaults to `False` under `data_loading.optimizations`.
-Read new settings with `.get(...)` defaults so existing configurations retain
-their original behaviour.
+Every optimization is a flat top-level key that defaults to `False` when missing, e.g.
+`obs_single_read: True` in an overlay. The sampler reads them with `cf.get(...)` and passes
+them on: reader flags become class attributes set on each reader, tokenizer flags become
+`TokenizerMasking` arguments.
 
 | Flag | What it changes and why it might work | Loss requirement | Measured effect |
 | --- | --- | --- | --- |

@@ -49,7 +49,7 @@ def assert_equal(a, b):
 @pytest.fixture
 def tokenizers():
     baseline = TokenizerMasking(0, None)
-    optimized = TokenizerMasking(0, None, optimizations=FLAGS)
+    optimized = TokenizerMasking(0, None, **FLAGS)
     return baseline, optimized
 
 
@@ -142,7 +142,7 @@ def test_empty_windows_preserved(tokenizers):
 
 def test_all_flags_explicitly_off_preserve_legacy_representation(tokenizers):
     baseline, _ = tokenizers
-    disabled = TokenizerMasking(0, None, optimizations=dict.fromkeys(FLAGS, False))
+    disabled = TokenizerMasking(0, None, **dict.fromkeys(FLAGS, False))
     rdata = sample()
     tokens = baseline.get_tokens_windows(STREAM, [rdata], True)[0]
     mask = np.ones(12, dtype=bool)

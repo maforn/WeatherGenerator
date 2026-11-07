@@ -27,16 +27,17 @@ data_loading:
   profile_memory_full: True
   num_workers: 5
   prefetch_factor: 1
-  optimizations:
-    even_workset_split: True
-    anemoi_select_vars: True
-    anemoi_avoid_dtype_copy: True
-    obs_single_read: True
-    skip_all_valid_filter_copy: True
-    tokenize_coords_only: True
-    source_direct_build: True
-    target_requested_fields_only: True
-    skip_train_inverse_indices: True
+
+# data-loader options: flat keys, each off when missing (docs/martin_dataloader_flags.md)
+even_workset_split: True
+anemoi_select_vars: True
+anemoi_avoid_dtype_copy: True
+obs_single_read: True
+skip_all_valid_filter_copy: True
+tokenize_coords_only: True
+source_direct_build: True
+target_requested_fields_only: True
+skip_train_inverse_indices: True
 
 training_config:
   start_date: 2017-06-01T00:00

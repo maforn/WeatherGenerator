@@ -189,7 +189,7 @@ class ReaderData:
         return len(self.data)
 
     def remove_nan_coords_and_geoinfos(
-        self, *, skip_all_valid_filter_copy: bool = False
+        self, skip_all_valid_filter_copy: bool = False
     ) -> "ReaderData":
         """
         Remove all data points where coords or geoinfos contain NaN
@@ -206,11 +206,9 @@ class ReaderData:
         idx_valid_geoinfos = ~np.isnan(self.geoinfos).any(axis=1)
         idx_valid = np.logical_and(idx_valid, idx_valid_geoinfos)
 
-        # Safe only for caller-owned arrays: normalization later mutates them.
+        # apply (when every row is valid, the option keeps views instead of copies)
         if skip_all_valid_filter_copy and idx_valid.all():
-            return ReaderData(self.coords, self.geoinfos, self.data, self.datetimes)
-
-        # apply
+            idx_valid = slice(None)
         return ReaderData(
             self.coords[idx_valid],
             self.geoinfos[idx_valid],
@@ -308,6 +306,9 @@ class DataReaderBase(metaclass=ABCMeta):
     and longitude in degrees from -180 (West) to +180 (East).
     """
 
+    # set by the sampler from cf; off for readers built elsewhere
+    skip_all_valid_filter_copy = False
+
     # The fields that need to be set by the child classes
     source_channels: list[str] = abstract_attribute()
     target_channels: list[str] = abstract_attribute()
@@ -337,8 +338,6 @@ class DataReaderBase(metaclass=ABCMeta):
 
         self.time_window_handler = tw_handler
         self.stream_info = stream_info
-        # Populated by the sampler after construction; old callers retain all defaults.
-        self.optimizations = {}
         self.target_channel_weights = None
 
     def init_empty(self) -> None:

@@ -35,6 +35,10 @@ _logger = logging.getLogger(__name__)
 class DataReaderAnemoi(DataReaderTimestep):
     "Wrapper for Anemoi datasets"
 
+    # set by the sampler from cf; off for readers built elsewhere
+    anemoi_select_vars = False
+    anemoi_avoid_dtype_copy = False
+
     def __init__(
         self,
         tw_handler: TimeWindowHandler,
@@ -56,8 +60,6 @@ class DataReaderAnemoi(DataReaderTimestep):
         -------
         None
         """
-
-        self._selected_datasets = {}
 
         # use anemoi_config if it's defined; ignore filename in this case
         data_paths = stream_info.get("data_paths", [])
@@ -171,42 +173,29 @@ class DataReaderAnemoi(DataReaderTimestep):
         self.mean = ds.statistics["mean"]
         self.stdev = ds.statistics["stdev"]
 
-    def _read_selected_variables(self, start, end, channels_idx):
-        """Read a lazy variable subset without changing the reader's statistics indices.
+    def _read_variables(self, didx_start: int, didx_end: int, channels_idx: list[int]):
+        """Read time steps [didx_start, didx_end) as float32 (time, variables, grid), with the
+        columns of the channels and geoinfos in it.
 
-        Uses Anemoi's public ``open_dataset(dataset, select=...)`` API. Older
-        installations that cannot provide the requested view fail explicitly.
-        The view may still read full chunks; storage savings depend on layout.
+        With anemoi_select_vars only the variables the stream uses are converted, so the
+        transpose and copies after it cover fewer variables. The read is the same either way:
+        each zarr chunk holds all variables of a time step. With anemoi_avoid_dtype_copy a
+        float32 dataset is not copied by the conversion.
         """
-        indices = tuple(sorted(set(map(int, channels_idx)) | set(map(int, self.geoinfo_idx))))
-        # Empty selection keeps the legacy shape/empty-channel handling.
-        if not indices:
-            return self.ds[start:end], list(channels_idx), list(self.geoinfo_idx)
-        if indices not in self._selected_datasets:
-            names = [self.ds.variables[i] for i in indices]
-            try:
-                selected = anemoi_datasets.open_dataset(self.ds, select=names)
-                actual = list(selected.variables)
-                if len(actual) != len(names) or set(actual) != set(names):
-                    raise ValueError("selected variables do not match the requested variables")
-                if selected.shape[0] != self.ds.shape[0]:
-                    raise ValueError("variable selection changed the time dimension")
-                if not np.array_equal(selected.dates, self.ds.dates):
-                    raise ValueError("variable selection changed dates")
-            except Exception as error:
-                raise RuntimeError(
-                    "anemoi_select_vars requires an Anemoi dataset supporting "
-                    "open_dataset(dataset, select=names); disable the flag for this dataset"
-                ) from error
-            positions = {
-                index: actual.index(name) for index, name in zip(indices, names, strict=False)
-            }
-            self._selected_datasets[indices] = selected, positions
-        selected, positions = self._selected_datasets[indices]
+        raw = self.ds[didx_start:didx_end]
+        used = self.anemoi_select_vars and sorted(
+            {int(i) for i in [*channels_idx, *self.geoinfo_idx]}
+        )
+        if not used:  # option off, or nothing to select
+            data = raw[:, :, 0].astype(np.float32, copy=not self.anemoi_avoid_dtype_copy)
+            return data, channels_idx, self.geoinfo_idx
+        column = {index: k for k, index in enumerate(used)}
+        # advanced indexing already copies, so astype needs no second copy
+        data = raw[:, used, 0].astype(np.float32, copy=False)
         return (
-            selected[start:end],
-            [positions[int(i)] for i in channels_idx],
-            [positions[int(i)] for i in self.geoinfo_idx],
+            data,
+            [column[int(i)] for i in channels_idx],
+            [column[int(i)] for i in self.geoinfo_idx],
         )
 
     @override
@@ -253,21 +242,7 @@ class DataReaderAnemoi(DataReaderTimestep):
         # subsetting is pushed to the ctor via frequency argument; this also ensures that no sub-
         # sampling is required here
         try:
-            read_channels_idx = channels_idx
-            read_geoinfo_idx = self.geoinfo_idx
-            if self.optimizations.get("anemoi_select_vars", False):
-                raw, read_channels_idx, read_geoinfo_idx = self._read_selected_variables(
-                    didx_start, didx_end, channels_idx
-                )
-                data = raw[:, :, 0].astype(
-                    np.float32,
-                    copy=not self.optimizations.get("anemoi_avoid_dtype_copy", False),
-                )
-                del raw
-            elif self.optimizations.get("anemoi_avoid_dtype_copy", False):
-                data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32, copy=False)
-            else:
-                data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32)
+            data, data_cols, geo_cols = self._read_variables(didx_start, didx_end, channels_idx)
         except MissingDateError as e:
             _logger.debug(f"Date not present in anemoi dataset: {str(e)}. Skipping.")
             return ReaderData.empty(
@@ -278,9 +253,9 @@ class DataReaderAnemoi(DataReaderTimestep):
         data = data.transpose([0, 2, 1]).reshape((data.shape[0] * data.shape[2], -1))
 
         # extract geoinfo channels (can be time-varying, so read from dataset)
-        geoinfos = data[:, list(read_geoinfo_idx)]
+        geoinfos = data[:, list(geo_cols)]
         # extract channels
-        data = data[:, list(read_channels_idx)]
+        data = data[:, list(data_cols)]
 
         # construct lat/lon coords
         latlon = np.concatenate(
