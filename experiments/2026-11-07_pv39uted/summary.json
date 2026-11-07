@@ -1,0 +1,18 @@
+{
+ "run": "pv39uted",
+ "job": "2728526",
+ "date": "2026-11-07",
+ "state": "COMPLETED",
+ "elapsed": "00:31:38",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml + exp_bn_loader.yml + exp_bn_profile.yml + exp_bn_level6.yml",
+ "steps": 100,
+ "s_per_step": 15.87,
+ "gpu_peak_gib": 21.02,
+ "host_rss_gib": 76.7,
+ "source_gb_per_sample": 4.68,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "bottleneck C: level 6, andres/scalene + GPU options + bf16 workers, 8 workers"
+}
