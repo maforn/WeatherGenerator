@@ -26,9 +26,6 @@ embed_index_copy: True
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
 
-# data-loader optimizations, each off when missing
-data_loading:
-  optimizations:
-    # split complete batches evenly over the loader workers; the remainder goes one each to the
-    # first workers instead of all to the last one
-    even_workset_split: True
+# data loader: split complete batches evenly over the loader workers; the remainder goes one each
+# to the first workers instead of all to the last one
+even_workset_split: True
