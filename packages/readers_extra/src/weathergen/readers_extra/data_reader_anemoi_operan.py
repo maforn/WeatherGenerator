@@ -148,11 +148,9 @@ class DataReaderAnemoiOperan(DataReaderAnemoi):
             read_channels_idx = channels_idx
             read_geoinfo_idx = self.geoinfo_idx
             if self.optimizations.get("anemoi_select_vars", False):
-                raw, read_channels_idx, read_geoinfo_idx = self._read_selected_variables(
-                    didx_start, didx_end, channels_idx
+                data, read_channels_idx, read_geoinfo_idx = self._select_variables(
+                    self.ds[didx_start:didx_end], channels_idx
                 )
-                data = raw[:, :, 0].astype(np.float32)
-                del raw
             else:
                 data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32)
         except MissingDateError as e:

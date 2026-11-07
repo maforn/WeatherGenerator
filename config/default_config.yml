@@ -150,12 +150,6 @@ data_loading :
   # If this happens, you can disable the flag, but performance will drop on GH200.
   memory_pinning: True
 
-  # data-loader optimizations, each off when missing or False
-  optimizations:
-    # Anemoi and Operan readers: read only the stream's channels and geoinfos
-    # (open_dataset(ds, select=...)) instead of every variable in the dataset
-    anemoi_select_vars: False
-
 
 # config for training
 training_config:

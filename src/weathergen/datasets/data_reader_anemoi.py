@@ -57,8 +57,6 @@ class DataReaderAnemoi(DataReaderTimestep):
         None
         """
 
-        self._selected_datasets = {}
-
         # use anemoi_config if it's defined; ignore filename in this case
         data_paths = stream_info.get("data_paths", [])
         anemoi_config = stream_info.get("anemoi_config")
@@ -171,42 +169,23 @@ class DataReaderAnemoi(DataReaderTimestep):
         self.mean = ds.statistics["mean"]
         self.stdev = ds.statistics["stdev"]
 
-    def _read_selected_variables(self, start, end, channels_idx):
-        """Read a lazy variable subset without changing the reader's statistics indices.
+    def _select_variables(self, raw: NDArray, channels_idx: list[int]):
+        """Keep only the variables this stream uses before the dtype conversion and transpose.
 
-        Uses Anemoi's public ``open_dataset(dataset, select=...)`` API. Older
-        installations that cannot provide the requested view fail explicitly.
-        The view may still read full chunks; storage savings depend on layout.
+        The read is unchanged (each zarr chunk holds all variables of a time step); only the
+        conversion, the transpose and the copies after it cover fewer variables. Returns the
+        data (time, variables, grid) and the positions of the channels and geoinfos in it.
         """
-        indices = tuple(sorted(set(map(int, channels_idx)) | set(map(int, self.geoinfo_idx))))
-        # Empty selection keeps the legacy shape/empty-channel handling.
-        if not indices:
-            return self.ds[start:end], list(channels_idx), list(self.geoinfo_idx)
-        if indices not in self._selected_datasets:
-            names = [self.ds.variables[i] for i in indices]
-            try:
-                selected = anemoi_datasets.open_dataset(self.ds, select=names)
-                actual = list(selected.variables)
-                if len(actual) != len(names) or set(actual) != set(names):
-                    raise ValueError("selected variables do not match the requested variables")
-                if selected.shape[0] != self.ds.shape[0]:
-                    raise ValueError("variable selection changed the time dimension")
-                if not np.array_equal(selected.dates, self.ds.dates):
-                    raise ValueError("variable selection changed dates")
-            except Exception as error:
-                raise RuntimeError(
-                    "anemoi_select_vars requires an Anemoi dataset supporting "
-                    "open_dataset(dataset, select=names); disable the flag for this dataset"
-                ) from error
-            positions = {
-                index: actual.index(name) for index, name in zip(indices, names, strict=False)
-            }
-            self._selected_datasets[indices] = selected, positions
-        selected, positions = self._selected_datasets[indices]
+        used = sorted({int(i) for i in channels_idx} | {int(i) for i in self.geoinfo_idx})
+        if not used:  # nothing to select: keep the original shape handling
+            return raw[:, :, 0].astype(np.float32), list(channels_idx), list(self.geoinfo_idx)
+        position = {index: k for k, index in enumerate(used)}
+        # advanced indexing already copies, so astype needs no second copy
+        data = raw[:, used, 0].astype(np.float32, copy=False)
         return (
-            selected[start:end],
-            [positions[int(i)] for i in channels_idx],
-            [positions[int(i)] for i in self.geoinfo_idx],
+            data,
+            [position[int(i)] for i in channels_idx],
+            [position[int(i)] for i in self.geoinfo_idx],
         )
 
     @override
@@ -256,11 +235,9 @@ class DataReaderAnemoi(DataReaderTimestep):
             read_channels_idx = channels_idx
             read_geoinfo_idx = self.geoinfo_idx
             if self.optimizations.get("anemoi_select_vars", False):
-                raw, read_channels_idx, read_geoinfo_idx = self._read_selected_variables(
-                    didx_start, didx_end, channels_idx
+                data, read_channels_idx, read_geoinfo_idx = self._select_variables(
+                    self.ds[didx_start:didx_end], channels_idx
                 )
-                data = raw[:, :, 0].astype(np.float32)
-                del raw
             else:
                 data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32)
         except MissingDateError as e:
