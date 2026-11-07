@@ -88,7 +88,7 @@ TRAIN_CFG=$BASE_CFG,config/optimizations.yml,config/exp_bn_loader.yml,config/exp
   process peak is 1.6 / 12.5 / **72 GiB** at L5/6/7, in source tokenization (`tokenizer_utils.py`
   :365 cat, :332 gather, :485 per-point rotation matrices). 113 s per level-7 sample.
   - **D as planned (2 workers) would need ~575 GiB of host RAM**, above the plan's 200 GiB stop
-    line. On hold for Martin.
+    line. Run with 1 worker instead (Martin's OK).
 - **Added (Martin's OK, 2026-11-06), queued after C:**
   - **NOOPT:** `$B,config/exp_bn_loader.yml,config/exp_bn_profile.yml,config/exp_bn_nogpuopts.yml`,
     30 min. A without `optimizations.yml`. It keeps only the bf16 worker tokens and the per-step
@@ -96,6 +96,31 @@ TRAIN_CFG=$BASE_CFG,config/optimizations.yml,config/exp_bn_loader.yml,config/exp
     step time.
   - **W4:** `$TRAIN_CFG,config/exp_bn_workers4.yml`, 30 min. A with 4 workers. Answers how much
     host memory 8 fewer workers free, and whether the GPU stays fed.
+
+## Per-level summary (2026-11-07)
+Same code and options (A's setup: all loader flags, Andres's GPU options, bf16 worker tokens),
+1 node, 4 GH200. Step = mean interval between batches after step 0.
+
+| | L5 `ykm2kcxf` (A) | L6 `pv39uted` (C) | L7 `ywaqq3tw` (D) |
+|---|---|---|---|
+| Workers per GPU | 12 | 8 | 1 |
+| Step | 4.1 s | 15.9 s | **162 s** |
+| Loader wait share | 1.4% | 0.3% | 0.0% |
+| Prep per sample (one worker) | 13.7 s | 32.4 s | 92.1 s |
+| read / tokenize / build | 4.6 / 2.9 / 5.7 | 5.2 / 6.2 / 20.5 | 5.0 / 14.3 / 72.1 |
+| Workers needed to keep up | ~4 | ~3 | 1 |
+| Payload per sample (bf16) | 1.5 GiB | 4.8 GiB | 17 GiB |
+| Rank RSS / workers RSS per rank | 8.6 / 64 GiB | 13.2 / 70 GiB | 30.7 / 47 GiB |
+| GPU allocated peak (of 96) | 7.3 GiB | 17.1 GiB | 59.6 GiB |
+| Node used peak (CPU+HBM, of 858) | 409 GiB | 486 GiB | 630 GiB |
+
+- **GPU step bound at all three levels.** From L6 to L7 the step grows ×10 and the prep ×2.8,
+  so the loader needs fewer workers as the level rises.
+- **Read is flat** (~5 s); **build** (batch assembly) is the part that grows: 42% → 63% → 78%.
+- **Host memory** sets the worker cap at L7: one worker is 47 GiB, a second per GPU would exceed
+  the 477 GiB of CPU RAM. One is also enough.
+- **Open:** inside a L7 step the GPU allocation sits flat for ~2×40 s. SNAP7 should show whether
+  that is GPU compute or main-process CPU work.
 
 ## How each run is judged
 - **GPU-bound:** loader wait per step ≈ 0 (`loader_wait_rank*.jsonl`), and step time = GPU step.

@@ -1,0 +1,18 @@
+{
+ "run": "ywaqq3tw",
+ "job": "2736092",
+ "date": "2026-11-07",
+ "state": "COMPLETED",
+ "elapsed": "00:34:22",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml + exp_bn_loader.yml + exp_bn_profile.yml + exp_bn_level7.yml",
+ "steps": 10,
+ "s_per_step": null,
+ "gpu_peak_gib": 59.62,
+ "host_rss_gib": 64.6,
+ "source_gb_per_sample": 17.68,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "D: level 7, 1 worker/GPU, 10 steps; GPU-step-bound, 162 s/step, 92 s/sample"
+}
