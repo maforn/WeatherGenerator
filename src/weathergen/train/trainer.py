@@ -643,7 +643,7 @@ class Trainer(TrainerBase):
                 if self.cf.get("source_tokens_in_mixed_precision", False)
                 else None
             )
-            batch.to_device(self.device, source_dtype)
+            batch.to_device(self.device, source_dtype, self.cf.get("source_tokens_on_cpu", False))
             with torch.autocast(
                 device_type=f"cuda:{self.cf.local_rank}",
                 dtype=self.mixed_precision_dtype,
