@@ -5,6 +5,10 @@
 # (forecast engine and local assimilation)
 checkpoint_per_block: True
 
+# attention + MLP blocks per forecast-engine checkpoint
+# requires: checkpoint_per_block
+fe_blocks_per_checkpoint: 2
+
 # decoder: project keys/values once per cell, then select each cell's 9 neighbours by index
 # instead of copying them
 decoder_gather_after_kv_projection: True
