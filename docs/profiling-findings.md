@@ -65,11 +65,26 @@ So the cost of the memory options is CPU work, not GPU arithmetic: the backward 
 Python forward code of every checkpointed block, and the GPU waits while thousands of small
 kernels are launched.
 
+## Using the freed memory: 2 samples per GPU
+
+Same number of kernel launches, twice the work per kernel (`training_config.model_input.source_masking.num_samples=2`,
+6 workers, 50 steps):
+
+| Options | Samples per GPU | Step | Samples/s | Peak per GPU | Host memory per rank |
+|---|---|---|---|---|---|
+| none | 1 | 3.16 s | 1.27 | 29.31 GiB | 72.5 GiB |
+| none | 2 | 5.17 s | 1.55 (+22%) | 53.81 GiB | 72.1 GiB |
+| all 16 | 1 | 4.29 s | 0.93 | 7.47 GiB | 44.2 GiB |
+| all 16 | 2 | 6.30 s | 1.27 (+37%) | 14.10 GiB | 34.4 GiB |
+
+All options with 2 samples per GPU give the throughput of the original setup with 2.1x less GPU memory
+and half the host memory. More samples per GPU are limited by the host, not the GPU: with 8 or 12
+workers the finished batches overflow `/dev/shm` (DataLoader workers die with a bus error).
+
 ## Next
 
-- Use the freed memory to give each kernel more work: 2 samples per GPU (same number of launches).
-  The first tests ran out of host shared memory (`/dev/shm`) for the DataLoader workers; converting
-  the source tokens to bf16 in the workers would halve it.
+- Halve the host shared memory per batch (source tokens in bf16 already in the workers), to allow
+  3 or 4 samples per GPU (about 28 GiB for 4 with all options).
 - Fewer, larger kernels: norms and elementwise kernels are 25% of the GPU kernel time and most of
   the launches; fusing them (e.g. `torch.compile` on the blocks) cuts both.
 - Less nested recompute where memory allows (each level reruns the Python forward).
