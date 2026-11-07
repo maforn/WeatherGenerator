@@ -637,7 +637,9 @@ class Trainer(TrainerBase):
                 # pin memory for faster CPU-GPU transfer
                 batch = batch.pin_memory()
             # the embedding casts the source tokens to the mixed-precision dtype first, so
-            # keeping them in that dtype on the device gives the same result with less memory
+            # keeping them in that dtype on the device gives the same result with less memory.
+            # The data loader workers already convert them (MultiStreamDataSampler), so this is
+            # a plain copy then; it only converts batches built elsewhere.
             source_dtype = (
                 self.mixed_precision_dtype
                 if self.cf.get("source_tokens_in_mixed_precision", False)
