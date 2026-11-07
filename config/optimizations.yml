@@ -19,6 +19,9 @@ source_tokens_in_mixed_precision: True
 # checkpoint each block of the local-to-global adapter
 ae_adapter_checkpoint: True
 
+# one outer checkpoint per local-assimilation chunk (one more local forward)
+ae_local_checkpoint_outer: True
+
 # run the stream-embedding layers over this many chunks of patches (bounds the backward burst;
 # 4 measured on the lowres operan config)
 embed_num_chunks: 4
