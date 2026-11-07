@@ -34,14 +34,17 @@ from weathergen.model.utils import ActivationFactory
 from weathergen.utils.utils import get_dtype
 
 
-def checkpoint_layers(layers, per_block: bool, x, *args):
-    """Run ``layers`` with one activation checkpoint per layer or, with ``per_block``, per block
-    (an attention layer and the layers up to the next one): half as many inputs are saved for
-    the backward pass, with the same math."""
+def checkpoint_layers(layers, per_block: bool, x, *args, blocks_per_checkpoint: int = 1):
+    """Run ``layers`` with one activation checkpoint per layer or, with ``per_block``, per
+    ``blocks_per_checkpoint`` blocks (a block: an attention layer and the layers up to the next
+    one): half as many inputs (or fewer) are saved for the backward pass, with the same math."""
     attention = (MultiSelfAttentionHead, MultiSelfAttentionHeadLocal, MultiSelfAttentionHeadVarlen)
     groups: list[list[torch.nn.Module]] = []
+    num_blocks = 0
     for layer in layers:
-        if not groups or not per_block or isinstance(layer, attention):
+        starts_group = isinstance(layer, attention) and num_blocks % blocks_per_checkpoint == 0
+        num_blocks += isinstance(layer, attention)
+        if not groups or not per_block or starts_group:
             groups.append([])
         groups[-1].append(layer)
     for group in groups:
@@ -681,7 +684,10 @@ class ForecastingEngine(torch.nn.Module):
 
         aux_info = None
         per_block = self.cf.get("checkpoint_per_block", False)
-        return checkpoint_layers(self.fe_blocks, per_block, tokens, coords, aux_info)
+        n = self.cf.get("fe_blocks_per_checkpoint", 1)
+        return checkpoint_layers(
+            self.fe_blocks, per_block, tokens, coords, aux_info, blocks_per_checkpoint=n
+        )
 
 
 class EnsPredictionHead(torch.nn.Module):
