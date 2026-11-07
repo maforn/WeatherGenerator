@@ -119,8 +119,15 @@ Same code and options (A's setup: all loader flags, Andres's GPU options, bf16 w
 - **Read is flat** (~5 s); **build** (batch assembly) is the part that grows: 42% → 63% → 78%.
 - **Host memory** sets the worker cap at L7: one worker is 47 GiB, a second per GPU would exceed
   the 477 GiB of CPU RAM. One is also enough.
-- **Open:** inside a L7 step the GPU allocation sits flat for ~2×40 s. SNAP7 should show whether
-  that is GPU compute or main-process CPU work.
+- **The flat stretches at L7 are GPU time** (SNAP7 `ft98r6re`, SNAP6 `k8eytats`). The main thread
+  makes no GPU allocation for 91% of a L7 step (41–44% at L6): 2 pauses of 12–15 s in forward
+  just before the decoders, and 2 of 34–41 s in backward after a checkpoint recompute. Nothing on
+  the CPU at those places takes that long, and they grow ~15× for 4× the cells, which fits the
+  16 global-attention forecast-engine blocks (`forecast_att_dense_rate: 1.0`, quadratic in the
+  number of cells). Plot: `ft98r6re/plots/step_pauses_l6_l7.png`. A kernel timeline (nsys) of
+  2 steps would confirm which kernels run there; not submitted.
+- **So at L7 the bottleneck is GPU compute in the model**, not storage → CPU: the loader needs
+  1 worker, and the training main thread is idle 91% of the step.
 
 ## How each run is judged
 - **GPU-bound:** loader wait per step ≈ 0 (`loader_wait_rank*.jsonl`), and step time = GPU step.
