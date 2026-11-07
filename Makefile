@@ -67,7 +67,7 @@ SCALENE_CONFIGS := --base-config $(BASE) --config $(subst $(comma), ,$(CONFIG))
 
 scalene-data: ## Scalene CPU + memory profile of building BATCHES batches (no workers, no GPU)
 	mkdir -p $(SCALENE_DIR)
-	$(MODULES) $(SCALENE) srun -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 1 --time 00:40:00 \
+	$(MODULES) $(SCALENE) ulimit -c 0 && srun -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 1 --time 00:40:00 \
 		.venv/bin/python -m scalene run --memory --profile-only weathergen --program-path . \
 		-o $(SCALENE_DIR)/data.json scripts/profile_data_loading.py --- $(SCALENE_CONFIGS) \
 		--batches $(BATCHES) --checksum $(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))

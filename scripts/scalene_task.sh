@@ -8,6 +8,8 @@
 # fsdp_cpu_offload) or hangs rank 0, so use Nsight Systems (make profile) for the GPU side.
 out=$1
 shift
+# no core dumps: crashed profiling runs left ~275 GB of them in the working directory
+ulimit -c 0
 MASTER_ADDR="$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1)"
 export MASTER_ADDR
 export CUDA_VISIBLE_DEVICES=0,1,2,3 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
