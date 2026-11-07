@@ -327,6 +327,11 @@ class Trainer(TrainerBase):
             self.validate_with_ema = False
         self.ema_model = None
         if self.validate_with_ema:
+            is_model_sharded = (
+                cf.distributed.data_parallel.with_ddp and cf.distributed.data_parallel.with_fsdp
+            )
+            # keep the EMA weights in pinned CPU memory (FSDP only)
+            ema_on_cpu = cf.get("ema_on_cpu", False) and is_model_sharded
             meta_ema_model, _ = init_model_and_shard(
                 cf,
                 self.dataset,
@@ -335,16 +340,15 @@ class Trainer(TrainerBase):
                 cf.training_config.training_mode,
                 devices[0],
                 cf.distributed.data_parallel,
+                cpu_offload=ema_on_cpu,
             )
             self.ema_model = EMAModel(
                 self.model,
                 meta_ema_model,
                 halflife_steps=validate_with_ema_cfg.get("ema_halflife_in_thousands", 1e-3),
                 rampup_ratio=validate_with_ema_cfg.get("ema_ramp_up_ratio", 0.09),
-                is_model_sharded=(
-                    cf.distributed.data_parallel.with_ddp
-                    and cf.distributed.data_parallel.with_fsdp
-                ),
+                is_model_sharded=is_model_sharded,
+                on_cpu=ema_on_cpu,
             )
 
         # get target_aux calculators for different loss terms

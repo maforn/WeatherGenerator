@@ -9,12 +9,15 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+import gc
 import itertools
 import logging
 
 import torch
 from torch.distributed.fsdp import (
+    CPUOffloadPolicy,
     MixedPrecisionPolicy,
+    OffloadPolicy,
     fully_shard,
 )
 from torch.distributed.tensor import distribute_tensor
@@ -50,7 +53,10 @@ def init_model_and_shard(
     device,
     data_parallel_cfg,
     overrides={},
+    cpu_offload=False,
 ):
+    """cpu_offload: with FSDP, keep the sharded parameters (and so the gradients and optimizer
+    states) in pinned CPU memory; FSDP copies them to the GPU for each all-gather."""
     with_ddp = data_parallel_cfg["with_ddp"]
     with_fsdp = data_parallel_cfg["with_fsdp"]
     model_creation_device = "meta" if with_ddp and with_fsdp else "cuda"
@@ -88,7 +94,9 @@ def init_model_and_shard(
         # this by returning float32 whatever it was handed. Off by default so autocast picks
         # the dtype per operation, identically in both passes.
         cast_forward_inputs = cf.get("fsdp_cast_forward_inputs", False)
+        offload_policy = CPUOffloadPolicy(pin_memory=True) if cpu_offload else OffloadPolicy()
         fsdp_kwargs = {
+            "offload_policy": offload_policy,
             "mp_policy": (
                 MixedPrecisionPolicy(
                     param_dtype=get_dtype(cf.mixed_precision_dtype),
@@ -140,6 +148,7 @@ def init_model_and_shard(
         # this is the policy the mismatch was observed under: param_dtype float32 against
         # bfloat16 activations, so the entry cast is a full float32 copy of the activation
         full_precision_fsdp_kwargs = {
+            "offload_policy": offload_policy,
             "mp_policy": (
                 MixedPrecisionPolicy(
                     param_dtype=torch.float32,
@@ -162,7 +171,7 @@ def init_model_and_shard(
                 fully_shard(module, **full_precision_fsdp_kwargs)
 
     if with_ddp and with_fsdp:
-        fully_shard(model)
+        fully_shard(model, offload_policy=offload_policy)
         for tensor in itertools.chain(model.parameters(), model.buffers()):
             assert tensor.device == torch.device("meta")
 
@@ -173,6 +182,27 @@ def init_model_and_shard(
         # occur during validation.
         for embed in model.encoder.embed_engine.embeds.values():
             torch.distributed.fsdp.register_fsdp_forward_method(embed, "forward")
+
+        # FSDP moves offloaded shards to the CPU as soon as they are materialized, so they would
+        # be initialized by the CPU generator: initialize (or load) a GPU copy exactly as without
+        # offloading and copy it into the pinned CPU shards
+        if cpu_offload:
+            gpu_model, model_params = init_model_and_shard(
+                cf,
+                dataset,
+                run_id_contd,
+                mini_epoch_contd,
+                training_mode,
+                device,
+                data_parallel_cfg,
+                overrides,
+            )
+            model.to_empty(device="cpu")
+            model.load_state_dict(gpu_model.state_dict())
+            # FSDP modules are in reference cycles: free the GPU copy now
+            del gpu_model
+            gc.collect()
+            return model, model_params
 
     # complete initalization and load model if inference/continuing a run
     if run_id_contd is not None:
