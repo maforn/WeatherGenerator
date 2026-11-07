@@ -24,12 +24,16 @@ class EMAModel:
         halflife_steps=float("inf"),
         rampup_ratio=0.09,
         is_model_sharded=False,
+        on_cpu=False,
     ):
+        """on_cpu: empty_model is FSDP-sharded with CPU offloading, so the EMA weights stay in
+        pinned CPU memory (FSDP copies them to the GPU when validating with them)."""
         self.original_model = model
         self.halflife_steps = halflife_steps
         self.rampup_ratio = rampup_ratio
         self.ema_model = empty_model
         self.is_model_sharded = is_model_sharded
+        self.on_cpu = on_cpu
         self.batch_size = 1
         # Build a name → param map once
         self.src_params = dict(self.original_model.named_parameters())
@@ -44,7 +48,7 @@ class EMAModel:
         It operates via the state_dict to be able to deal with sharded tensors in case
         FSDP2 is used.
         """
-        self.ema_model.to_empty(device="cuda")
+        self.ema_model.to_empty(device="cpu" if self.on_cpu else "cuda")
         for p in self.ema_model.parameters():
             p.requires_grad = False
         maybe_sharded_sd = self.original_model.state_dict()
@@ -89,6 +93,7 @@ class EMAModel:
         # determine correct interpolation params
         self.batch_size = batch_size
         beta = self.get_current_beta(cur_step)
+        staged = False
 
         for name, p_ema in self.ema_model.named_parameters():
             p_src = self.src_params.get(name, None)
@@ -101,7 +106,19 @@ class EMAModel:
                 # EMA-only param or intentionally excluded
                 assert False, f"{name}: All parameters of the EMA model must be in the base model."
 
-            p_ema.lerp_(p_src, 1.0 - beta)
+            if p_ema.is_cuda and p_src.is_cuda:
+                p_ema.lerp_(p_src, 1.0 - beta)
+            else:
+                # EMA or model shard in CPU memory: same lerp on the GPU, result copied back
+                ema, src = p_ema.to_local(), p_src.to_local()
+                ema_gpu = ema.to("cuda", non_blocking=True)
+                ema_gpu.lerp_(src.to("cuda", non_blocking=True), 1.0 - beta)
+                ema.copy_(ema_gpu, non_blocking=True)
+                staged = True
+
+        # the async copies to and from pinned memory must finish before the CPU uses it
+        if staged:
+            torch.cuda.current_stream().synchronize()
 
     @torch.no_grad()
     def forward_eval(self, *args, **kwargs):
