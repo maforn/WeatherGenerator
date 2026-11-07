@@ -7,6 +7,8 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+import functools
+
 import torch
 from astropy_healpix import healpy
 from torch.distributed.nn.functional import all_gather
@@ -248,6 +250,13 @@ class EncoderModule(torch.nn.Module):
         posteriors = []
         empty_chunk_dependency = tokens_global.new_zeros(())
 
+        # one checkpoint around each chunk's local engine (the empty-chunk path too, so that all
+        # ranks issue the same FSDP all-gathers in the recompute): only the chunk input is kept
+        # until backward instead of every block's input, for one more forward of the engine
+        local_engine = self.ae_local_engine
+        if self.cf.get("ae_local_checkpoint_outer", False):
+            local_engine = functools.partial(checkpoint, self.ae_local_engine, use_reentrant=False)
+
         num_chunks = (cell_lens.shape[0] + clen - 1) // clen
         for i in range(num_chunks):
             i_end = min((i + 1) * clen, cell_lens.shape[0])
@@ -266,7 +275,7 @@ class EncoderModule(torch.nn.Module):
                 # zero dependency so its backward hooks also execute.
                 dummy_lens = torch.tensor([0, 1], device=tokens.device, dtype=torch.int32)
                 dummy_tokens = tokens.new_zeros((1, tokens.shape[-1]))
-                dummy_tokens = self.ae_local_engine(dummy_tokens, dummy_lens)
+                dummy_tokens = local_engine(dummy_tokens, dummy_lens)
                 dummy_tokens, _ = self.interpolate_latents(dummy_tokens)
                 dummy_global = self.ae_local_global_engine(
                     dummy_tokens,
@@ -282,7 +291,7 @@ class EncoderModule(torch.nn.Module):
             q_cells_lens_cur = q_cells_lens[: cell_lens_cur.shape[0]]
 
             # local assimilation model
-            toks = self.ae_local_engine(toks, cell_lens_cur)
+            toks = local_engine(toks, cell_lens_cur)
 
             toks, posteriors_c = self.interpolate_latents(toks)
             posteriors += [posteriors_c]
