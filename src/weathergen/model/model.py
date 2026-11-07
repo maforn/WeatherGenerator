@@ -720,7 +720,18 @@ class Model(torch.nn.Module):
                 tokens = self.forecast_engine(tokens, step, model_params.rope_coords)
                 continue
 
-            tokens = self.forecast_engine(tokens, step, model_params.rope_coords)
+            if self.cf.get("fe_checkpoint_per_step", False):
+                # keep only the step input for the backward, which reruns this step's forecast
+                # engine (with its own checkpoints inside) before going through it
+                tokens = checkpoint(
+                    self.forecast_engine,
+                    tokens,
+                    step,
+                    model_params.rope_coords,
+                    use_reentrant=False,
+                )
+            else:
+                tokens = self.forecast_engine(tokens, step, model_params.rope_coords)
             # decoder predictions
             output = self.predict_decoders(model_params, step, tokens, batch, output)
             # latent predictions (raw and with SSL heads)

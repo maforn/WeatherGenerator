@@ -5,6 +5,10 @@
 # (forecast engine and local assimilation)
 checkpoint_per_block: True
 
+# one checkpoint per forecast step around the forecast engine: only the step input is kept
+# until the backward (one more forecast-engine forward per step)
+fe_checkpoint_per_step: True
+
 # decoder: project keys/values once per cell, then select each cell's 9 neighbours by index
 # instead of copying them
 decoder_gather_after_kv_projection: True
