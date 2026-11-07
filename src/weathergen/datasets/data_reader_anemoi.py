@@ -35,6 +35,9 @@ _logger = logging.getLogger(__name__)
 class DataReaderAnemoi(DataReaderTimestep):
     "Wrapper for Anemoi datasets"
 
+    # set by the sampler from cf; off for readers built elsewhere
+    anemoi_select_vars = False
+
     def __init__(
         self,
         tw_handler: TimeWindowHandler,
@@ -169,23 +172,27 @@ class DataReaderAnemoi(DataReaderTimestep):
         self.mean = ds.statistics["mean"]
         self.stdev = ds.statistics["stdev"]
 
-    def _select_variables(self, raw: NDArray, channels_idx: list[int]):
-        """Keep only the variables this stream uses before the dtype conversion and transpose.
+    def _read_variables(self, didx_start: int, didx_end: int, channels_idx: list[int]):
+        """Read time steps [didx_start, didx_end) as float32 (time, variables, grid), with the
+        columns of the channels and geoinfos in it.
 
-        The read is unchanged (each zarr chunk holds all variables of a time step); only the
-        conversion, the transpose and the copies after it cover fewer variables. Returns the
-        data (time, variables, grid) and the positions of the channels and geoinfos in it.
+        With anemoi_select_vars only the variables the stream uses are converted, so the
+        transpose and copies after it cover fewer variables. The read is the same either way:
+        each zarr chunk holds all variables of a time step.
         """
-        used = sorted({int(i) for i in channels_idx} | {int(i) for i in self.geoinfo_idx})
-        if not used:  # nothing to select: keep the original shape handling
-            return raw[:, :, 0].astype(np.float32), list(channels_idx), list(self.geoinfo_idx)
-        position = {index: k for k, index in enumerate(used)}
+        raw = self.ds[didx_start:didx_end]
+        used = self.anemoi_select_vars and sorted(
+            {int(i) for i in [*channels_idx, *self.geoinfo_idx]}
+        )
+        if not used:  # option off, or nothing to select
+            return raw[:, :, 0].astype(np.float32), channels_idx, self.geoinfo_idx
+        column = {index: k for k, index in enumerate(used)}
         # advanced indexing already copies, so astype needs no second copy
         data = raw[:, used, 0].astype(np.float32, copy=False)
         return (
             data,
-            [position[int(i)] for i in channels_idx],
-            [position[int(i)] for i in self.geoinfo_idx],
+            [column[int(i)] for i in channels_idx],
+            [column[int(i)] for i in self.geoinfo_idx],
         )
 
     @override
@@ -232,14 +239,7 @@ class DataReaderAnemoi(DataReaderTimestep):
         # subsetting is pushed to the ctor via frequency argument; this also ensures that no sub-
         # sampling is required here
         try:
-            read_channels_idx = channels_idx
-            read_geoinfo_idx = self.geoinfo_idx
-            if self.optimizations.get("anemoi_select_vars", False):
-                data, read_channels_idx, read_geoinfo_idx = self._select_variables(
-                    self.ds[didx_start:didx_end], channels_idx
-                )
-            else:
-                data = self.ds[didx_start:didx_end][:, :, 0].astype(np.float32)
+            data, data_cols, geo_cols = self._read_variables(didx_start, didx_end, channels_idx)
         except MissingDateError as e:
             _logger.debug(f"Date not present in anemoi dataset: {str(e)}. Skipping.")
             return ReaderData.empty(
@@ -250,9 +250,9 @@ class DataReaderAnemoi(DataReaderTimestep):
         data = data.transpose([0, 2, 1]).reshape((data.shape[0] * data.shape[2], -1))
 
         # extract geoinfo channels (can be time-varying, so read from dataset)
-        geoinfos = data[:, list(read_geoinfo_idx)]
+        geoinfos = data[:, list(geo_cols)]
         # extract channels
-        data = data[:, list(read_channels_idx)]
+        data = data[:, list(data_cols)]
 
         # construct lat/lon coords
         latlon = np.concatenate(
