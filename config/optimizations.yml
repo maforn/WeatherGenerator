@@ -52,3 +52,10 @@ anemoi_select_vars: True
 # free each batch before the next one is copied to the GPU (a reference cycle otherwise keeps
 # it alive until the next garbage collection: +1.7 GiB on random steps)
 train_gc_collect_every_step: True
+
+# data-loader optimizations, each off when missing
+data_loading:
+  optimizations:
+    # split complete batches evenly over the loader workers; the remainder goes one each to the
+    # first workers instead of all to the last one
+    even_workset_split: True
