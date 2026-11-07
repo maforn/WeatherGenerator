@@ -25,3 +25,8 @@ embed_index_copy: True
 # run the decoder over this many groups of cells (smaller flash-attn backward scratch;
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
+
+# EMA weights in pinned CPU memory
+# requires: FSDP (distributed.data_parallel.with_fsdp, several GPUs) and
+#   validation_config.validate_with_ema.enabled (otherwise there is no EMA model)
+ema_on_cpu: True
