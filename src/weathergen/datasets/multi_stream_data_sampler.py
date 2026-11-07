@@ -117,6 +117,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.masker,
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
+            target_requested_fields_only=cf.get("target_requested_fields_only", False),
         )
         if self.spatial_parallel.size > 1:
             logger.info(
