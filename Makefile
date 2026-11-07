@@ -72,7 +72,7 @@ scalene-data: ## Scalene CPU + memory profile of building BATCHES batches (no wo
 		-o $(SCALENE_DIR)/data.json scripts/profile_data_loading.py --- $(SCALENE_CONFIGS) \
 		--batches $(BATCHES) --checksum $(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))
 
-scalene-train: ## Scalene CPU + GPU profile of rank 0 of a 1-node training of STEPS steps
+scalene-train: ## Scalene CPU profile of rank 0 of a 1-node training of STEPS steps
 	mkdir -p $(SCALENE_DIR)
 	$(MODULES) $(SCALENE) srun -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 4 --cpus-per-task=72 \
 		--gres=gpu:4 --time $(TIME) bash scripts/scalene_task.sh $(SCALENE_DIR)/train.json train \
