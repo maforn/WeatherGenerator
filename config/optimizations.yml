@@ -25,3 +25,7 @@ embed_index_copy: True
 # run the decoder over this many groups of cells (smaller flash-attn backward scratch;
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
+
+# free each batch before the next one is copied to the GPU (a reference cycle otherwise keeps
+# it alive until the next garbage collection: +1.7 GiB on random steps)
+train_gc_collect_every_step: True
