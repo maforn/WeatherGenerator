@@ -52,7 +52,7 @@ their original behaviour.
 | `even_workset_split` | Share leftover samples across workers: four workers get 9 and eight get 8, instead of one getting 12 and eleven getting 8. Reduces uneven finishing times. | Similar and decreasing; sampled dates change | Mean step −28%, tail stall 39→10 s (`azmuvlzx`) |
 | `source_direct_build` | Reduce padding/gathering/split-and-stack copies while preserving token order and padding. | Almost identical | Part of tokenizer group: build −2.1 s/sample (`em2wu8xf`) |
 | `obs_single_read` | Read the union of observation columns once. May avoid repeated decompression; an extra combined buffer could instead raise memory. Inspect storage chunks first. | Almost identical | Part of reader group (`kawac1qm`) |
-| `anemoi_select_vars` | Select needed variables before materializing data, in both ordinary and Operan readers. Disk savings depend on storage chunks and reader support. | Almost identical | Part of reader group (`kawac1qm`) |
+| `anemoi_select_vars` | Convert and transpose only the variables the stream uses, in both ordinary and Operan readers. The read is unchanged: each zarr chunk holds all variables of a time step. | Almost identical | Part of reader group (`kawac1qm`) |
 
 ### bf16 source tokens in the workers
 

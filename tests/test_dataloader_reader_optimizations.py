@@ -2,7 +2,6 @@
 
 import unittest
 from types import SimpleNamespace
-from unittest.mock import patch
 
 import numpy as np
 
@@ -25,22 +24,16 @@ class ArrayStore:
 
 
 class AnemoiDataset:
-    def __init__(self, values, variables=None):
+    def __init__(self, values):
         self.values = values
-        self.variables = variables or [f"v{i}" for i in range(values.shape[1])]
         self.dates = np.arange("2020-01-01T00", "2020-01-01T04", dtype="datetime64[h]")
         self.shape = values.shape
+        self.reads = []
 
     def __getitem__(self, index):
+        self.reads.append(index)
         # Deliberately return a view: the reader must not mutate cached data.
         return self.values[index]
-
-
-def select_variables(dataset, *, select):
-    # Reverse the returned order to test explicit remapping, not assumptions.
-    names = list(reversed(select))
-    indices = [dataset.variables.index(name) for name in names]
-    return AnemoiDataset(dataset.values[:, indices], names)
 
 
 class ReaderOptimizationTests(unittest.TestCase):
@@ -105,13 +98,12 @@ class ReaderOptimizationTests(unittest.TestCase):
                 self.assertIs(actual.data, data.data)
                 self.assertFalse(np.shares_memory(expected.data, data.data))
 
-    def make_anemoi(self, cls, flags, dtype):
+    def make_anemoi(self, cls, flags, dtype, geoinfo_idx=(3, 1)):
         reader = object.__new__(cls)
         reader.optimizations = flags
-        reader._selected_datasets = {}
         reader.ds = AnemoiDataset(np.arange(160, dtype=dtype).reshape(4, 5, 2, 4))
         reader.len = 4
-        reader.geoinfo_idx = [3, 1]
+        reader.geoinfo_idx = list(geoinfo_idx)
         reader.latitudes = np.arange(4, dtype=np.float32)
         reader.longitudes = np.arange(4, dtype=np.float32) + 30
         reader.stream_info = {"nominal_time_mapping": {str(i): str(i) for i in range(24)}}
@@ -122,10 +114,8 @@ class ReaderOptimizationTests(unittest.TestCase):
         return reader
 
     def test_anemoi_flags_preserve_values_and_dataset_storage(self):
-        with patch(
-            "weathergen.datasets.data_reader_anemoi.anemoi_datasets.open_dataset",
-            side_effect=select_variables,
-        ) as open_dataset:
+        # unsorted, repeated, and overlapping with the geoinfos (3, 1)
+        for channels in ([4, 0, 4], [1, 2]):
             for cls in (DataReaderAnemoi, DataReaderAnemoiOperan):
                 for dtype in (np.float32, np.float64):
                     for selection, avoid_copy in ((False, True), (True, False), (True, True)):
@@ -136,37 +126,35 @@ class ReaderOptimizationTests(unittest.TestCase):
                         baseline = self.make_anemoi(cls, {}, dtype)
                         reader = self.make_anemoi(cls, flags, dtype)
                         saved = reader.ds.values.copy()
-                        expected = baseline._get(0, [4, 0, 4])
-                        actual = reader._get(0, [4, 0, 4])
+                        expected = baseline._get(0, channels)
+                        actual = reader._get(0, channels)
                         self.assert_reader_equal(expected, actual)
+                        # the read itself is unchanged: one slice of every variable
+                        self.assertEqual(reader.ds.reads, baseline.ds.reads)
                         actual.data[:] = -1
                         actual.geoinfos[:] = -2
                         np.testing.assert_array_equal(reader.ds.values, saved)
-                        calls = open_dataset.call_count
-                        self.assert_reader_equal(expected, reader._get(0, [4, 0, 4]))
-                        self.assertEqual(calls, open_dataset.call_count)
 
-    def test_anemoi_selection_rejects_unsupported_api(self):
-        reader = self.make_anemoi(DataReaderAnemoi, {"anemoi_select_vars": True}, np.float32)
-        with (
-            patch(
-                "weathergen.datasets.data_reader_anemoi.anemoi_datasets.open_dataset",
-                side_effect=TypeError("unsupported select"),
-            ),
-            self.assertRaisesRegex(RuntimeError, "anemoi_select_vars requires"),
-        ):
-            reader._get(0, [4])
+    def test_anemoi_selection_converts_only_used_variables(self):
+        for dtype in (np.float32, np.float64):
+            reader = self.make_anemoi(DataReaderAnemoi, {"anemoi_select_vars": True}, dtype)
+            raw = reader.ds[1:3]
+            data, channels, geoinfos = reader._select_variables(raw, [4, 4])
+            # variables 1, 3 (geoinfos) and 4 (channel) of 5, in that order
+            self.assertEqual(data.shape, (2, 3, 4))
+            self.assertEqual(data.dtype, np.float32)
+            self.assertEqual((channels, geoinfos), ([2, 2], [1, 0]))
+            np.testing.assert_array_equal(data, raw[:, [1, 3, 4], 0].astype(np.float32))
+            self.assertFalse(np.shares_memory(data, raw))
 
-    def test_anemoi_selection_rejects_wrong_variables(self):
-        reader = self.make_anemoi(DataReaderAnemoi, {"anemoi_select_vars": True}, np.float32)
-        with (
-            patch(
-                "weathergen.datasets.data_reader_anemoi.anemoi_datasets.open_dataset",
-                return_value=reader.ds,
-            ),
-            self.assertRaisesRegex(RuntimeError, "anemoi_select_vars requires"),
-        ):
-            reader._get(0, [4])
+    def test_anemoi_selection_empty_channels_or_geoinfos(self):
+        for cls in (DataReaderAnemoi, DataReaderAnemoiOperan):
+            for channels, geoinfo_idx in (([], (3, 1)), ([2], ()), ([], ())):
+                baseline = self.make_anemoi(cls, {}, np.float32, geoinfo_idx)
+                reader = self.make_anemoi(
+                    cls, {"anemoi_select_vars": True}, np.float32, geoinfo_idx
+                )
+                self.assert_reader_equal(baseline._get(0, channels), reader._get(0, channels))
 
 
 if __name__ == "__main__":
