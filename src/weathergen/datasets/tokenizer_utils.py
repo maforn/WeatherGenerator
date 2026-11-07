@@ -150,36 +150,35 @@ def hpy_splits(
 
     # if token_size is exceeed split based on latitude
     # TODO: split by hierarchically traversing healpix scheme
-    thetas_sorted = [torch.argsort(thetas[idxs], stable=True) for idxs in hpy_idxs_ord_split]
-    # remainder for padding to token size
-    if pad_tokens:
-        rem = [
-            token_size - (len(idxs) % token_size if len(idxs) % token_size != 0 else token_size)
-            for idxs in hpy_idxs_ord_split
-        ]
-    else:
-        rem = np.zeros(len(hpy_idxs_ord_split), dtype=np.int32)
+    # One stable sort of all points by cell and, within a cell, by latitude: the same order as a
+    # stable sort per cell, without one small sort (and cat and split) per cell.
+    lens = np.array([len(idxs) for idxs in hpy_idxs_ord_split], dtype=np.int64)
+    if lens.sum() == 0:
+        return [[] for _ in hpy_idxs_ord_split], [[] for _ in hpy_idxs_ord_split]
+    points = np.concatenate(hpy_idxs_ord_split)
+    cells = np.repeat(np.arange(len(lens)), lens)
+    points = points[np.lexsort((np.asarray(thetas)[points], cells))]
 
-    # helper variables to split according to cells
-    # pad to token size *and* offset by +1 to account for the index 0 that is added for the padding
+    # pad each occupied cell to whole tokens with zeros, after an offset of +1 for the index 0
+    # that is added for the padding
     offset = (1 if pad_tokens else 0) + offset_step
-    int32 = torch.int32
-    idxs_ord = [
-        list(
-            torch.split(
-                torch.cat(
-                    (torch.from_numpy(np.take(idxs, ts) + offset), torch.zeros(r, dtype=int32))
-                ),
-                token_size,
-            )
-        )
-        if len(idxs) > 0
-        else []
-        for idxs, ts, r in zip(hpy_idxs_ord_split, thetas_sorted, rem, strict=True)
-    ]
+    padded_lens = lens + (-lens % token_size if pad_tokens else 0)
+    padded = np.zeros(padded_lens.sum(), dtype=np.result_type(points.dtype, np.int32))
+    padded_starts, starts = np.cumsum(padded_lens) - padded_lens, np.cumsum(lens) - lens
+    padded[np.arange(len(points)) + np.repeat(padded_starts - starts, lens)] = points + offset
 
-    # extract length and flatten nested list
-    idxs_ord_lens = [[len(a) for a in aa] for aa in idxs_ord]
+    # tokens of token_size points per cell, the last one shorter when not padded
+    num_tokens = -(-padded_lens // token_size)
+    token_lens = np.full(num_tokens.sum(), token_size)
+    occupied = num_tokens > 0
+    token_lens[np.cumsum(num_tokens)[occupied] - 1] = (
+        padded_lens[occupied] - (num_tokens[occupied] - 1) * token_size
+    )
+    tokens = torch.from_numpy(padded).split(token_lens.tolist())
+    bounds = np.cumsum(num_tokens).tolist()
+    token_lens = token_lens.tolist()
+    idxs_ord = [list(tokens[a:b]) for a, b in zip([0, *bounds[:-1]], bounds, strict=True)]
+    idxs_ord_lens = [token_lens[a:b] for a, b in zip([0, *bounds[:-1]], bounds, strict=True)]
 
     return idxs_ord, idxs_ord_lens
 
