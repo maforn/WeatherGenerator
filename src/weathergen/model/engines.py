@@ -97,6 +97,7 @@ class EmbeddingEngine(torch.nn.Module):
                     unembed_mode=self.cf.embed_unembed_mode,
                     stream_name=stream_name,
                     num_chunks=self.cf.get("embed_num_chunks", 1),
+                    checkpoint_chunks=self.cf.get("embed_checkpoint_per_chunk", False),
                 )
             elif si["embed"]["net"] == "linear":
                 self.embeds[stream_name] = StreamEmbedLinear(
