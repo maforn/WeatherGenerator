@@ -33,6 +33,7 @@ class StreamEmbedTransformer(torch.nn.Module):
         unembed_mode="full",
         stream_name="stream_embed",
         num_chunks=1,
+        checkpoint_chunks=False,
     ):
         """Constructor
 
@@ -43,6 +44,8 @@ class StreamEmbedTransformer(torch.nn.Module):
                 (which is hence a block-sparse form of full)
         num_chunks : number of pieces the input patches are split into and embedded one after
                 the other, to bound the per-layer recompute + backward burst (see forward)
+        checkpoint_chunks : one checkpoint per chunk, patch embedding included, so the backward
+                rebuilds one chunk at a time
         """
 
         super(StreamEmbedTransformer, self).__init__()
@@ -58,6 +61,7 @@ class StreamEmbedTransformer(torch.nn.Module):
         self.num_heads = num_heads
         self.unembed_mode = unembed_mode
         self.num_chunks = num_chunks
+        self.checkpoint_chunks = checkpoint_chunks
 
         norm = torch.nn.LayerNorm if norm_type == "LayerNorm" else RMSNorm
 
@@ -111,6 +115,13 @@ class StreamEmbedTransformer(torch.nn.Module):
     def forward(self, x_in):
         peh = positional_encoding_harmonic
 
+        if self.checkpoint_chunks and self.num_chunks > 1 and x_in.shape[0] > 1:
+            # the patch embedding runs inside each chunk's checkpoint too (it is per patch), so
+            # nothing of the size of the whole stream is kept: the backward rebuilds one chunk
+            chunks = [c for c in x_in.tensor_split(self.num_chunks) if c.shape[0] > 0]
+            x = torch.cat([checkpoint(self._embed_layers, c, use_reentrant=False) for c in chunks])
+            return checkpoint(self.readout, x, use_reentrant=False)
+
         # embed provided input data
         # NOTE: no checkpoint on self.embed, a single Linear whose input is x_in (alive
         # regardless) and whose output is retained as the first block's checkpoint input
@@ -125,6 +136,9 @@ class StreamEmbedTransformer(torch.nn.Module):
             x = self._layers(x)
 
         return checkpoint(self.readout, x, use_reentrant=False)
+
+    def _embed_layers(self, x_in):
+        return self._layers(positional_encoding_harmonic(self.embed(x_in.transpose(-2, -1))))
 
     def _layers(self, x):
         # One checkpoint per layer, not one per (attention, MLP) pair. Pairing them retains
