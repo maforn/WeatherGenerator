@@ -25,3 +25,10 @@ embed_index_copy: True
 # run the decoder over this many groups of cells (smaller flash-attn backward scratch;
 # 2 measured on the lowres operan config)
 decoder_num_chunks: 2
+
+# data-loader optimizations, each off when missing
+data_loading:
+  optimizations:
+    # observation reader: one read of the needed columns instead of three
+    # (coordinates, geoinfos, channels)
+    obs_single_read: True
