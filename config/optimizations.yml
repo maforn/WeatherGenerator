@@ -5,6 +5,10 @@
 # (forecast engine and local assimilation)
 checkpoint_per_block: True
 
+# reshard the forecast-engine weights after forward instead of keeping them gathered
+# requires: training_config.forecast.pushforward off (it relies on gathered weights)
+fe_reshard_after_forward: True
+
 # decoder: project keys/values once per cell, then select each cell's 9 neighbours by index
 # instead of copying them
 decoder_gather_after_kv_projection: True
