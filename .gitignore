@@ -232,3 +232,5 @@ models
 results
 reports
 metric_plots
+# local profiling outputs (scalene, snapshots)
+/profiling/
