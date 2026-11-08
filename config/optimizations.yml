@@ -49,6 +49,14 @@ embed_readout_batched: True
 # of copying them
 skip_all_valid_filter_copy: True
 
+# data loader: build only the target fields each caller uses (coordinates or values), not both
+# twice
+target_requested_fields_only: True
+
+# data loader: the observation reader reads the needed columns once instead of three times
+# (coordinates, geoinfos, channels)
+obs_single_read: True
+
 # data loader: the Anemoi and Operan readers convert and transpose only the variables the stream
 # uses (the read is unchanged: each zarr chunk holds all variables of a time step)
 anemoi_select_vars: True
@@ -56,3 +64,7 @@ anemoi_select_vars: True
 # free each batch before the next one is copied to the GPU (a reference cycle otherwise keeps
 # it alive until the next garbage collection: +1.7 GiB on random steps)
 train_gc_collect_every_step: True
+
+# data loader: split complete batches evenly over the loader workers; the remainder goes one each
+# to the first workers instead of all to the last one
+even_workset_split: True

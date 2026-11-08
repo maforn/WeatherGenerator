@@ -101,6 +101,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self._stage = stage
 
         self.mini_epoch = 0
+        self.even_workset_split = cf.get("even_workset_split", False)
         self.mask_value = 0.0
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
 
@@ -119,6 +120,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.masker,
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
+            target_requested_fields_only=cf.get("target_requested_fields_only", False),
         )
         if self.spatial_parallel.size > 1:
             logger.info(
@@ -288,6 +290,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     )
                 ds = dataset(filename=filename, **kwargs)
                 ds.skip_all_valid_filter_copy = cf.get("skip_all_valid_filter_copy", False)
+                ds.obs_single_read = cf.get("obs_single_read", False)
                 ds.anemoi_select_vars = cf.get("anemoi_select_vars", False)
 
                 streams_datasets[stream_name].readers += [ds]
@@ -877,11 +880,18 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             # note the rng seed is not touched here: each worker derives its own seed from
             # the base seed in _derive_rng_seed(), keyed by rank, worker id and mini epoch
             # split workload
-            per_worker = (local_end - local_start) // worker_info.num_workers
-            iter_start = local_start + worker_info.id * per_worker
-            iter_end = iter_start + per_worker
-            if worker_info.id + 1 == worker_info.num_workers:
-                iter_end = local_end
+            if self.even_workset_split:
+                # whole batches per worker, the remainder one each to the first workers
+                wid = worker_info.id
+                count, rest = divmod(len(self) // self.batch_size, worker_info.num_workers)
+                iter_start = local_start + (wid * count + min(wid, rest)) * self.batch_size
+                iter_end = iter_start + (count + (wid < rest)) * self.batch_size
+            else:
+                per_worker = (local_end - local_start) // worker_info.num_workers
+                iter_start = local_start + worker_info.id * per_worker
+                iter_end = iter_start + per_worker
+                if worker_info.id + 1 == worker_info.num_workers:
+                    iter_end = local_end
             logger.info(
                 f"{self.spatial_parallel.ddp_rank}::{worker_info.id}"
                 + f" : dataset [{local_start},{local_end}) : [{iter_start},{iter_end})"
