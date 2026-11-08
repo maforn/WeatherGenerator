@@ -6,3 +6,10 @@
 # host memory per rank 63 -> 39 GiB; level 6: 34x less, 1 GiB less GPU memory, 12 workers fit
 # (runs tz30c2cz, 160m47a2)
 source_tokens_unpadded: True
+
+# torch.compile the MLP and attention modules (flash-attention 3 runs eagerly in between, it
+# has no fake kernels). Off: slower, as the step is bound by the CPU launching kernels and each
+# compiled call adds wrapper work: level 5 5.10 instead of 4.09 s per step, level 6 16.4 instead
+# of 15.5 (runs 0gath1pq, yi4knvey); a process sometimes segfaults at exit. Worth retrying with
+# whole blocks compiled, once flash-attention is a torch custom op.
+compile_blocks: False

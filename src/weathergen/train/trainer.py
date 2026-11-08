@@ -34,6 +34,7 @@ from weathergen.datasets.batch import ModelBatch
 from weathergen.datasets.multi_stream_data_sampler import MultiStreamDataSampler
 from weathergen.model.ema import EMAModel
 from weathergen.model.model_interface import (
+    compile_blocks,
     init_model_and_shard,
 )
 from weathergen.model.utils import apply_fct_to_blocks, set_to_eval
@@ -319,6 +320,8 @@ class Trainer(TrainerBase):
             cf.distributed.data_parallel,
             cpu_offload=cf.get("fsdp_cpu_offload", False),
         )
+        if cf.get("compile_blocks", False):
+            compile_blocks(self.model)
 
         validate_with_ema_cfg = self.validation_cfg.get("validate_with_ema")
         if validate_with_ema_cfg is not None:

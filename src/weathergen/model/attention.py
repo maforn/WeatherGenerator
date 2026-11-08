@@ -16,6 +16,11 @@ from torch.nn.attention.flex_attention import create_block_mask, flex_attention
 from weathergen.model.norms import AdaLayerNorm, RMSNorm, norm_in_input_dtype
 from weathergen.model.positional_encoding import rotary_pos_emb_2d
 
+# flash-attention 3 has no fake kernels for torch.compile: with compile_blocks it runs eagerly
+# between the compiled code before and after it
+flash_attn_func = torch.compiler.disable(flash_attn_func)
+flash_attn_varlen_func = torch.compiler.disable(flash_attn_varlen_func)
+
 """
 Attention blocks used by WeatherGenerator.
 

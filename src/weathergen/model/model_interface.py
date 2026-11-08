@@ -44,6 +44,23 @@ logger = logging.getLogger(__name__)
 type TrainingMode = str
 
 
+def compile_blocks(model):
+    """torch.compile the forward of every MLP and (flash) attention module: the norms,
+    projections, casts and residuals become fewer, fused kernels with less Python work, also in
+    the recompute of the checkpoints; the flash-attention calls run eagerly in between."""
+    # one compiled version per module configuration (sizes, training or not, grad or not)
+    torch._dynamo.config.cache_size_limit = max(torch._dynamo.config.cache_size_limit, 64)
+    compiled = (
+        MLP,
+        MultiSelfAttentionHead,
+        MultiSelfAttentionHeadVarlen,
+        MultiCrossAttentionHeadVarlen,
+    )
+    for module in model.modules():
+        if isinstance(module, compiled):
+            module.forward = torch.compile(module.forward, dynamic=True)
+
+
 def init_model_and_shard(
     cf,
     dataset,
