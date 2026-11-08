@@ -2,7 +2,7 @@
 
 How the operan config scales from HEALPix level 5 to 7 with the GPU memory optimizations
 ([memory-optimizations.md](memory-optimizations.md)) and the faster data loading
-([profiling-findings.md](profiling-findings.md)). 1 node (4 GH200), 1 sample per GPU, 30 steps,
+([profiling-findings.md](profiling-findings.md)). 1 node (4 GH200), 1 sample per GPU, 30 steps (10 at level 7, 7vgrhdp9),
 `dphpc_memory_baseline_100steps.yml`, `healpix_level=<level>`; levels 6 and 7 started with `make train-direct`,
 level 5 from xatp1z1w and a2ojap23 (`make train`, 100 steps) and zm0tjco5 (`make train-direct`).
 
