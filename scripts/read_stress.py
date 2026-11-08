@@ -78,7 +78,7 @@ def nbytes(rdatas) -> int:
     total = 0
     for rdata in rdatas:
         for value in vars(rdata).values():
-            if isinstance(value, np.ndarray):
+            if isinstance(value, np.ndarray):  # noqa: TID251 (runtime type check)
                 total += value.nbytes
     return total
 
@@ -182,7 +182,9 @@ def summarize(procs, records, node, level_start, level_end, baseline_used) -> di
         "samples": len(done),
         "elapsed_s": elapsed,
         "samples_per_s": len(done) / elapsed if elapsed else None,
-        "decoded_gb_per_s": sum(r["decoded_bytes"] for r in done) / elapsed / 1e9 if elapsed else None,
+        "decoded_gb_per_s": sum(r["decoded_bytes"] for r in done) / elapsed / 1e9
+        if elapsed
+        else None,
         "rchar_gb_per_s": sum(r["rchar"] for r in done) / elapsed / 1e9 if elapsed else None,
         "read_bytes_gb_per_s": sum(r["read_bytes"] for r in done) / elapsed / 1e9
         if elapsed
@@ -250,8 +252,17 @@ def main() -> None:
         workers = [
             ctx.Process(
                 target=reader,
-                args=(sampler, indices, counter, limit, deadline, level_dir / f"proc{i:03d}.jsonl",
-                      1000 * procs + i, num_forecast_steps, steps_in),
+                args=(
+                    sampler,
+                    indices,
+                    counter,
+                    limit,
+                    deadline,
+                    level_dir / f"proc{i:03d}.jsonl",
+                    1000 * procs + i,
+                    num_forecast_steps,
+                    steps_in,
+                ),
             )
             for i in range(procs)
         ]
@@ -296,11 +307,13 @@ def main() -> None:
         results.append(summary)
         if summary["samples"]:
             mem_per_proc = max(mem_per_proc or 0.0, summary["private_gib_p95"] * GIB)
-        print(json.dumps(summary), flush=True)
+        print(json.dumps(summary), flush=True)  # noqa: T201
     stop.set()
     (args.out / "summary.json").write_text(json.dumps(results, indent=1))
     (args.out / "node.jsonl").write_text("\n".join(json.dumps(s) for s in node))
-    header = "procs samples/s decodedGB/s rcharGB/s wall_med wall_p90 cpu_med wall/cpu cpu% private_GiB"
+    header = (
+        "procs samples/s decodedGB/s rcharGB/s wall_med wall_p90 cpu_med wall/cpu cpu% private_GiB"
+    )
     print(header)  # noqa: T201
     for r in results:
         if "skipped" in r:

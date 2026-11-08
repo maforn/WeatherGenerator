@@ -47,9 +47,13 @@ class TokenizerMasking(Tokenizer):
         source_cell_start: int = 0,
         source_cell_end: int | None = None,
         optimizations: dict | None = None,
+        source_dtype: torch.dtype | None = None,
     ):
         super().__init__(healpix_level)
         self.optimizations = optimizations or {}
+        # dtype StreamData converts the source tokens to; with source_build_in_place they are
+        # built in it, so the full tensor in the tokenizer's dtype is never allocated
+        self.source_dtype = source_dtype
         self.masker = masker
         self.rng = None
         self.token_size = None
@@ -178,6 +182,8 @@ class TokenizerMasking(Tokenizer):
             self.hpy_verts_rots_source[-1][self.source_cell_start : self.source_cell_end],
             encode_times_source,
             direct_build=self.optimizations.get("source_direct_build", False),
+            build_in_place=self.optimizations.get("source_build_in_place", False),
+            out_dtype=self.source_dtype,
         )
 
         return (source_tokens_cells, source_tokens_lens)

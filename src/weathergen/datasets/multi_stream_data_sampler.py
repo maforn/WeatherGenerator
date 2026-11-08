@@ -153,6 +153,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
             optimizations=self.optimizations,
+            source_dtype=self.source_dtype,
         )
         if self.spatial_parallel.size > 1:
             logger.info(
@@ -614,6 +615,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             self.num_healpix_cells,
             source_num_healpix_cells=self.spatial_parallel.local_num_cells,
             source_dtype=self.source_dtype,
+            nan_in_chunks=self.optimizations.get("source_build_in_place", False),
         )
 
         stream_data = self._build_stream_data_input(

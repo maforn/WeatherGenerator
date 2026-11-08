@@ -8,6 +8,7 @@ import pytest
 import torch
 
 from weathergen.common.io import IOReaderData
+from weathergen.datasets import stream_data as stream_data_module
 from weathergen.datasets import tokenizer_utils
 from weathergen.datasets.stream_data import StreamData
 from weathergen.datasets.tokenizer_masking import TokenizerMasking
@@ -150,3 +151,67 @@ def test_all_flags_explicitly_off_preserve_legacy_representation(tokenizers):
     actual = disabled.get_source(STREAM, rdata, tokens, WINDOW, mask)
     assert isinstance(actual[0], tuple)
     assert_equal(expected, actual)
+
+
+def larger_sample(num_points=3000, seed=0):
+    """Random points over the sphere and two times, with NaN in the data, for chunked builds."""
+    rng = np.random.default_rng(seed)
+    data = rng.normal(size=(num_points, 4)).astype(np.float32)
+    data[rng.random(data.shape) < 0.05] = np.nan
+    times = np.array(["2020-01-01T00", "2020-01-01T03"], dtype="datetime64[ns]")
+    return IOReaderData(
+        coords=torch.tensor(
+            np.stack([rng.uniform(-90, 90, num_points), rng.uniform(-180, 180, num_points)], 1),
+            dtype=torch.float32,
+        ),
+        geoinfos=torch.tensor(rng.normal(size=(num_points, 3)), dtype=torch.float32),
+        data=torch.from_numpy(data),
+        datetimes=times[rng.integers(0, 2, num_points)],
+    )
+
+
+@pytest.mark.parametrize("source_dtype", [None, torch.bfloat16])
+@pytest.mark.parametrize("selection", ["all", "some", "none"])
+@pytest.mark.parametrize("chunk_rows", [None, 64])
+@pytest.mark.parametrize("make_sample", [sample, larger_sample])
+def test_source_build_in_place_exact_after_packaging(
+    monkeypatch, source_dtype, selection, chunk_rows, make_sample
+):
+    # data loader workers run one torch thread; with more, the old build's elementwise math
+    # splits rows between threads, and rounding then depends on the thread count
+    threads = torch.get_num_threads()
+    torch.set_num_threads(1)
+    try:
+        if chunk_rows is not None:
+            monkeypatch.setattr(tokenizer_utils, "BUILD_CHUNK_ROWS", chunk_rows)
+            monkeypatch.setattr(stream_data_module, "NAN_CHUNK_ELEMENTS", 96)
+        baseline = TokenizerMasking(0, None)
+        optimized = TokenizerMasking(
+            0,
+            None,
+            optimizations=FLAGS | {"source_build_in_place": True},
+            source_dtype=source_dtype,
+        )
+        rdata = make_sample()
+        original = copy.deepcopy(rdata)
+        tokens = baseline.get_tokens_windows(STREAM, [rdata], True)[0]
+        mask = np.ones(12, dtype=bool)
+        if selection == "some":
+            mask[::2] = False
+        elif selection == "none":
+            mask[:] = False
+        old, old_lens = baseline.get_source(STREAM, rdata, tokens, WINDOW, mask)
+        new, new_lens = optimized.get_source(STREAM, rdata, tokens, WINDOW, mask)
+        left = StreamData(0, 1, 1, 12, source_dtype=source_dtype)
+        right = StreamData(0, 1, 1, 12, source_dtype=source_dtype, nan_in_chunks=True)
+        left.add_source(TRAIN, 0, rdata, old_lens, old, False)
+        right.add_source(TRAIN, 0, rdata, new_lens, new, False)
+        assert_equal(left.source_tokens_cells, right.source_tokens_cells)
+        assert_equal(left.source_tokens_lens, right.source_tokens_lens)
+        if selection != "none":
+            # built in the source dtype: StreamData keeps the tokenizer's tensor, no copy
+            assert right.source_tokens_cells[0].data_ptr() == new.data_ptr()
+        for field in ("coords", "geoinfos", "data", "datetimes"):
+            assert_equal(getattr(original, field), getattr(rdata, field))
+    finally:
+        torch.set_num_threads(threads)

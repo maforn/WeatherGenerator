@@ -1,3 +1,5 @@
+from functools import reduce
+
 import numpy as np
 import pandas as pd
 import torch
@@ -285,6 +287,8 @@ def tokenize_apply_mask_source(
     hpy_verts_rots,
     enc_time,
     direct_build=False,
+    build_in_place=False,
+    out_dtype=None,
 ):
     """
     Apply masking to the data.
@@ -293,6 +297,8 @@ def tokenize_apply_mask_source(
     the cols the channels. Thereby mask_tokens acts on the rows, grouped according to the tokens as
     specified in idxs_cells and mask_channels acts on the columns.
 
+    With build_in_place, the tokens are those of direct_build, written chunk by chunk into one
+    tensor of out_dtype (see build_source_tokens_in_place).
     """
 
     def return_empty(rdata, idxs_cells_lens):
@@ -322,6 +328,28 @@ def tokenize_apply_mask_source(
     # idxs_cells -> idxs_tokens -> idxs_data has been prepared so
     # that the zero-index is used to add the padding to the tokens to ensure fixed size
     times_enc = enc_time(rdata.datetimes, time_win)
+    if build_in_place:
+        if mask_channels is not None:
+            raise AssertionError("to be implemented")
+        tokens_per_cell, masked_points_per_cell = masked_counts_per_cell(
+            idxs_cells_lens, idxs_lens, mask_tokens
+        )
+        tokens = build_source_tokens_in_place(
+            stream_id,
+            idxs_data,
+            times_enc,
+            rdata,
+            hpy_verts_rots,
+            masked_points_per_cell,
+            out_dtype,
+        )
+        idxs_data_lens = idxs_data_lens.tolist()
+        if len(set(idxs_data_lens)) == 1:
+            tokens_cells = tokens.reshape(len(idxs_data_lens), idxs_data_lens[0], tokens.shape[-1])
+        else:
+            tokens_cells = torch.split(tokens, idxs_data_lens)
+        return tokens_cells, tokens_per_cell
+
     if direct_build:
         # Gather directly from the original arrays and replace padding positions with zeros.
         # Keep the same padded coordinates (including the legacy first-point handling below).
@@ -491,6 +519,69 @@ def get_source_coords_local(
     # TODO: vec_scaled are small -> should they be normalized/rescaled?
 
     return vec_scaled
+
+
+# Rows per chunk of build_source_tokens_in_place: a multiple of every SIMD width, so that the
+# elementwise math of a chunk takes the same vector and scalar paths as one pass over all rows.
+BUILD_CHUNK_ROWS = 1 << 20
+
+
+def build_source_tokens_in_place(
+    stream_id,
+    idxs_data: Tensor,
+    times_enc: Tensor,
+    rdata: IOReaderData,
+    hpy_verts_rots: Tensor,
+    masked_points_per_cell: Tensor,
+    out_dtype: torch.dtype | None = None,
+) -> Tensor:
+    """The direct build's source tokens, torch.cat((stream_ids, datetimes, coords_local, geoinfos,
+    data), 1) with index 0 of idxs_data as padding, cast to out_dtype (default: the dtype of that
+    cat). One tensor is allocated and filled chunk by chunk, so the gathered fields, the cat's
+    inputs and the per-point rotation matrices never exist for all points at once. The values
+    are the same, since every chunk does the same gathers and elementwise math on its rows, and
+    a cast of the chunks equals a cast of the whole tensor.
+    """
+    geoinfos, data, coords = rdata.geoinfos, rdata.data, rdata.coords
+    widths = [1, times_enc.shape[1], 2, geoinfos.shape[1], data.shape[1]]
+    cat_dtype = reduce(
+        torch.promote_types,
+        [torch.float32, times_enc.dtype, torch.float32, geoinfos.dtype, data.dtype],
+    )
+    tokens = torch.empty(len(idxs_data), sum(widths), dtype=out_dtype or cat_dtype)
+    ends = np.cumsum(widths).tolist()
+    col_time, col_local, col_geo, col_data = (
+        slice(ends[0], ends[1]),
+        slice(ends[1], ends[2]),
+        slice(ends[2], ends[3]),
+        slice(ends[3], ends[4]),
+    )
+    tokens[:, 0] = torch.tensor(stream_id, dtype=torch.float32).to(cat_dtype)
+    # cell of every row (rows are grouped by cell), to rotate a chunk of rows with their cells
+    cell_of_row = torch.repeat_interleave(
+        torch.arange(len(masked_points_per_cell), dtype=torch.int32), masked_points_per_cell
+    )
+    for start in range(0, len(idxs_data), BUILD_CHUNK_ROWS):
+        rows = slice(start, start + BUILD_CHUNK_ROWS)
+        padding = idxs_data[rows] == 0
+        gather_indices = (idxs_data[rows] - 1).clamp_min(0)
+
+        def gather_padded(values, gather_indices=gather_indices, padding=padding):
+            result = values[gather_indices]
+            result[padding] = 0
+            return result
+
+        tokens[rows, col_time] = gather_padded(times_enc).to(cat_dtype)
+        posr3 = s2tor3(*theta_phi_to_standard_coords(gather_padded(coords)))
+        if start == 0:
+            posr3[0] = 0.0
+        rots = hpy_verts_rots[cell_of_row[rows].long()]
+        vec_rot = torch.bmm(rots, posr3.unsqueeze(-1)).squeeze(-1)
+        tokens[rows, col_local] = r3tos2(vec_rot).to(torch.float32).to(cat_dtype)
+        del posr3, rots, vec_rot
+        tokens[rows, col_geo] = gather_padded(geoinfos).to(cat_dtype)
+        tokens[rows, col_data] = gather_padded(data).to(cat_dtype)
+    return tokens
 
 
 def get_target_coords_local(

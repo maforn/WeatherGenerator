@@ -1,0 +1,6 @@
+# Bottleneck study, test 3 (TOK): build the source tokens in one preallocated tensor, in row
+# chunks, with per-cell rotations gathered per chunk instead of a 3x3 matrix copied per point.
+# Use after exp_bn_loader.yml (deep-merged into its optimizations). S7 without it: 72 GiB peak.
+data_loading:
+  optimizations:
+    source_build_in_place: True

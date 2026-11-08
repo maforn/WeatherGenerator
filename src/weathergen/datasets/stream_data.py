@@ -14,6 +14,9 @@ import torch
 from weathergen.common.io import IOReaderData
 from weathergen.train.utils import TRAIN, Stage
 
+# elements per chunk when NaN in the source tokens are replaced chunk by chunk (nan_in_chunks)
+NAN_CHUNK_ELEMENTS = 1 << 24
+
 
 def _pin_tensor(tensor: torch.Tensor) -> torch.Tensor:
     """Pin a tensor to CPU pinned memory.
@@ -60,6 +63,7 @@ class StreamData:
         healpix_cells: int,
         source_num_healpix_cells: int | None = None,
         source_dtype: torch.dtype | None = None,
+        nan_in_chunks: bool = False,
     ) -> None:
         """
         StreamData object
@@ -81,6 +85,9 @@ class StreamData:
         source_dtype : torch.dtype | None
             If given, the source tokens are converted to it when they are added, i.e. in the
             data loader worker. None keeps them as produced by the tokenizer.
+        nan_in_chunks : bool
+            Replace NaN in the source tokens chunk by chunk, without a mask of the whole tensor
+            (same values).
 
         Returns
         -------
@@ -89,6 +96,7 @@ class StreamData:
 
         self.mask_value = 0.0
         self.source_dtype = source_dtype
+        self.nan_in_chunks = nan_in_chunks
 
         self.input_steps = input_steps
         self.output_steps = output_steps
@@ -221,8 +229,13 @@ class StreamData:
             ss_cells if isinstance(ss_cells, torch.Tensor) else torch.stack(ss_cells)
         )
 
-        idx = torch.isnan(self.source_tokens_cells[step])
-        self.source_tokens_cells[step][idx] = self.mask_value
+        tokens = self.source_tokens_cells[step]
+        if self.nan_in_chunks and tokens.is_contiguous():
+            for chunk in tokens.view(-1).split(NAN_CHUNK_ELEMENTS):
+                chunk[torch.isnan(chunk)] = self.mask_value
+        else:
+            idx = torch.isnan(tokens)
+            tokens[idx] = self.mask_value
 
         # after the NaN masking, so the values equal those of a cast on the GPU; the tokens are
         # then smaller in shared memory, in host memory and in the host-to-device copy
