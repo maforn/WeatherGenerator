@@ -45,6 +45,10 @@ decoder_num_chunks: 2
 # a loop over them (same parameters, equal up to bf16 rounding)
 embed_readout_batched: True
 
+# data loader: the time-window and NaN filters reuse the arrays when every row is kept, instead
+# of copying them
+skip_all_valid_filter_copy: True
+
 # data loader: build only the target fields each caller uses (coordinates or values), not both
 # twice
 target_requested_fields_only: True
