@@ -1,0 +1,18 @@
+{
+ "run": "y4agz23e",
+ "job": "2760900",
+ "date": "2026-11-08",
+ "state": "COMPLETED",
+ "elapsed": "00:04:35",
+ "setup": "default_config.yml",
+ "steps": 10,
+ "s_per_step": null,
+ "gpu_peak_gib": 9.78,
+ "host_rss_gib": null,
+ "source_gb_per_sample": 2.41,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "L5 control, source tokens float32; 40 samples, so not comparable with the 120-sample runs (train-direct)"
+}
