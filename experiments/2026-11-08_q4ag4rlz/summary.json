@@ -1,0 +1,18 @@
+{
+ "run": "q4ag4rlz",
+ "job": "2764672",
+ "date": "2026-11-08",
+ "state": "COMPLETED",
+ "elapsed": "00:15:08",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml + exp_bn_loader.yml + exp_bn_profile.yml + exp_bn_level7.yml + config_memory_profiling.yml + exp_bn_torchprof.yml",
+ "steps": 3,
+ "s_per_step": null,
+ "gpu_peak_gib": 59.61,
+ "host_rss_gib": 68.0,
+ "source_gb_per_sample": null,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "PROF7: PyTorch profiler at L7, step 2 on GPU 0 (same sample as SNAP7 ft98r6re). Step 160 s, GPU busy 99%; global attention over 196,608 cells = 86% of kernel time; whole-step forecast-engine rerun (fe_checkpoint_per_step) = 24 s."
+}

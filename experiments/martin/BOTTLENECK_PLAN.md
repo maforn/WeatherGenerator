@@ -128,8 +128,23 @@ Same code and options (A's setup: all loader flags, Andres's GPU options, bf16 w
   just before the decoders, and 2 of 34–41 s in backward after a checkpoint recompute. Nothing on
   the CPU at those places takes that long, and they grow ~15× for 4× the cells, which fits the
   16 global-attention forecast-engine blocks (`forecast_att_dense_rate: 1.0`, quadratic in the
-  number of cells). Plot: `ft98r6re/plots/step_pauses_l6_l7.png`. A kernel timeline (nsys) of
-  2 steps would confirm which kernels run there; not submitted.
+  number of cells). Plot: `ft98r6re/plots/step_pauses_l6_l7.png`.
+- **PROF7 `q4ag4rlz` confirms it at the kernel level** (PyTorch profiler, step 2 on GPU 0, the
+  same sample as SNAP7; nsys could not reach a L7 step, see LOG.md NSYS7). Plot:
+  `q4ag4rlz/plots/step_gpu_timeline_l7.png`.
+  - The GPU is busy 99% of the 160 s step.
+  - FlashAttention over the full sphere (196,608 tokens) is 86% of kernel time: 0.69 s per
+    forward and 1.84 s per backward call, at ~450 TFLOP/s (~45% of the bf16 peak, normal for
+    64-dim heads). The cost is the quadratic amount of work, not a slow kernel.
+  - The forecast engine is 82% of the step. SNAP7's forward pauses are its 2 forecast-step
+    forwards (2 × 12.6 s), and the backward pauses are its 2 backward stretches (42 and 41 s:
+    8 × (rerun 2 blocks + their backward)).
+  - Each forecast-engine attention runs forward 3 times per step. The whole-step rerun from
+    `fe_checkpoint_per_step` (Andres's option in `optimizations.yml`) is 24 s (15%) of it.
+    Turning it off would keep each step's 2-block group inputs from the forward to the
+    backward: 3 × 0.8 GB (bf16) + 4 × 1.6 GB (fp32, after the LayerNorm at block 7) ≈ 9 GB per
+    forecast step. Estimate: +9–18 GB, so the 60 GiB peak would stay under 96. Not tested:
+    model options belong to the teammates.
 - **So at L7 the bottleneck is GPU compute in the model**, not storage → CPU: the loader needs
   1 worker, and the training main thread is idle 91% of the step.
 
