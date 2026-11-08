@@ -27,6 +27,9 @@ _logger = logging.getLogger(__name__)
 
 
 class DataReaderObs(DataReaderBase):
+    # set by the sampler from cf; off for readers built elsewhere
+    obs_single_read = False
+
     def __init__(
         self, tw_handler: TimeWindowHandler, filename: Path, stream_info: dict, stage: Stage
     ) -> None:
@@ -271,14 +274,27 @@ class DataReaderObs(DataReaderBase):
         start_row = self.indices_start[idx]
         end_row = self.indices_end[idx]
 
-        coords = self.data.oindex[start_row:end_row, self.coords_idx]
-        geoinfos = (
-            self.data.oindex[start_row:end_row, self.geoinfo_idx]
-            if len(self.geoinfo_idx) > 0
-            else np.zeros((coords.shape[0], 0), np.float32)
-        )
-
-        data = self.data.oindex[start_row:end_row, channels_idx]
+        if self.obs_single_read:
+            # read the union of the columns once, then split it (keeps column order and duplicates)
+            columns = np.unique(np.concatenate((self.coords_idx, self.geoinfo_idx, channels_idx)))
+            columns = columns.astype(np.int64)
+            values = self.data.oindex[start_row:end_row, columns]
+            coords = values[:, np.searchsorted(columns, self.coords_idx)]
+            geoinfos = (
+                values[:, np.searchsorted(columns, self.geoinfo_idx)]
+                if len(self.geoinfo_idx) > 0
+                else np.zeros((coords.shape[0], 0), np.float32)
+            )
+            data = values[:, np.searchsorted(columns, channels_idx)]
+            del values
+        else:
+            coords = self.data.oindex[start_row:end_row, self.coords_idx]
+            geoinfos = (
+                self.data.oindex[start_row:end_row, self.geoinfo_idx]
+                if len(self.geoinfo_idx) > 0
+                else np.zeros((coords.shape[0], 0), np.float32)
+            )
+            data = self.data.oindex[start_row:end_row, channels_idx]
         datetimes = self.dt[start_row:end_row][:, 0]
 
         # indices_start, indices_end above work with [t_start, t_end] and violate
