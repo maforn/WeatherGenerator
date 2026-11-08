@@ -173,6 +173,12 @@ for 1 node.
    :485) and avoid the full-size cat and gather (:365, :332). Check bit-identity with the
    synthetic harness, then rerun S7. Goal: 72 → <35 GiB, so 2 workers per GPU fit at L7.
    ~0.7 node-hour.
+   - **Done (job 2766651, LOG.md TOK).** Bit-identical batches, but the peak only drops 72 → 59 GiB
+     and the time rises 113 → 129 s per batch. The floor is the padded output: at L7 almost every
+     cell is padded to the obs `token_size` (1024), so one call has 1.8e9 rows while a whole sample
+     decodes to 0.62 GB. Real reductions need bf16 output (training already uses it: D's workers
+     were 47 GiB), a smaller obs `token_size` at L7 (model input; team decision), or no padding in
+     the loader. Not worth a PR as is.
 4. **S8: loader at L8** (scalene-data, 1 sample, no GPU). Prediction ~4× L7: ~290 GiB peak and
    ~6 min per sample, so 4 workers (1 per GPU) would not fit in 478 GiB, and host memory breaks
    first. L8 training is not worth a run: 16× the attention and ~4× the activations of L7.
