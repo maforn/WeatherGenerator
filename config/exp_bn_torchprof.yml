@@ -1,0 +1,13 @@
+# Bottleneck study: PyTorch profiler at level 7, for a GPU-kernel view of SNAP7's pauses.
+# Use after config_memory_profiling.yml, as SNAP7 (ft98r6re) did, so the data order, start date and
+# norm match SNAP7 and the profiled step trains on the same sample: ...,exp_bn_level7.yml,
+# config_memory_profiling.yml,exp_bn_torchprof.yml. The nsys run (y8rh6usr) could not do this:
+# the private nsys_profiling.sh records 120-240 s after launch and step 0 at level 7 starts ~300 s in.
+# The trainer's schedule (wait 1, warmup 1, active 1) records step 2 on rank 0. It writes a Chrome
+# trace to the run's profiling dir and op tables sorted by CUDA time to the log, then stops.
+# The profiler wraps every module forward in record_function and records shapes and stacks, so CPU
+# times are inflated. The GPU kernel times are what this run is for.
+profiling:
+  memory_profiling: False
+  pytorch_profiling: True
+  only_profiling: True
