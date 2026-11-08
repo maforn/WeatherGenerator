@@ -101,6 +101,7 @@ class EmbeddingEngine(torch.nn.Module):
                     stream_name=stream_name,
                     num_chunks=self.cf.get("embed_num_chunks", 1),
                     readout_batched=self.cf.get("embed_readout_batched", False),
+                    checkpoint_chunks=self.cf.get("embed_checkpoint_per_chunk", False),
                 )
             elif si["embed"]["net"] == "linear":
                 self.embeds[stream_name] = StreamEmbedLinear(

@@ -31,6 +31,13 @@ ae_local_checkpoint_outer: True
 # 4 measured on the lowres operan config)
 embed_num_chunks: 4
 
+# one checkpoint per chunk of patches, patch embedding included: the backward rebuilds one
+# chunk at a time and nothing of the size of a whole stream is kept.
+# Note that this is subjective to the number set in embed_num_chunks as testing with
+# embed_num_chunks: 2 did not reduce the memory and only increased the time.
+# requires: embed_num_chunks > 1
+embed_checkpoint_per_chunk: True
+
 # copy the embedded tokens into cell order with index_copy_ (1D index) instead of scatter_
 embed_index_copy: True
 
