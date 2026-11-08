@@ -1,0 +1,18 @@
+{
+ "run": "yi4knvey",
+ "job": "2766433",
+ "date": "2026-11-08",
+ "state": "FAILED",
+ "elapsed": "00:14:29",
+ "setup": "default_config.yml",
+ "steps": 30,
+ "s_per_step": 16.44,
+ "gpu_peak_gib": 20.06,
+ "host_rss_gib": 35.7,
+ "source_gb_per_sample": 0.14,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "L6, all options + efficiency.yml, 3 workers; segfault at exit after saving (train-direct)"
+}

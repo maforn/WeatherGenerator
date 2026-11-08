@@ -48,16 +48,41 @@ Data loading, one batch built in one process (`scripts/profile_data_loading.py`,
 - `make train-direct`: training from the folder's `.venv`, for when `launch-slurm.py` cannot build
   a new venv (GitHub release downloads timed out with 504 for hours).
 
-Runs started with `make train-direct` give a different step-0 loss than the same setup started with
-`make train` (0.71876 against 0.71779 at level 5, with the same first batch and the same model
-input); the cause is not found yet, so compare runs only within one way of starting them.
+Early `make train-direct` runs gave each rank too few CPUs (`srun` does not pass on
+`--cpus-per-task` unless told, the JUPITER job script sets `SRUN_CPUS_PER_TASK`): slower steps
+(6.27 instead of 4.09 s at level 5) and a different step-0 loss (0.71876 instead of 0.71779).
+Fixed; the level 5 to 7 rows above come from those runs, so their step times are too high.
+
+## Unpadded source tokens and torch.compile (`config/efficiency.yml`)
+
+All options, 1 sample per GPU, `make train-direct` with the CPU fix (s per step from step 10):
+
+| Run | Level | Workers | s per step | Peak per GPU | Host memory per rank | Source data per sample |
+|---|---|---|---|---|---|---|
+| qtpiqnva, control | 5 | 12 | 4.09 | 7.49 GiB | 63.1 GiB | 1.21 GB |
+| tz30c2cz, `source_tokens_unpadded` | 5 | 12 | 4.06 | 7.60 GiB | 38.7 GiB | 0.13 GB |
+| 0gath1pq, `compile_blocks` | 5 | 12 | 5.10 | 7.49 GiB | 82.9 GiB | 1.21 GB |
+| f0lkhiju, both | 5 | 12 | 4.92 | 7.60 GiB | 60.0 GiB | 0.13 GB |
+| h4tgdnkt, control | 6 | 3 | 15.50 | 21.02 GiB | 43.9 GiB | 4.7 GB |
+| yi4knvey, both | 6 | 3 | 16.44 | 20.06 GiB | 35.7 GiB | 0.14 GB |
+| 160m47a2, both | 6 | 12 | 16.34 | 20.05 GiB | 55.9 GiB | 0.14 GB |
+
+- `source_tokens_unpadded`: the workers send only the real points; the embedding pads them on
+  the GPU inside each chunk checkpoint. Same batches (identical checksums at levels 5 and 6),
+  9x (level 5) to 34x (level 6) less source data, 39% less host memory at level 5, 1 GiB less
+  GPU memory at level 6, and 12 workers fit at level 6 (3 before). The step time does not change:
+  training no longer waited on data.
+- `compile_blocks` (off): `torch.compile` of each MLP and attention module, with
+  flash-attention 3 run eagerly in between (it has no fake kernels). 25% slower at level 5, 6%
+  at level 6: the step is bound by the CPU launching kernels, and each compiled call adds
+  wrapper work (twice per attention module, split at flash-attention), also in every recompute.
+  Compiled processes sometimes segfault at exit, after the model is saved.
 
 ## Next
 
-- Ship only the real points to the GPU and pad there (inside the embedding chunk checkpoints),
-  instead of padding in the workers: 10x (level 5) to 40x (level 6) less data in the workers,
-  shared memory, hand-off and copies, with the same model.
-- Or scale `token_size` with the level (4x smaller per level). This changes the model's
+- Bigger compiled regions: register flash-attention 3 as a torch custom op (with fake kernels),
+  so whole checkpointed groups of blocks compile into one graph each.
+- Scale `token_size` with the level (4x smaller per level). This changes the model's
   embedding; at level 6 it makes a batch 3x smaller (1.5 GiB in bf16) and the worker peak
   6.0 GiB instead of 21.9 GiB, with the same time per batch.
 - Local or windowed attention in the forecast engine and global assimilation at level 6 and

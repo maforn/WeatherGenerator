@@ -6,6 +6,13 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Host memory per rank GiB | Source GB/sample | Data loading, s per step | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|
+| [160m47a2](2026-11-08_160m47a2/) | 2026-11-08 | default_config.yml | FAILED | 30 | 16.34 | 20.05 | 55.9 |  | 0.14 |  | L6, all options + efficiency.yml, 12 workers; segfault at exit after saving (train-direct) |
+| [yi4knvey](2026-11-08_yi4knvey/) | 2026-11-08 | default_config.yml | FAILED | 30 | 16.44 | 20.06 | 35.7 |  | 0.14 |  | L6, all options + efficiency.yml, 3 workers; segfault at exit after saving (train-direct) |
+| [h4tgdnkt](2026-11-08_h4tgdnkt/) | 2026-11-08 | default_config.yml | COMPLETED | 30 | 15.5 | 21.02 | 43.9 |  | 4.7 |  | L6, all options, 3 workers, control for efficiency.yml (train-direct) |
+| [f0lkhiju](2026-11-08_f0lkhiju/) | 2026-11-08 | default_config.yml | COMPLETED | 100 | 4.92 | 7.6 | 60.0 |  | 0.13 |  | L5, all options + efficiency.yml (unpadded + compile) (train-direct) |
+| [0gath1pq](2026-11-08_0gath1pq/) | 2026-11-08 | default_config.yml | FAILED | 100 | 5.1 | 7.49 | 82.9 |  | 1.21 |  | L5, all options + compile_blocks; segfault at exit after saving (train-direct) |
+| [tz30c2cz](2026-11-08_tz30c2cz/) | 2026-11-08 | default_config.yml | COMPLETED | 100 | 4.06 | 7.6 | 38.7 |  | 0.13 |  | L5, all options + source_tokens_unpadded (train-direct) |
+| [qtpiqnva](2026-11-08_qtpiqnva/) | 2026-11-08 | default_config.yml | COMPLETED | 100 | 4.09 | 7.49 | 63.1 |  | 1.21 |  | L5, all options, control for efficiency.yml, train-direct with srun --cpus-per-task=72 |
 | [y4agz23e](2026-11-08_y4agz23e/) | 2026-11-08 | default_config.yml | COMPLETED | 10 |  | 9.78 |  |  | 2.41 |  | L5 control, source tokens float32; 40 samples, so not comparable with the 120-sample runs (train-direct) |
 | [7vgrhdp9](2026-11-08_7vgrhdp9/) | 2026-11-08 | default_config.yml | COMPLETED | 10 |  | 59.62 |  |  | 17.68 |  | L7, all options, 1 worker, 10 steps (train-direct) |
 | [9keiveg4](2026-11-08_9keiveg4/) | 2026-11-08 | default_config.yml | COMPLETED | 30 | 13.59 | 82.23 | 48.7 |  | 9.41 |  | L6, no options, 3 workers, 30 steps (train-direct) |
