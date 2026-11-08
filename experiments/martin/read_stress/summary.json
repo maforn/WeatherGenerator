@@ -1,0 +1,121 @@
+[
+ {
+  "procs": 1,
+  "samples": 17,
+  "elapsed_s": 91.39719773898832,
+  "samples_per_s": 0.1860013263048668,
+  "decoded_gb_per_s": 0.11526166093280715,
+  "rchar_gb_per_s": 0.31456812922323896,
+  "read_bytes_gb_per_s": 0.0,
+  "decoded_gb_per_sample": 0.616465788,
+  "wall_s_median": 5.392487485951278,
+  "wall_s_p90": 5.783126688189805,
+  "read_s_median": 5.045798519044183,
+  "cpu_s_median": 4.154778464000001,
+  "wall_over_cpu": 1.2979001245615576,
+  "node_cpu_busy_mean": 0.0028526641891890385,
+  "node_iowait_mean": 0.0,
+  "node_used_peak_gib": 89.7701416015625,
+  "mem_per_proc_gib": 1.5050048828125,
+  "private_gib_p95": 1.23021240234375,
+  "exitcodes": [
+   0
+  ]
+ },
+ {
+  "procs": 16,
+  "samples": 267,
+  "elapsed_s": 95.54745712300064,
+  "samples_per_s": 2.7944228767520647,
+  "decoded_gb_per_s": 1.7263921583978177,
+  "rchar_gb_per_s": 4.722472640618084,
+  "read_bytes_gb_per_s": 0.0,
+  "decoded_gb_per_sample": 0.61635136,
+  "wall_s_median": 5.584326935990248,
+  "wall_s_p90": 6.084843224391807,
+  "read_s_median": 5.178583403874654,
+  "cpu_s_median": 4.391466176,
+  "wall_over_cpu": 1.271631549050612,
+  "node_cpu_busy_mean": 0.045164651320600005,
+  "node_iowait_mean": 3.629030355750217e-07,
+  "node_used_peak_gib": 116.3363037109375,
+  "mem_per_proc_gib": 1.7635040283203125,
+  "private_gib_p95": 1.3478759765625,
+  "exitcodes": [
+   0
+  ]
+ },
+ {
+  "procs": 64,
+  "samples": 941,
+  "elapsed_s": 95.47758387896465,
+  "samples_per_s": 9.855716512400335,
+  "decoded_gb_per_s": 6.100302674042865,
+  "rchar_gb_per_s": 16.728787249903334,
+  "read_bytes_gb_per_s": 0.0,
+  "decoded_gb_per_sample": 0.61645218,
+  "wall_s_median": 6.374566122016404,
+  "wall_s_p90": 7.047418745001778,
+  "read_s_median": 5.717776959994808,
+  "cpu_s_median": 5.505615072000001,
+  "wall_over_cpu": 1.15782996788781,
+  "node_cpu_busy_mean": 0.19860674427705477,
+  "node_iowait_mean": 0.0,
+  "node_used_peak_gib": 241.73565673828125,
+  "mem_per_proc_gib": 2.270512580871582,
+  "private_gib_p95": 1.64752197265625,
+  "exitcodes": [
+   0
+  ]
+ },
+ {
+  "procs": 128,
+  "samples": 1341,
+  "elapsed_s": 98.73902195203118,
+  "samples_per_s": 13.581256665186302,
+  "decoded_gb_per_s": 8.41035031438163,
+  "rchar_gb_per_s": 23.084439573012315,
+  "read_bytes_gb_per_s": 0.0,
+  "decoded_gb_per_sample": 0.616533668,
+  "wall_s_median": 8.960199588967953,
+  "wall_s_p90": 10.139238262956496,
+  "read_s_median": 7.561355609097518,
+  "cpu_s_median": 7.985902175999996,
+  "wall_over_cpu": 1.1220021722650209,
+  "node_cpu_busy_mean": 0.39628119022367647,
+  "node_iowait_mean": 0.0037188710691689257,
+  "node_used_peak_gib": 380.92279052734375,
+  "mem_per_proc_gib": 1.7931489944458008,
+  "private_gib_p95": 1.82232666015625,
+  "exitcodes": [
+   0
+  ]
+ },
+ {
+  "procs": 192,
+  "samples": 1291,
+  "elapsed_s": 99.83634467999218,
+  "samples_per_s": 12.931162535428086,
+  "decoded_gb_per_s": 8.017943007486947,
+  "rchar_gb_per_s": 22.065588038506025,
+  "read_bytes_gb_per_s": 0.0,
+  "decoded_gb_per_sample": 0.616585668,
+  "wall_s_median": 14.24032940500183,
+  "wall_s_p90": 16.222107249021064,
+  "read_s_median": 11.405205369985197,
+  "cpu_s_median": 13.024828895999999,
+  "wall_over_cpu": 1.093321802436508,
+  "node_cpu_busy_mean": 0.6006963645458839,
+  "node_iowait_mean": 0.005329690935412178,
+  "node_used_peak_gib": 449.16668701171875,
+  "mem_per_proc_gib": 1.359866460164388,
+  "private_gib_p95": 1.56903076171875,
+  "exitcodes": [
+   0
+  ]
+ },
+ {
+  "procs": 256,
+  "skipped": "memory"
+ }
+]

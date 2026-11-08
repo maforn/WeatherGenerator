@@ -162,6 +162,13 @@ for 1 node.
    only 8–64 concurrent readers have been seen, and the time was flat. One node can only show the
    node's link ceiling, not the file-system aggregate: that needs 2–4 nodes (approval).
    ~0.5 node-hour.
+   - **Done (job 2766316, LOG.md READ).** 1/16/64/128/192 readers: 0.19 / 2.8 / 9.9 / **13.6** /
+     12.9 samples/s. The read is not storage-bound: off-CPU time stays ~1 s per sample at every
+     level and iowait ≤ 0.5%. The ceiling is CPU-side contention: normalize (numpy, no I/O) slows
+     ×9 and the read ×2.3 while the node is only 40–60% busy (memory bandwidth/cache). L5 training
+     needs ~1 sample/s per node, so the read stage has ~14× headroom. Plot
+     `read_stress/plots/read_stress.png`. Next if needed: record user vs system CPU per sample, and
+     2–4 nodes for the file-system aggregate.
 3. **TOK: cut the tokenizer peak at L7** (Martin's area): rotate per cell (`tokenizer_utils.py`
    :485) and avoid the full-size cat and gather (:365, :332). Check bit-identity with the
    synthetic harness, then rerun S7. Goal: 72 → <35 GiB, so 2 workers per GPU fit at L7.
