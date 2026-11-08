@@ -63,11 +63,15 @@ ifndef RUN_ID
 RUN_ID := $(shell head -c 512 /dev/urandom | LC_ALL=C tr -dc a-z0-9 | head -c 8)
 endif
 WORK := /e/scratch/weatherai/shared_work
+# NSYS=1: Nsight Systems trace of each rank, NSYS_DELAY s after the start for NSYS_DURATION s
+NSYS_DELAY ?= 120
+NSYS_DURATION ?= 120
 train-direct: ## like train on 1 node, from this folder's .venv (when launch-slurm cannot build one)
 	mkdir -p $(WORK)/logs/$(RUN_ID)
 	sbatch -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 4 --cpus-per-task=72 --gres=gpu:4 --time $(TIME) \
 		-J weathergen_$(RUN_ID)_part1_train -o $(WORK)/logs/$(RUN_ID)/output.%j.txt \
-		--wrap "$(MODULES) srun --cpus-per-task=72 --label bash scripts/train_task.sh train --run-id $(RUN_ID) \
+		--wrap "$(MODULES) $(if $(NSYS),module load Nsight-Systems/2024.7.1 && \
+		export NSYS=$(RUN_ID) NSYS_DELAY=$(NSYS_DELAY) NSYS_DURATION=$(NSYS_DURATION) &&) srun --cpus-per-task=72 --label bash scripts/train_task.sh train --run-id $(RUN_ID) \
 		--base-config $(BASE) --config $(subst $(comma), ,$(CONFIG)) \
 		$(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))"
 	@echo "run_id=$(RUN_ID)"
