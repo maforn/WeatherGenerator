@@ -6,8 +6,8 @@ needs optimizing. Results feed Alejandro's plots for the 20 Nov meeting.
 
 ## Who does what
 - **Martin:** normal (data-parallel) runs at levels 5, 6 and 7, scalene and loader profiling. This file.
-- **Jonnas:** spatial parallelism (`config/spatial_parallel_4.yml`). He checks the config and
-  submits those runs himself.
+- **Jonah:** spatial parallelism (`config/spatial_parallel_4.yml`). Jonah checks the config and
+  submits those runs.
   - Today every rank of a spatial group reads and normalizes the full sample and tokenizes the
     full-sphere target. Only source tokenization is cut to the rank's cells.
 - **Shared:** the weekly budget, about 12 node-hours left until Thu 2026-11-12 16:00. Martin's
@@ -108,7 +108,7 @@ Same code and options (A's setup: all loader flags, Andres's GPU options, bf16 w
 | Loader wait share | 1.4% | 0.3% | 0.0% |
 | Prep per sample (one worker) | 13.7 s | 32.4 s | 92.1 s |
 | read / tokenize / build | 4.6 / 2.9 / 5.7 | 5.2 / 6.2 / 20.5 | 5.0 / 14.3 / 72.1 |
-| Workers needed to keep up | ~4 | ~3 | 1 |
+| Workers needed to keep up | 4 (checked by W4) | ~3 | 1 |
 | Payload per sample (bf16) | 1.5 GiB | 4.8 GiB | 17 GiB |
 | Rank RSS / workers RSS per rank | 8.6 / 64 GiB | 13.2 / 70 GiB | 30.7 / 47 GiB |
 | GPU allocated peak (of 96) | 7.3 GiB | 17.1 GiB | 59.6 GiB |
@@ -119,6 +119,10 @@ Same code and options (A's setup: all loader flags, Andres's GPU options, bf16 w
 - **Read is flat** (~5 s); **build** (batch assembly) is the part that grows: 42% → 63% → 78%.
 - **Host memory** sets the worker cap at L7: one worker is 47 GiB, a second per GPU would exceed
   the 477 GiB of CPU RAM. One is also enough.
+- **W4 `kdi7cfy9` (L5, 4 workers instead of 12) keeps the GPU fed:** step 3.99 vs 4.19 s, loader
+  wait 1.4% in both, node used peak **246 vs 409 GiB** (workers RSS 23–24 vs 64–66 GiB per rank).
+  4 workers give 0.28 samples/s/rank for 0.25 used, so 4 is the minimum at L5. Size workers as
+  prep per sample ÷ step, rounded up: each extra worker costs ~6 GiB at L5.
 - **The flat stretches at L7 are GPU time** (SNAP7 `ft98r6re`, SNAP6 `k8eytats`). The main thread
   makes no GPU allocation for 91% of a L7 step (41–44% at L6): 2 pauses of 12–15 s in forward
   just before the decoders, and 2 of 34–41 s in backward after a checkpoint recompute. Nothing on
@@ -143,7 +147,7 @@ Same code and options (A's setup: all loader flags, Andres's GPU options, bf16 w
 ## Expected answer (to confirm)
 Storage → CPU is not the limit on 1 node in data-parallel mode. The levels hit host memory
 (level 7) and CPU (tokenize/build) first.
-- With spatial parallelism (Jonnas), the issue is 4× duplicated per-rank work, not the storage
+- With spatial parallelism (Jonah), the issue is 4× duplicated per-rank work, not the storage
   bandwidth itself.
 - Rechunking pays off only if reads become bandwidth-bound (multi-node, higher-resolution
   dataset).
