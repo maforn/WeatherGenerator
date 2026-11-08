@@ -97,6 +97,7 @@ class EmbeddingEngine(torch.nn.Module):
                     unembed_mode=self.cf.embed_unembed_mode,
                     stream_name=stream_name,
                     num_chunks=self.cf.get("embed_num_chunks", 1),
+                    readout_batched=self.cf.get("embed_readout_batched", False),
                 )
             elif si["embed"]["net"] == "linear":
                 self.embeds[stream_name] = StreamEmbedLinear(
@@ -164,7 +165,7 @@ class EmbeddingEngine(torch.nn.Module):
             else:
                 # original path (default)
                 scatter_idxs = scatter_idxs.unsqueeze(1).repeat((1, self.cf.ae_local_dim_embed))
-                tokens_all.scatter_(0, scatter_idxs, torch.cat(x_embeds))                          
+                tokens_all.scatter_(0, scatter_idxs, torch.cat(x_embeds))
 
         pe_idxs = self.get_pe_idxs_vectorized(batch)
         tokens_all = tokens_all + pe_embed[pe_idxs]

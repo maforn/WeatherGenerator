@@ -33,6 +33,7 @@ class StreamEmbedTransformer(torch.nn.Module):
         unembed_mode="full",
         stream_name="stream_embed",
         num_chunks=1,
+        readout_batched=False,
     ):
         """Constructor
 
@@ -43,6 +44,8 @@ class StreamEmbedTransformer(torch.nn.Module):
                 (which is hence a block-sparse form of full)
         num_chunks : number of pieces the input patches are split into and embedded one after
                 the other, to bound the per-layer recompute + backward burst (see forward)
+        readout_batched : 'block' readout of all channels in one batched matmul instead of a loop
+                over the channels (same parameters, equal up to rounding)
         """
 
         super(StreamEmbedTransformer, self).__init__()
@@ -107,6 +110,7 @@ class StreamEmbedTransformer(torch.nn.Module):
             raise ValueError(f"Unknown unembed mode: {unembed_mode}")
 
         self.dropout_final = torch.nn.Dropout(0.1)
+        self.readout_batched = readout_batched
 
     def forward(self, x_in):
         peh = positional_encoding_harmonic
@@ -125,6 +129,27 @@ class StreamEmbedTransformer(torch.nn.Module):
             x = self._layers(x)
 
         return checkpoint(self.readout, x, use_reentrant=False)
+
+    def _readout_block_batched(self, x):
+        """
+        The block readout, ue_i(ln_i(x[:, i])) for every channel i, as one normalisation and one
+        batched matmul over the stacked per-channel weights.
+        """
+        ln = self.ln_final[0]
+        # the normalisation itself is the same for every channel, only its affine part differs
+        if isinstance(ln, torch.nn.LayerNorm):
+            x = torch.nn.functional.layer_norm(x, ln.normalized_shape, eps=ln.eps)
+        else:
+            x = torch.nn.functional.rms_norm(x, ln.normalized_shape, eps=ln.eps)
+        if ln.weight is not None:
+            x = x * torch.stack([n.weight for n in self.ln_final]).to(x.dtype)
+        if getattr(ln, "bias", None) is not None:
+            x = x + torch.stack([n.bias for n in self.ln_final]).to(x.dtype)
+        # (channels, patches, dim_embed) @ (channels, dim_embed, dim_out) + bias
+        w = torch.stack([ue.weight for ue in self.unembed]).transpose(1, 2)
+        b = torch.stack([ue.bias for ue in self.unembed]).unsqueeze(1)
+        out = torch.baddbmm(b, x.transpose(0, 1), w)
+        return out.transpose(0, 1).flatten(-2, -1)
 
     def _layers(self, x):
         # One checkpoint per layer, not one per (attention, MLP) pair. Pairing them retains
@@ -148,6 +173,8 @@ class StreamEmbedTransformer(torch.nn.Module):
 
         if self.unembed_mode == "full":
             out = self.unembed(self.ln_final(x.flatten(-2, -1)))
+        elif self.unembed_mode == "block" and self.readout_batched:
+            out = self._readout_block_batched(x)
         elif self.unembed_mode == "block":
             out = [
                 ue(ln(x[:, i]))
