@@ -24,7 +24,7 @@ MODULES := { type module >/dev/null 2>&1 || . "$$LMOD_ROOT/lmod/init/bash"; } &&
 	module load Stages/2025 GCCcore/.13.3.0 Python/3.12.3 &&
 comma := ,
 
-.PHONY: help init check test train profile snapshot scalene-data scalene-train
+.PHONY: help init check test train profile snapshot scalene-data scalene-train read-stress
 
 help: ## show this help
 	@grep -hE '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk 'BEGIN {FS=":.*##"}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -71,6 +71,18 @@ scalene-data: ## Scalene CPU + memory profile of building BATCHES batches (no wo
 		.venv/bin/python -m scalene run --memory --profile-only weathergen --program-path . \
 		-o $(SCALENE_DIR)/data.json scripts/profile_data_loading.py --- $(SCALENE_CONFIGS) \
 		--batches $(BATCHES) --checksum $(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))
+
+# Storage stress of the read stage: PROCS concurrent reader processes, READ_SECONDS each, on all
+# 288 CPUs of one node and no GPU (scripts/read_stress.py). Results: READ_DIR/summary.json.
+READ_DIR ?= profiling/read_stress
+PROCS ?= 1 16 64 128 192 256
+READ_SECONDS ?= 90
+read-stress: ## read-only storage stress test: PROCS concurrent readers, READ_SECONDS per level
+	mkdir -p $(READ_DIR)
+	$(MODULES) srun -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 1 --cpus-per-task=288 --time 00:30:00 \
+		.venv/bin/python -u scripts/read_stress.py $(SCALENE_CONFIGS) --out $(READ_DIR) \
+		--procs $(PROCS) --seconds $(READ_SECONDS) \
+		$(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))
 
 scalene-train: ## Scalene CPU + GPU profile of rank 0 of a 1-node training of STEPS steps
 	mkdir -p $(SCALENE_DIR)
