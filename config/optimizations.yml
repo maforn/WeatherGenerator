@@ -5,6 +5,10 @@
 # (forecast engine and local assimilation)
 checkpoint_per_block: True
 
+# one checkpoint per forecast step around the forecast engine: only the step input is kept
+# until the backward (one more forecast-engine forward per step)
+fe_checkpoint_per_step: True
+
 # decoder: project keys/values once per cell, then select each cell's 9 neighbours by index
 # instead of copying them
 decoder_gather_after_kv_projection: True
@@ -14,6 +18,9 @@ source_tokens_in_mixed_precision: True
 
 # checkpoint each block of the local-to-global adapter
 ae_adapter_checkpoint: True
+
+# one outer checkpoint per local-assimilation chunk (one more local forward)
+ae_local_checkpoint_outer: True
 
 # run the stream-embedding layers over this many chunks of patches (bounds the backward burst;
 # 4 measured on the lowres operan config)
@@ -29,3 +36,7 @@ decoder_num_chunks: 2
 # 'block' readout of the stream embedding as one batched matmul over the channels instead of
 # a loop over them (same parameters, equal up to bf16 rounding)
 embed_readout_batched: True
+
+# data loader: the Anemoi and Operan readers convert and transpose only the variables the stream
+# uses (the read is unchanged: each zarr chunk holds all variables of a time step)
+anemoi_select_vars: True
