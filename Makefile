@@ -24,7 +24,7 @@ MODULES := { type module >/dev/null 2>&1 || . "$$LMOD_ROOT/lmod/init/bash"; } &&
 	module load Stages/2025 GCCcore/.13.3.0 Python/3.12.3 &&
 comma := ,
 
-.PHONY: help init check test train profile snapshot scalene-data scalene-train
+.PHONY: help init check test train profile snapshot train-direct scalene-data scalene-train
 
 help: ## show this help
 	@grep -hE '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk 'BEGIN {FS=":.*##"}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -56,6 +56,21 @@ profile: ## like train, with Nsight Systems profiling
 
 snapshot: ## like train, but 3 steps with a CUDA allocator snapshot (scripts/analyze_memory_snapshot.py)
 	$(MAKE) train CONFIG="$(CONFIG)$(comma)config/config_memory_profiling.yml"
+
+# Runs from this folder's .venv and code as they are: no copy of the code, no new venv per job.
+# := so that the job name, the run id and the log folder use the same id
+ifndef RUN_ID
+RUN_ID := $(shell head -c 512 /dev/urandom | LC_ALL=C tr -dc a-z0-9 | head -c 8)
+endif
+WORK := /e/scratch/weatherai/shared_work
+train-direct: ## like train on 1 node, from this folder's .venv (when launch-slurm cannot build one)
+	mkdir -p $(WORK)/logs/$(RUN_ID)
+	sbatch -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 4 --cpus-per-task=72 --gres=gpu:4 --time $(TIME) \
+		-J weathergen_$(RUN_ID)_part1_train -o $(WORK)/logs/$(RUN_ID)/output.%j.txt \
+		--wrap "$(MODULES) srun --label bash scripts/train_task.sh train --run-id $(RUN_ID) \
+		--base-config $(BASE) --config $(subst $(comma), ,$(CONFIG)) \
+		$(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))"
+	@echo "run_id=$(RUN_ID)"
 
 # Scalene: line-level CPU (Python and native), memory and GPU profiles, run on a compute node.
 # View: `.venv/bin/python -m scalene view --cli -r <json>`, or `--standalone` for one HTML file.
