@@ -148,6 +148,33 @@ Same code and options (A's setup: all loader flags, Andres's GPU options, bf16 w
 - **So at L7 the bottleneck is GPU compute in the model**, not storage → CPU: the loader needs
   1 worker, and the training main thread is idle 91% of the step.
 
+## Next steps (proposed 2026-11-08, not submitted; need Martin's OK and Jonah's share of the budget)
+Every data-parallel run so far is GPU-bound. These tests look for what breaks next. Costs are
+for 1 node.
+1. **SP7: spatial parallelism at L7** (Jonah's run, with our loader profiling and the torch
+   profiler). Per `docs/{encoder,decoder}_spatial_parallelism.md`, every spatial rank still runs
+   the forecast engine and global assimilation on the full sphere. That is 82% of the L7 step,
+   so we expect ~140–150 s per sample on 4 GPUs: about 4× less throughput than data-parallel.
+   The 4 ranks also read the same sample. Source tokenization (where the 72 GiB peak is) is
+   split, so the worker peak may drop. ~0.5–1 node-hour.
+2. **READ: storage stress on 1 node.** A new read-only script (Martin's area) with 16/64/128/256
+   processes doing only the read stage; record per-sample read time and aggregate GB/s. So far
+   only 8–64 concurrent readers have been seen, and the time was flat. One node can only show the
+   node's link ceiling, not the file-system aggregate: that needs 2–4 nodes (approval).
+   ~0.5 node-hour.
+3. **TOK: cut the tokenizer peak at L7** (Martin's area): rotate per cell (`tokenizer_utils.py`
+   :485) and avoid the full-size cat and gather (:365, :332). Check bit-identity with the
+   synthetic harness, then rerun S7. Goal: 72 → <35 GiB, so 2 workers per GPU fit at L7.
+   ~0.7 node-hour.
+4. **S8: loader at L8** (scalene-data, 1 sample, no GPU). Prediction ~4× L7: ~290 GiB peak and
+   ~6 min per sample, so 4 workers (1 per GPU) would not fit in 478 GiB, and host memory breaks
+   first. L8 training is not worth a run: 16× the attention and ~4× the activations of L7.
+   ~0.7 node-hour.
+5. **CKPT7: L7 without `fe_checkpoint_per_step`** (Andres's option; measure only, 3-step
+   snapshot as SNAP7). Expect −24 s per step and +9–18 GB of GPU peak. ~0.3 node-hour.
+6. **W2-L6: L6 with 2 workers per GPU.** Prep 32 s against a 16 s step, so it should be on the
+   edge: it confirms "workers = prep ÷ step" from the failing side. ~0.5 node-hour.
+
 ## How each run is judged
 - **GPU-bound:** loader wait per step ≈ 0 (`loader_wait_rank*.jsonl`), and step time = GPU step.
 - **CPU-bound (loader):** waits > 0, and sample time is dominated by tokenize/build. More workers
