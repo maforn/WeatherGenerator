@@ -1,6 +1,3 @@
-# GPU memory optimizations, each off when missing. The first three: peak 28.93 instead of
-# 31.69 GiB per GPU on the operan config, same losses.
-
 # one activation checkpoint per attention + MLP block instead of per layer
 # (forecast engine and local assimilation)
 checkpoint_per_block: True
@@ -64,6 +61,10 @@ anemoi_select_vars: True
 # free each batch before the next one is copied to the GPU (a reference cycle otherwise keeps
 # it alive until the next garbage collection: +1.7 GiB on random steps)
 train_gc_collect_every_step: True
+
+# data loader: split the points of all cells into tokens with one sort, not one sort per cell
+# (same tokens)
+vectorize_hpy_splits: True
 
 # data loader: split complete batches evenly over the loader workers; the remainder goes one each
 # to the first workers instead of all to the last one
