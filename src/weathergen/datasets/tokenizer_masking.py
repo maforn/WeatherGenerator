@@ -48,10 +48,12 @@ class TokenizerMasking(Tokenizer):
         source_cell_end: int | None = None,
         vectorize_hpy_splits: bool = False,
         target_requested_fields_only: bool = False,
+        masked_counts_bincount: bool = False,
     ):
         super().__init__(healpix_level)
         self.vectorize_hpy_splits = vectorize_hpy_splits
         self.target_requested_fields_only = target_requested_fields_only
+        self.masked_counts_bincount = masked_counts_bincount
         self.masker = masker
         self.rng = None
         self.token_size = None
@@ -176,6 +178,7 @@ class TokenizerMasking(Tokenizer):
             time_win,
             self.hpy_verts_rots_source[-1][self.source_cell_start : self.source_cell_end],
             encode_times_source,
+            counts_bincount=self.masked_counts_bincount,
         )
 
         return (source_tokens_cells, source_tokens_lens)
@@ -210,6 +213,7 @@ class TokenizerMasking(Tokenizer):
             self.hpy_nctrs_target,
             encode_times_target,
             need_values=not self.target_requested_fields_only,
+            counts_bincount=self.masked_counts_bincount,
         )
 
         return (coords_local, coords_per_cell)
@@ -243,6 +247,7 @@ class TokenizerMasking(Tokenizer):
             self.hpy_nctrs_target,
             encode_times_target,
             need_coords=not self.target_requested_fields_only,
+            counts_bincount=self.masked_counts_bincount,
         )
 
         idxs_ord_inv = None

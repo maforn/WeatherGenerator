@@ -76,3 +76,6 @@ vectorize_hpy_splits: True
 # data loader: split complete batches evenly over the loader workers; the remainder goes one each
 # to the first workers instead of all to the last one
 even_workset_split: True
+
+# data loader: count the masked tokens and points per cell with one bincount (same counts)
+masked_counts_bincount: True
