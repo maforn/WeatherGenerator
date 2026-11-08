@@ -124,32 +124,9 @@ def hpy_cell_splits(
     return (hpy_idxs_ord_split, thetas, phis)
 
 
-def hpy_splits(
-    coords: torch.Tensor,
-    hl: int,
-    token_size: int,
-    pad_tokens: bool,
-    offset_step: int = 0,
-    cell_start: int = 0,
-    cell_end: int | None = None,
-) -> tuple[list[torch.Tensor], list[torch.Tensor], torch.Tensor]:
-    """Compute healpix cell for each data point and splitting information per cell;
-       when the token_size is exceeded then splitting based on lat is used;
-       tokens can be padded
+def hpy_token_splits_vectorized(hpy_idxs_ord_split, thetas, token_size, pad_tokens, offset_step):
+    """The token split of hpy_splits, vectorized over the cells (same result)."""
 
-    Return :
-        idxs_ord : flat list of indices (to data points) per healpix cell
-        idxs_ord_lens : lens of lists per cell
-        (so that data[idxs_ord].split( idxs_ord_lens) provides per cell data)
-    """
-
-    # list of data points per healpix cell
-    (hpy_idxs_ord_split, thetas, phis) = hpy_cell_splits(
-        coords, hl, cell_start=cell_start, cell_end=cell_end
-    )
-
-    # if token_size is exceeed split based on latitude
-    # TODO: split by hierarchically traversing healpix scheme
     # One stable sort of all points by cell and, within a cell, by latitude: the same order as a
     # stable sort per cell, without one small sort (and cat and split) per cell.
     lens = np.array([len(idxs) for idxs in hpy_idxs_ord_split], dtype=np.int64)
@@ -183,6 +160,71 @@ def hpy_splits(
     return idxs_ord, idxs_ord_lens
 
 
+def hpy_splits(
+    coords: torch.Tensor,
+    hl: int,
+    token_size: int,
+    pad_tokens: bool,
+    offset_step: int = 0,
+    cell_start: int = 0,
+    cell_end: int | None = None,
+    vectorized: bool = False,
+) -> tuple[list[torch.Tensor], list[torch.Tensor], torch.Tensor]:
+    """Compute healpix cell for each data point and splitting information per cell;
+       when the token_size is exceeded then splitting based on lat is used;
+       tokens can be padded
+
+    Return :
+        idxs_ord : flat list of indices (to data points) per healpix cell
+        idxs_ord_lens : lens of lists per cell
+        (so that data[idxs_ord].split( idxs_ord_lens) provides per cell data)
+    """
+
+    # list of data points per healpix cell
+    (hpy_idxs_ord_split, thetas, phis) = hpy_cell_splits(
+        coords, hl, cell_start=cell_start, cell_end=cell_end
+    )
+    if vectorized:
+        return hpy_token_splits_vectorized(
+            hpy_idxs_ord_split, thetas, token_size, pad_tokens, offset_step
+        )
+
+    # if token_size is exceeed split based on latitude
+    # TODO: split by hierarchically traversing healpix scheme
+    thetas_sorted = [torch.argsort(thetas[idxs], stable=True) for idxs in hpy_idxs_ord_split]
+    # remainder for padding to token size
+    if pad_tokens:
+        rem = [
+            token_size - (len(idxs) % token_size if len(idxs) % token_size != 0 else token_size)
+            for idxs in hpy_idxs_ord_split
+        ]
+    else:
+        rem = np.zeros(len(hpy_idxs_ord_split), dtype=np.int32)
+
+    # helper variables to split according to cells
+    # pad to token size *and* offset by +1 to account for the index 0 that is added for the padding
+    offset = (1 if pad_tokens else 0) + offset_step
+    int32 = torch.int32
+    idxs_ord = [
+        list(
+            torch.split(
+                torch.cat(
+                    (torch.from_numpy(np.take(idxs, ts) + offset), torch.zeros(r, dtype=int32))
+                ),
+                token_size,
+            )
+        )
+        if len(idxs) > 0
+        else []
+        for idxs, ts, r in zip(hpy_idxs_ord_split, thetas_sorted, rem, strict=True)
+    ]
+
+    # extract length and flatten nested list
+    idxs_ord_lens = [[len(a) for a in aa] for aa in idxs_ord]
+
+    return idxs_ord, idxs_ord_lens
+
+
 def tokenize_space(
     rdata,
     token_size,
@@ -191,6 +233,7 @@ def tokenize_space(
     offset_step=0,
     cell_start=0,
     cell_end=None,
+    vectorized=False,
 ):
     """Process one window into tokens"""
 
@@ -203,6 +246,7 @@ def tokenize_space(
         offset_step,
         cell_start,
         cell_end,
+        vectorized,
     )
 
     return idxs_ord, idxs_ord_lens
@@ -215,6 +259,7 @@ def tokenize_spacetime(
     pad_tokens=True,
     cell_start=0,
     cell_end=None,
+    vectorized=False,
 ):
     """Tokenize respecting an intrinsic time step in the data, i.e. each time step is tokenized
     separately
@@ -241,6 +286,7 @@ def tokenize_spacetime(
             offset_step,
             cell_start,
             cell_end,
+            vectorized,
         )
 
         # collect data for all time steps

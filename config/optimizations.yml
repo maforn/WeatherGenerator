@@ -52,3 +52,7 @@ anemoi_select_vars: True
 # free each batch before the next one is copied to the GPU (a reference cycle otherwise keeps
 # it alive until the next garbage collection: +1.7 GiB on random steps)
 train_gc_collect_every_step: True
+
+# data loader: split the points of all cells into tokens with one sort, not one sort per cell
+# (same tokens)
+vectorize_hpy_splits: True

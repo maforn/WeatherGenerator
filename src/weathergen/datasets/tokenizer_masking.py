@@ -46,8 +46,10 @@ class TokenizerMasking(Tokenizer):
         masker: Masker,
         source_cell_start: int = 0,
         source_cell_end: int | None = None,
+        vectorize_hpy_splits: bool = False,
     ):
         super().__init__(healpix_level)
+        self.vectorize_hpy_splits = vectorize_hpy_splits
         self.masker = masker
         self.rng = None
         self.token_size = None
@@ -97,6 +99,7 @@ class TokenizerMasking(Tokenizer):
                 pad_tokens,
                 cell_start=cell_start,
                 cell_end=cell_end,
+                vectorized=self.vectorize_hpy_splits,
             )
             tokens += [(idxs_cells, idxs_cells_lens)]
 
