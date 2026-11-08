@@ -1,0 +1,8 @@
+# Speed and host-memory options, each off when missing (on top of config/optimizations.yml).
+
+# the DataLoader workers send only the real points of the source tokens, with the number of
+# real points per token and the row each token is padded with; the embedding pads them on the
+# GPU, chunk by chunk. Same tokens (identical batch checksums); level 5: 9x less source data,
+# host memory per rank 63 -> 39 GiB; level 6: 34x less, 1 GiB less GPU memory, 12 workers fit
+# (runs tz30c2cz, 160m47a2)
+source_tokens_unpadded: True

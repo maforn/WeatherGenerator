@@ -17,6 +17,7 @@ import torch
 
 from weathergen.common import config
 from weathergen.datasets.multi_stream_data_sampler import MultiStreamDataSampler
+from weathergen.datasets.packed_tokens import PackedTokens
 from weathergen.train.trainer import Trainer
 from weathergen.train.utils import TRAIN, cfg_keys_to_filter, filter_config_by_enabled
 
@@ -26,6 +27,10 @@ def checksum(obj, digest, seen) -> int:
     if id(obj) in seen:
         return 0
     seen.add(id(obj))
+    if isinstance(obj, PackedTokens):
+        # hash the padded tokens, the same as without source_tokens_unpadded
+        checksum(obj.unpad(), digest, set())
+        return obj.nbytes
     if isinstance(obj, torch.Tensor):
         digest.update(obj.detach().cpu().contiguous().view(torch.uint8).numpy().tobytes())
         return obj.numel() * obj.element_size()

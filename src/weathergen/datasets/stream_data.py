@@ -12,6 +12,7 @@ import numpy as np
 import torch
 
 from weathergen.common.io import IOReaderData
+from weathergen.datasets.packed_tokens import PackedTokens
 from weathergen.train.utils import TRAIN, Stage
 
 
@@ -27,7 +28,7 @@ def _pin_tensor(tensor: torch.Tensor) -> torch.Tensor:
     torch.Tensor
         The pinned tensor.
     """
-    return tensor.pin_memory() if isinstance(tensor, torch.Tensor) else tensor
+    return tensor.pin_memory() if isinstance(tensor, torch.Tensor | PackedTokens) else tensor
 
 
 def _pin_tensor_list(tensor_list: list) -> list:
@@ -213,12 +214,11 @@ class StreamData:
 
         self.source_raw[step] = ss_raw
         self.source_tokens_lens[step] = ss_lens
-        self.source_tokens_cells[step] = torch.stack(ss_cells)
+        tokens = ss_cells if isinstance(ss_cells, PackedTokens) else torch.stack(ss_cells)
 
-        idx = torch.isnan(self.source_tokens_cells[step])
-        self.source_tokens_cells[step][idx] = self.mask_value
-        if dtype is not None:
-            self.source_tokens_cells[step] = self.source_tokens_cells[step].to(dtype)
+        for t in (tokens.rows, tokens.pad) if isinstance(tokens, PackedTokens) else (tokens,):
+            t[torch.isnan(t)] = self.mask_value
+        self.source_tokens_cells[step] = tokens if dtype is None else tokens.to(dtype=dtype)
 
         self.source_is_spoof[step] = is_spoof
 

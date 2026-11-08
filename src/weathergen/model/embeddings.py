@@ -10,6 +10,7 @@
 import torch
 from torch.utils.checkpoint import checkpoint
 
+from weathergen.datasets.packed_tokens import PackedTokens
 from weathergen.model.attention import MultiSelfAttentionHead
 from weathergen.model.layers import MLP
 
@@ -115,12 +116,16 @@ class StreamEmbedTransformer(torch.nn.Module):
     def forward(self, x_in):
         peh = positional_encoding_harmonic
 
-        if self.checkpoint_chunks and self.num_chunks > 1 and x_in.shape[0] > 1:
+        if self.checkpoint_chunks and self.num_chunks > 1 and len(x_in) > 1:
             # the patch embedding runs inside each chunk's checkpoint too (it is per patch), so
             # nothing of the size of the whole stream is kept: the backward rebuilds one chunk
-            chunks = [c for c in x_in.tensor_split(self.num_chunks) if c.shape[0] > 0]
+            # (with source_tokens_unpadded the padding too)
+            chunks = [c for c in x_in.tensor_split(self.num_chunks) if len(c) > 0]
             x = torch.cat([checkpoint(self._embed_layers, c, use_reentrant=False) for c in chunks])
             return checkpoint(self.readout, x, use_reentrant=False)
+
+        if isinstance(x_in, PackedTokens):
+            x_in = x_in.unpad()
 
         # embed provided input data
         # NOTE: no checkpoint on self.embed, a single Linear whose input is x_in (alive
@@ -138,6 +143,8 @@ class StreamEmbedTransformer(torch.nn.Module):
         return checkpoint(self.readout, x, use_reentrant=False)
 
     def _embed_layers(self, x_in):
+        if isinstance(x_in, PackedTokens):
+            x_in = x_in.unpad()
         return self._layers(positional_encoding_harmonic(self.embed(x_in.transpose(-2, -1))))
 
     def _layers(self, x):
@@ -190,6 +197,8 @@ class StreamEmbedLinear(torch.nn.Module):
 
     def forward(self, x):
         # NOTE: no checkpoint, a single Linear whose input is the argument itself
+        if isinstance(x, PackedTokens):
+            x = x.unpad()
         x = self.layer(x.flatten(-2, -1)).unsqueeze(0)
 
         return x

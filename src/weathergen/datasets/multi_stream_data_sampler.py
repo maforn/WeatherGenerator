@@ -125,6 +125,8 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.masker,
             self.spatial_parallel.cell_start,
             self.spatial_parallel.cell_end,
+            # source_tokens_unpadded: only the real points, the embedding pads them on the GPU
+            cf.get("source_tokens_unpadded", False),
         )
         if self.spatial_parallel.size > 1:
             logger.info(
