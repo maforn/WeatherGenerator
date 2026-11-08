@@ -121,6 +121,12 @@ def init_model_and_shard(
                 fully_shard(module, **fsdp_kwargs)
 
         fe_reshard = cf.get("fe_reshard_after_forward", False)
+        pushforward = cf.get("training_config", {}).get("forecast", {}).get("pushforward", False)
+        if fe_reshard and pushforward:
+            logger.warning(
+                "fe_reshard_after_forward is ignored with training_config.forecast.pushforward"
+            )
+            fe_reshard = False
         for module in model.forecast_engine.fe_blocks.modules():
             if isinstance(module, modules_to_shard):
                 # by default the FE parameters stay unsharded during the multi-step rollout
