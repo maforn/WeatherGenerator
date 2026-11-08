@@ -67,7 +67,7 @@ train-direct: ## like train on 1 node, from this folder's .venv (when launch-slu
 	mkdir -p $(WORK)/logs/$(RUN_ID)
 	sbatch -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 4 --cpus-per-task=72 --gres=gpu:4 --time $(TIME) \
 		-J weathergen_$(RUN_ID)_part1_train -o $(WORK)/logs/$(RUN_ID)/output.%j.txt \
-		--wrap "$(MODULES) srun --label bash scripts/train_task.sh train --run-id $(RUN_ID) \
+		--wrap "$(MODULES) srun --cpus-per-task=72 --label bash scripts/train_task.sh train --run-id $(RUN_ID) \
 		--base-config $(BASE) --config $(subst $(comma), ,$(CONFIG)) \
 		$(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))"
 	@echo "run_id=$(RUN_ID)"
