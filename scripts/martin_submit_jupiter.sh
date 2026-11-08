@@ -40,8 +40,10 @@ echo "lock acquired"
 
 # Same exclusions as .minion.json, plus local caches and experiments/ (results are pulled, not
 # pushed; launch-slurm.py would copy them into every job dir). No --delete: never remove remote files.
-rsync -az --checksum --exclude .git --exclude .venv --exclude profiling --exclude .pytest_cache \
-  --exclude .ruff_cache --exclude __pycache__ --exclude .DS_Store --exclude experiments \
+# /profiling and /experiments are anchored to the repo root: an unanchored "profiling" also skipped
+# config/profiling/annotations.json, which nsys_profiling.sh needs (nsys exits with a usage error).
+rsync -az --checksum --exclude .git --exclude .venv --exclude /profiling --exclude .pytest_cache \
+  --exclude .ruff_cache --exclude __pycache__ --exclude .DS_Store --exclude /experiments \
   "$SRC_DIR/" "jupiter:$W/"
 echo "synced $SRC_DIR -> $W"
 # make train/scalene need this directory's own .venv (editable install of its src/)
