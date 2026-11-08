@@ -8,6 +8,7 @@ of every batch, so that a data-loading change can be checked to give the same ba
 
 import argparse
 import hashlib
+import resource
 import time
 from pathlib import Path
 
@@ -20,23 +21,24 @@ from weathergen.train.trainer import Trainer
 from weathergen.train.utils import TRAIN, cfg_keys_to_filter, filter_config_by_enabled
 
 
-def checksum(obj, digest, seen) -> None:
-    """Hash every tensor and array reachable from obj, in a fixed order."""
+def checksum(obj, digest, seen) -> int:
+    """Hash every tensor and array reachable from obj, in a fixed order; returns their bytes."""
     if id(obj) in seen:
-        return
+        return 0
     seen.add(id(obj))
     if isinstance(obj, torch.Tensor):
         digest.update(obj.detach().cpu().contiguous().view(torch.uint8).numpy().tobytes())
-    elif hasattr(obj, "__array_interface__"):
+        return obj.numel() * obj.element_size()
+    if hasattr(obj, "__array_interface__"):
         digest.update(np.ascontiguousarray(obj).tobytes())
-    elif isinstance(obj, dict):
-        for key in sorted(obj, key=str):
-            checksum(obj[key], digest, seen)
-    elif isinstance(obj, list | tuple):
-        for item in obj:
-            checksum(item, digest, seen)
-    elif hasattr(obj, "__dict__"):
-        checksum(vars(obj), digest, seen)
+        return obj.nbytes
+    if isinstance(obj, dict):
+        return sum(checksum(obj[key], digest, seen) for key in sorted(obj, key=str))
+    if isinstance(obj, list | tuple):
+        return sum(checksum(item, digest, seen) for item in obj)
+    if hasattr(obj, "__dict__"):
+        return checksum(vars(obj), digest, seen)
+    return 0
 
 
 def main() -> None:
@@ -67,9 +69,12 @@ def main() -> None:
         seconds.append(time.perf_counter() - t)
         if args.checksum:
             digest = hashlib.sha256()
-            checksum(batch, digest, set())
-            print(f"batch {i}: {digest.hexdigest()[:16]}")  # noqa: T201
-    print(f"{sum(seconds) / len(seconds):.2f} s per batch ({len(seconds)} batches)")  # noqa: T201
+            size = checksum(batch, digest, set())
+            print(f"batch {i}: {digest.hexdigest()[:16]}, {size / 2**20:.0f} MiB")  # noqa: T201
+    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 2**20  # KiB on Linux
+    print(
+        f"{sum(seconds) / len(seconds):.2f} s per batch ({len(seconds)} batches), peak {peak:.1f} GiB"
+    )  # noqa: T201
 
 
 if __name__ == "__main__":
