@@ -45,6 +45,10 @@ decoder_num_chunks: 2
 # a loop over them (same parameters, equal up to bf16 rounding)
 embed_readout_batched: True
 
+# data loader: build only the target fields each caller uses (coordinates or values), not both
+# twice
+target_requested_fields_only: True
+
 # data loader: the observation reader reads the needed columns once instead of three times
 # (coordinates, geoinfos, channels)
 obs_single_read: True
