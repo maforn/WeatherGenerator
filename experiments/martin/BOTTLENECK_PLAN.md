@@ -179,6 +179,10 @@ for 1 node.
      decodes to 0.62 GB. Real reductions need bf16 output (training already uses it: D's workers
      were 47 GiB), a smaller obs `token_size` at L7 (model input; team decision), or no padding in
      the loader. Not worth a PR as is.
+   - **Padding measured (LOG.md PAD, `scripts/padding_stats.py`, login node):** the source tokens
+     are 89 / 97 / 99.3 / 99.5% padding at L5 / 6 / 7 / 8. The same 3.36 M points (0.16 GiB bf16)
+     become 1.2 / 4.5 / 16.5 / 23.5 GiB. Geostationary token_size 1024 (IASI 512) against 109 / 28 /
+     7 / 5 points per occupied cell. With token_size 64 at L7: 1.3 GiB (L5 today: 1.2).
 4. **S8: loader at L8** (scalene-data, 1 sample, no GPU). Prediction ~4× L7: ~290 GiB peak and
    ~6 min per sample, so 4 workers (1 per GPU) would not fit in 478 GiB, and host memory breaks
    first. L8 training is not worth a run: 16× the attention and ~4× the activations of L7.
