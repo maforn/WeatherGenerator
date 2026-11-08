@@ -1,0 +1,18 @@
+{
+ "run": "4vzfb9j8",
+ "job": "2760611",
+ "date": "2026-11-08",
+ "state": "COMPLETED",
+ "elapsed": "00:10:47",
+ "setup": "default_config.yml",
+ "steps": 30,
+ "s_per_step": 15.53,
+ "gpu_peak_gib": 21.02,
+ "host_rss_gib": 41.6,
+ "source_gb_per_sample": 4.7,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "L6, all options, 3 workers, 30 steps (train-direct)"
+}

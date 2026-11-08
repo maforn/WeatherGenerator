@@ -1,0 +1,18 @@
+{
+ "run": "9keiveg4",
+ "job": "2760612",
+ "date": "2026-11-08",
+ "state": "COMPLETED",
+ "elapsed": "00:09:47",
+ "setup": "default_config.yml",
+ "steps": 30,
+ "s_per_step": 13.59,
+ "gpu_peak_gib": 82.23,
+ "host_rss_gib": 48.7,
+ "source_gb_per_sample": 9.41,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "L6, no options, 3 workers, 30 steps (train-direct)"
+}
