@@ -649,7 +649,8 @@ class Trainer(TrainerBase):
             # a plain copy then; it only converts batches built elsewhere.
             source_dtype = (
                 self.mixed_precision_dtype
-                if self.cf.get("source_tokens_in_mixed_precision", False)
+                if self.cf.with_mixed_precision
+                and self.cf.get("source_tokens_in_mixed_precision", False)
                 else None
             )
             batch.to_device(self.device, source_dtype, self.cf.get("source_tokens_on_cpu", False))

@@ -56,8 +56,9 @@ def get_source_tokens_dtype(cf: Config) -> torch.dtype | None:
 
     With ``source_tokens_in_mixed_precision`` the tokens are converted to the mixed-precision
     dtype, which the embedding casts them to first anyway, so the model input is unchanged.
+    Without ``with_mixed_precision`` the model runs in fp32, so the tokens are kept as they are.
     """
-    if not cf.get("source_tokens_in_mixed_precision", False):
+    if not (cf.with_mixed_precision and cf.get("source_tokens_in_mixed_precision", False)):
         return None
     return get_dtype(cf.mixed_precision_dtype)
 
