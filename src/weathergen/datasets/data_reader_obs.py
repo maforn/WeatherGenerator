@@ -287,6 +287,9 @@ class DataReaderObs(DataReaderBase):
         t_win = self.time_window_handler.window(idx)
         t_mask = np.logical_and(datetimes >= t_win.start, datetimes < t_win.end)
 
+        if self.skip_all_valid_filter_copy and t_mask.all():
+            t_mask = slice(None)  # every row is in the window: views instead of copies
+
         rdata = ReaderData(
             coords=coords[t_mask],
             geoinfos=geoinfos[t_mask],
