@@ -35,6 +35,7 @@ from weathergen.datasets.utils import (
 from weathergen.readers_extra.registry import get_extra_reader
 from weathergen.train.utils import Stage, get_batch_size_from_config
 from weathergen.utils.distributed import SpatialParallelContext, is_root
+from weathergen.utils.utils import get_dtype
 
 type AnyDataReader = DataReaderBase | DataReaderAnemoi | DataReaderObs
 type StreamName = str
@@ -104,6 +105,13 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
 
         # initialise healpic
         self.healpix_level = cf.healpix_level
+        # source_tokens_in_mixed_precision: the source tokens are in that dtype already here, in the
+        # DataLoader workers (the values the embedding sees are the same, the batches half as big)
+        self.source_dtype = (
+            get_dtype(cf.mixed_precision_dtype)
+            if cf.get("source_tokens_in_mixed_precision", False)
+            else None
+        )
         self.num_healpix_cells = 12 * 4**self.healpix_level
         # Ranks in one spatial group must consume the same batch. Data
         # parallelism therefore operates across groups, not individual ranks.
@@ -475,7 +483,13 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                 )
 
                 stream_data.add_source(
-                    self._stage, step, rdata, source_cells_lens, source_cells, rdata.is_spoof
+                    self._stage,
+                    step,
+                    rdata,
+                    source_cells_lens,
+                    source_cells,
+                    rdata.is_spoof,
+                    self.source_dtype,
                 )
 
         return stream_data

@@ -188,6 +188,7 @@ class StreamData:
         ss_lens: torch.Tensor,
         ss_cells: list,
         is_spoof: bool,
+        dtype: torch.dtype | None = None,
     ) -> None:
         """
         Add data for source for one input.
@@ -216,6 +217,8 @@ class StreamData:
 
         idx = torch.isnan(self.source_tokens_cells[step])
         self.source_tokens_cells[step][idx] = self.mask_value
+        if dtype is not None:
+            self.source_tokens_cells[step] = self.source_tokens_cells[step].to(dtype)
 
         self.source_is_spoof[step] = is_spoof
 
