@@ -45,6 +45,10 @@ decoder_num_chunks: 2
 # a loop over them (same parameters, equal up to bf16 rounding)
 embed_readout_batched: True
 
+# data loader: build only the target fields each caller uses (coordinates or values), not both
+# twice
+target_requested_fields_only: True
+
 # data loader: the Anemoi and Operan readers convert and transpose only the variables the stream
 # uses (the read is unchanged: each zarr chunk holds all variables of a time step)
 anemoi_select_vars: True
