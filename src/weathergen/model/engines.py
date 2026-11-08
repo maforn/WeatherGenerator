@@ -127,7 +127,10 @@ class EmbeddingEngine(torch.nn.Module):
             if all(s is None for s in sdata):
                 continue
 
-            sdata = torch.cat(sdata).to(tokens_all.dtype)
+            # with source_tokens_on_cpu the tokens are copied to the GPU here, also in the
+            # recompute of the encoder's checkpoint around this engine, so no copy is kept
+            sdata = torch.cat([s.to(tokens_all.device, non_blocking=True) for s in sdata])
+            sdata = sdata.to(tokens_all.dtype)
             # skip empty stream
             if sdata.numel() == 0:
                 continue

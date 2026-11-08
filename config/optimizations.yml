@@ -16,6 +16,10 @@ decoder_gather_after_kv_projection: True
 # keep the source tokens on the GPU in the mixed-precision dtype, as the embedding uses them
 source_tokens_in_mixed_precision: True
 
+# keep the source tokens in pinned CPU memory; the embedding copies them to the GPU when it runs
+# (also in its recompute)
+source_tokens_on_cpu: True
+
 # checkpoint each block of the local-to-global adapter
 ae_adapter_checkpoint: True
 
