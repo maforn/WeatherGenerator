@@ -10,6 +10,10 @@ fe_checkpoint_per_step: True
 # requires: checkpoint_per_block
 fe_blocks_per_checkpoint: 2
 
+# reshard the forecast-engine weights after forward instead of keeping them gathered
+# requires: training_config.forecast.pushforward off (it relies on gathered weights)
+fe_reshard_after_forward: True
+
 # decoder: project keys/values once per cell, then select each cell's 9 neighbours by index
 # instead of copying them
 decoder_gather_after_kv_projection: True
