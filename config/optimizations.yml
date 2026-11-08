@@ -76,3 +76,6 @@ vectorize_hpy_splits: True
 # data loader: split complete batches evenly over the loader workers; the remainder goes one each
 # to the first workers instead of all to the last one
 even_workset_split: True
+
+# data loader: target local coordinates on the flat points, not split per cell (same values)
+target_coords_flat: True
