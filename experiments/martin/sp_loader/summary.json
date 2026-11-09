@@ -1,0 +1,192 @@
+[
+ {
+  "level": 5,
+  "size": 1,
+  "rank": 0,
+  "cell_start": 0,
+  "cell_end": 12288,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 8.1767578125,
+  "read_median": 2.9735361601924524,
+  "normalize_median": 0.2714562158798799,
+  "tokenize_median": 3.185953540902119,
+  "build_median": 5.558062999043614,
+  "total_median": 12.351951368968002,
+  "payload_gib_median": 2.6318268813192844
+ },
+ {
+  "level": 5,
+  "size": 4,
+  "rank": 0,
+  "cell_start": 0,
+  "cell_end": 3072,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 3.398681640625,
+  "read_median": 5.1626781289232895,
+  "normalize_median": 0.2909259391017258,
+  "tokenize_median": 2.4348442249465734,
+  "build_median": 2.459227976971306,
+  "total_median": 10.554281696968246,
+  "payload_gib_median": 0.9826142527163029
+ },
+ {
+  "level": 5,
+  "size": 4,
+  "rank": 1,
+  "cell_start": 3072,
+  "cell_end": 6144,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 3.13873291015625,
+  "read_median": 4.979208344127983,
+  "normalize_median": 0.30255155183840543,
+  "tokenize_median": 2.57023837196175,
+  "build_median": 2.3766805491177365,
+  "total_median": 10.435184823989403,
+  "payload_gib_median": 0.8786939010024071
+ },
+ {
+  "level": 5,
+  "size": 4,
+  "rank": 2,
+  "cell_start": 6144,
+  "cell_end": 9216,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 3.344482421875,
+  "read_median": 4.918737605272327,
+  "normalize_median": 0.2907916411641054,
+  "tokenize_median": 2.4280007971683517,
+  "build_median": 2.4453439089702442,
+  "total_median": 10.500028731999919,
+  "payload_gib_median": 0.9782451018691063
+ },
+ {
+  "level": 5,
+  "size": 4,
+  "rank": 3,
+  "cell_start": 9216,
+  "cell_end": 12288,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 3.18353271484375,
+  "read_median": 4.564608171931468,
+  "normalize_median": 0.3258769227541052,
+  "tokenize_median": 2.7320100840297528,
+  "build_median": 2.593519611924421,
+  "total_median": 10.5387866840465,
+  "payload_gib_median": 0.9048516489565372
+ },
+ {
+  "level": 7,
+  "size": 1,
+  "rank": 0,
+  "cell_start": 0,
+  "cell_end": 196608,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 76.9893798828125,
+  "read_median": 3.3825648297788575,
+  "normalize_median": 0.3211730180773884,
+  "tokenize_median": 14.824447884049732,
+  "build_median": 71.88471566699445,
+  "total_median": 90.68345911998767,
+  "payload_gib_median": 33.400987803936005
+ },
+ {
+  "level": 7,
+  "size": 4,
+  "rank": 0,
+  "cell_start": 0,
+  "cell_end": 49152,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 22.62548828125,
+  "read_median": 3.1199111260357313,
+  "normalize_median": 0.29682633018819615,
+  "tokenize_median": 15.689130444952752,
+  "build_median": 28.749180936953053,
+  "total_median": 47.70776580501115,
+  "payload_gib_median": 9.302464384585619
+ },
+ {
+  "level": 7,
+  "size": 4,
+  "rank": 1,
+  "cell_start": 49152,
+  "cell_end": 98304,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 21.69903564453125,
+  "read_median": 2.9263111891923472,
+  "normalize_median": 0.2632898679585196,
+  "tokenize_median": 11.534379904041998,
+  "build_median": 24.951983192993794,
+  "total_median": 39.90866336598992,
+  "payload_gib_median": 7.854766361415386
+ },
+ {
+  "level": 7,
+  "size": 4,
+  "rank": 2,
+  "cell_start": 98304,
+  "cell_end": 147456,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 22.59442138671875,
+  "read_median": 3.188761777128093,
+  "normalize_median": 0.2749143870314583,
+  "tokenize_median": 13.108043091953732,
+  "build_median": 28.160792313108686,
+  "total_median": 45.334762213984504,
+  "payload_gib_median": 9.22502040117979
+ },
+ {
+  "level": 7,
+  "size": 4,
+  "rank": 3,
+  "cell_start": 147456,
+  "cell_end": 196608,
+  "samples": [
+   "11536",
+   "43464",
+   "13023"
+  ],
+  "peak_rss_gib": 21.27874755859375,
+  "read_median": 2.953306670708116,
+  "normalize_median": 0.2686139610596001,
+  "tokenize_median": 11.858647699933499,
+  "build_median": 24.86074760404881,
+  "total_median": 40.25101350899786,
+  "payload_gib_median": 8.345625776797533
+ }
+]
