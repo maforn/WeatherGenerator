@@ -1,0 +1,41 @@
+{
+ "DEV_wbdqj67x": {
+  "steps_logged": 102,
+  "wall_s": 320.8770000934601,
+  "waited_share": 0.045575095222783864,
+  "median_s": 3.3489999771118164,
+  "mean_s": 3.526120880147913,
+  "slow_steps": 1,
+  "max_step_s": 17.971999883651733,
+  "gpu_max_allocated_gib": 8.21255350112915,
+  "gpu_max_reserved_gib": 10.37890625,
+  "loss_first": 0.7180432677268982,
+  "loss_last": 0.48599645495414734
+ },
+ "A_ykm2kcxf": {
+  "steps_logged": 102,
+  "wall_s": 394.52699995040894,
+  "waited_share": 0.04046237592478126,
+  "median_s": 4.101000070571899,
+  "mean_s": 4.335461537916582,
+  "slow_steps": 3,
+  "max_step_s": 17.776000022888184,
+  "gpu_max_allocated_gib": 7.487061500549316,
+  "gpu_max_reserved_gib": 9.75390625,
+  "loss_first": 0.71778804063797,
+  "loss_last": 0.49433785676956177
+ },
+ "NOOPT_bb2w5nyg": {
+  "steps_logged": 102,
+  "wall_s": 271.50999999046326,
+  "waited_share": 0.04929652693150532,
+  "median_s": 2.753000020980835,
+  "mean_s": 2.9836263735215742,
+  "slow_steps": 1,
+  "max_step_s": 16.134999990463257,
+  "gpu_max_allocated_gib": 28.163758277893066,
+  "gpu_max_reserved_gib": 31.58984375,
+  "loss_first": 0.7197721600532532,
+  "loss_last": 0.49325835704803467
+ }
+}
