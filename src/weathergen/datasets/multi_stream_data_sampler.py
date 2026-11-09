@@ -122,6 +122,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             self.spatial_parallel.cell_end,
             vectorize_hpy_splits=cf.get("vectorize_hpy_splits", False),
             target_requested_fields_only=cf.get("target_requested_fields_only", False),
+            masked_counts_bincount=cf.get("masked_counts_bincount", False),
             target_coords_flat=cf.get("target_coords_flat", False),
         )
         if self.spatial_parallel.size > 1:

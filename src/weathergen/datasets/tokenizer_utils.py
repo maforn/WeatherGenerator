@@ -298,6 +298,17 @@ def tokenize_spacetime(
     return idxs_cells, idxs_cells_lens
 
 
+def masked_counts_per_cell(idxs_cells_lens, idxs_lens, mask_tokens):
+    """Tokens kept by mask_tokens (int64) and their data points (int32), per cell; one
+    bincount instead of a tensor per cell."""
+    num_cells = len(idxs_cells_lens)
+    cells = np.repeat(np.arange(num_cells), [len(lens) for lens in idxs_cells_lens])
+    mask = np.asarray(mask_tokens, dtype=bool)
+    tokens = np.bincount(cells[mask], minlength=num_cells)
+    points = np.bincount(cells[mask], weights=np.asarray(idxs_lens)[mask], minlength=num_cells)
+    return torch.from_numpy(tokens), torch.from_numpy(points).to(torch.int32)
+
+
 def tokenize_apply_mask_source(
     idxs_cells,
     idxs_cells_lens,
@@ -308,6 +319,7 @@ def tokenize_apply_mask_source(
     time_win,
     hpy_verts_rots,
     enc_time,
+    counts_bincount=False,
 ):
     """
     Apply masking to the data.
@@ -362,15 +374,20 @@ def tokenize_apply_mask_source(
         # data = data_padded[ : channel_mask]
 
     # local coords
-    num_tokens_per_cell = [len(idxs) for idxs in idxs_cells_lens]
-    mask_tokens_per_cell = torch.split(torch.from_numpy(mask_tokens), num_tokens_per_cell)
-    tokens_per_cell = torch.tensor([t.sum() for t in mask_tokens_per_cell])
-    masked_points_per_cell = torch.tensor(
-        [
-            torch.tensor([len(t) for t, m in zip(tt, mm, strict=False) if m]).sum()
-            for tt, mm in zip(idxs_cells, mask_tokens_per_cell, strict=False)
-        ]
-    ).to(dtype=torch.int32)
+    if counts_bincount:
+        tokens_per_cell, masked_points_per_cell = masked_counts_per_cell(
+            idxs_cells_lens, idxs_lens, mask_tokens
+        )
+    else:
+        num_tokens_per_cell = [len(idxs) for idxs in idxs_cells_lens]
+        mask_tokens_per_cell = torch.split(torch.from_numpy(mask_tokens), num_tokens_per_cell)
+        tokens_per_cell = torch.tensor([t.sum() for t in mask_tokens_per_cell])
+        masked_points_per_cell = torch.tensor(
+            [
+                torch.tensor([len(t) for t, m in zip(tt, mm, strict=False) if m]).sum()
+                for tt, mm in zip(idxs_cells, mask_tokens_per_cell, strict=False)
+            ]
+        ).to(dtype=torch.int32)
     coords_local = get_source_coords_local(coords, hpy_verts_rots, masked_points_per_cell)
 
     # create tensor that contains all data
@@ -400,6 +417,7 @@ def tokenize_apply_mask_target(
     enc_time,
     need_values=True,
     need_coords=True,
+    counts_bincount=False,
     target_coords_flat=False,
 ):
     """
@@ -450,14 +468,17 @@ def tokenize_apply_mask_target(
     datetimes_enc = enc_time(datetimes, time_win)
     geoinfos = rdata.geoinfos[idxs_data]
 
-    num_tokens_per_cell = [len(idxs) for idxs in idxs_cells_lens]
-    mask_tokens_per_cell = torch.split(torch.from_numpy(mask_tokens), num_tokens_per_cell)
-    masked_points_per_cell = torch.tensor(
-        [
-            torch.tensor([len(t) for t, m in zip(tt, mm, strict=False) if m]).sum()
-            for tt, mm in zip(idxs_cells, mask_tokens_per_cell, strict=False)
-        ]
-    ).to(dtype=torch.int32)
+    if counts_bincount:
+        _, masked_points_per_cell = masked_counts_per_cell(idxs_cells_lens, idxs_lens, mask_tokens)
+    else:
+        num_tokens_per_cell = [len(idxs) for idxs in idxs_cells_lens]
+        mask_tokens_per_cell = torch.split(torch.from_numpy(mask_tokens), num_tokens_per_cell)
+        masked_points_per_cell = torch.tensor(
+            [
+                torch.tensor([len(t) for t, m in zip(tt, mm, strict=False) if m]).sum()
+                for tt, mm in zip(idxs_cells, mask_tokens_per_cell, strict=False)
+            ]
+        ).to(dtype=torch.int32)
 
     # compute encoding of target coordinates used in prediction network
     if torch.tensor(idxs_lens).sum() > 0:
