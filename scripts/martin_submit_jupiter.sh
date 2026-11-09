@@ -7,8 +7,8 @@
 #   SRC_DIR=<local checkout>   default $LOCAL/WeatherGenerator (a worktree for other branches)
 #   REMOTE_DIR=<dir under $R>  default WeatherGenerator; give each branch its own directory,
 #                              since rsync without --delete would mix two branches' files
-#   TARGET=train|scalene-data|read-stress
-#                              default train; scalene-data and read-stress run `make <target>`
+#   TARGET=train|scalene-data|read-stress|sp-loader
+#                              default train; the others run `make <target>`
 #                              (one srun job, no cleanup job) in the background on the login node
 #   MAKEVARS="K=V ..."         extra make variables, e.g. "OPTIONS=healpix_level=6
 #                              SCALENE_DIR=profiling/scalene/l6 BATCHES=3"
@@ -21,7 +21,7 @@ TARGET="${TARGET:-train}"
 MAKEVARS="${MAKEVARS:-}"
 case "$TARGET" in
   train) NEW_JOBS=2 ;;
-  scalene-data|read-stress) NEW_JOBS=1 ;;
+  scalene-data|read-stress|sp-loader) NEW_JOBS=1 ;;
   *) echo "ABORT: unknown TARGET '$TARGET'"; exit 2 ;;
 esac
 R=/e/scratch/weatherai/maranonpaliz1
@@ -72,7 +72,11 @@ echo "queue ok ($NJOBS jobs)"
 if [[ "$TARGET" == train ]]; then
   $SSH "cd $W && make train CONFIG=$CONFIG NODES=1 TIME=$TIME ARGS=\"$EXTRA\" $MAKEVARS 2>&1"
 else
-  LOGDIR=profiling/$([[ "$TARGET" == scalene-data ]] && echo scalene || echo read_stress)
+  case "$TARGET" in
+    scalene-data) LOGDIR=profiling/scalene ;;
+    read-stress) LOGDIR=profiling/read_stress ;;
+    sp-loader) LOGDIR=profiling/sp_loader ;;
+  esac
   LOG="$LOGDIR/$(date -u +%Y%m%dT%H%M%SZ).log"
   # The ( ... & ) subshell exits at once and every descriptor is redirected, so ssh returns
   # (a bare `cd && ... &` backgrounds the whole chain, which keeps the channel open and the

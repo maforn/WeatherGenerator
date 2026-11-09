@@ -24,7 +24,7 @@ MODULES := { type module >/dev/null 2>&1 || . "$$LMOD_ROOT/lmod/init/bash"; } &&
 	module load Stages/2025 GCCcore/.13.3.0 Python/3.12.3 &&
 comma := ,
 
-.PHONY: help init check test train profile snapshot scalene-data scalene-train read-stress
+.PHONY: help init check test train profile snapshot scalene-data scalene-train read-stress sp-loader
 
 help: ## show this help
 	@grep -hE '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk 'BEGIN {FS=":.*##"}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -82,6 +82,20 @@ read-stress: ## read-only storage stress test: PROCS concurrent readers, READ_SE
 	$(MODULES) srun -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 1 --cpus-per-task=288 --time 00:30:00 \
 		.venv/bin/python -u scripts/read_stress.py $(SCALENE_CONFIGS) --out $(READ_DIR) \
 		--procs $(PROCS) --seconds $(READ_SECONDS) \
+		$(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))
+
+# Loader work per sample for each rank of a spatial group vs data parallel
+# (scripts/sp_loader_cost.py): per level in SP_LEVELS, 1 data-parallel process and SP_SIZE
+# spatial ranks, all at once on one node, no GPU. Results: SP_DIR/summary.json.
+SP_DIR ?= profiling/sp_loader
+SP_LEVELS ?= 5 7
+SP_SIZE ?= 4
+SP_BATCHES ?= 3
+sp-loader: ## loader stage times per sample, spatial ranks vs data parallel, levels SP_LEVELS
+	mkdir -p $(SP_DIR)
+	$(MODULES) srun -A $(BUDGET_ACCOUNTS) -p booster -N 1 -n 1 --cpus-per-task=288 --time 00:40:00 \
+		.venv/bin/python -u scripts/sp_loader_cost.py $(SCALENE_CONFIGS) --out $(SP_DIR) \
+		--levels $(SP_LEVELS) --size $(SP_SIZE) --batches $(SP_BATCHES) \
 		$(if $(OPTIONS),--options $(subst $(comma), ,$(OPTIONS)))
 
 scalene-train: ## Scalene CPU + GPU profile of rank 0 of a 1-node training of STEPS steps
