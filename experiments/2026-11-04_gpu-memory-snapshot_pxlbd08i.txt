@@ -1,0 +1,81 @@
+275997 events over 18.6 s
+peak allocated 16.67 GiB (1.81 allocated before recording + 14.86 recorded), at 17.5 s
+allocation that reached the peak (0.19 GiB): EmbeddingEngine.forward <- module.py:_call_impl <- module.py:_wrapped_call_impl <- checkpoint.py:recompute_fn <- checkpoint.py:_run_fn_with_dynamo_disabled <- eval_frame.py:_fn <- _compile.py:inner <- checkpoint.py:unpack_hook
+
+highest memory reached while each phase allocates:
+    16.67 GiB  forward      EmbeddingEngine.forward
+    16.53 GiB  backward     EmbeddingEngine.forward
+    16.42 GiB  backward     (no model frame)
+    16.39 GiB  forward      (no model frame)
+    16.21 GiB  forward      MLP.forward
+    16.19 GiB  forward      MultiSelfAttentionHead.forward
+    16.19 GiB  backward     MultiSelfAttentionHead.forward
+    16.15 GiB  forward      StreamEmbedTransformer.readout
+    14.52 GiB  forward      Model.predict_decoders
+    14.44 GiB  forward      MultiSelfAttentionHeadVarlen.forward
+    14.44 GiB  backward     MultiSelfAttentionHeadVarlen.forward
+    14.29 GiB  backward     Model.predict_decoders
+    14.29 GiB  forward      MultiCrossAttentionHeadVarlen.forward
+    14.29 GiB  backward     MultiCrossAttentionHeadVarlen.forward
+    14.08 GiB  FSDP buffers Model.predict_decoders
+
+live at the peak, by category:
+    10.51 GiB  forward
+     1.81 GiB  allocated before recording (weights etc.)
+     1.72 GiB  optimizer
+     1.49 GiB  input batch
+     1.14 GiB  FSDP buffers
+     0.00 GiB  backward
+
+live at the peak, by model part:
+     9.99 GiB  forward      EmbeddingEngine.forward
+     1.72 GiB  optimizer    (no model frame)
+     1.49 GiB  input batch  (no model frame)
+     1.14 GiB  FSDP buffers (no model frame)
+     0.22 GiB  forward      (no model frame)
+     0.19 GiB  forward      ForecastingEngine.forward
+     0.07 GiB  forward      Model.predict_decoders
+     0.03 GiB  forward      EncoderModule.forward
+     0.00 GiB  forward      MLP.forward
+     0.00 GiB  backward     (no model frame)
+
+live at the peak, by operation (innermost weathergen frame):
+     3.31 GiB  forward      MultiSelfAttentionHead.forward
+     2.80 GiB  forward      StreamEmbedTransformer.forward
+     1.86 GiB  forward      MLP.forward
+     1.72 GiB  optimizer    run_train.py:run_train
+     1.64 GiB  forward      positional_encoding.py:positional_encoding_harmonic
+     1.49 GiB  input batch  StreamData.to_device
+     0.98 GiB  FSDP buffers (outside weathergen)
+     0.39 GiB  forward      EmbeddingEngine.forward
+     0.22 GiB  forward      (outside weathergen)
+     0.21 GiB  forward      StreamEmbedTransformer.readout
+     0.15 GiB  FSDP buffers run_train.py:run_train
+     0.07 GiB  forward      EnsPredictionHead.forward
+     0.00 GiB  input batch  BatchSamples.to_device
+     0.00 GiB  forward      AdaLayerNorm.forward
+     0.00 GiB  forward      EmbeddingEngine.get_scatter_idxs_vectorized
+
+live at the peak, by call stack (innermost 4 weathergen frames):
+     3.28 GiB  forward      MultiSelfAttentionHead.forward:661 <- StreamEmbedTransformer._layers:138 <- StreamEmbedTransformer.forward:123 <- EmbeddingEngine.forward:136
+     1.72 GiB  optimizer    run_train.py:run_train:189 <- run_train.py:main:54 <- run_train.py:<module>:198
+     1.64 GiB  forward      positional_encoding.py:positional_encoding_harmonic:33 <- StreamEmbedTransformer.forward:117 <- EmbeddingEngine.forward:136
+     1.64 GiB  forward      MLP.forward:90 <- StreamEmbedTransformer._layers:138 <- StreamEmbedTransformer.forward:123 <- EmbeddingEngine.forward:136
+     1.64 GiB  forward      StreamEmbedTransformer.forward:123 <- EmbeddingEngine.forward:136
+     1.13 GiB  forward      StreamEmbedTransformer.forward:117 <- EmbeddingEngine.forward:136
+     1.13 GiB  input batch  StreamData.to_device:165 <- Sample.to_device:73 <- BatchSamples.to_device:185 <- ModelBatch.to_device:342
+     0.98 GiB  FSDP buffers (outside weathergen)
+     0.22 GiB  forward      (outside weathergen)
+     0.22 GiB  input batch  StreamData.to_device:158 <- Sample.to_device:73 <- BatchSamples.to_device:185 <- ModelBatch.to_device:342
+     0.19 GiB  forward      EmbeddingEngine.forward:114
+     0.19 GiB  forward      StreamEmbedTransformer.readout:163 <- StreamEmbedTransformer.forward:127 <- EmbeddingEngine.forward:136
+     0.19 GiB  forward      EmbeddingEngine.forward:160
+     0.19 GiB  forward      MLP.forward:90 <- engines.py:_run_layers:60 <- engines.py:checkpoint_layers:48 <- ForecastingEngine.forward:679
+     0.15 GiB  FSDP buffers run_train.py:run_train:189 <- run_train.py:main:54 <- run_train.py:<module>:198
+
+largest model parts, by allocation size (count x MiB):
+  forward      EmbeddingEngine.forward: 12 x 255.2, 2 x 1020.7, 2 x 194.9, 12 x 28.4
+  optimizer    (no model frame): 208 x 4.0, 100 x 8.0, 82 x 0.5, 160 x 0.2
+  input batch  (no model frame): 1 x 237.5, 1 x 227.2, 1 x 221.3, 1 x 213.4
+  FSDP buffers (no model frame): 26 x 16.0, 25 x 16.0, 3 x 32.0, 33 x 2.0
+  forward      (no model frame): 1 x 194.9, 1 x 32.0, 1 x 0.2, 1 x 0.2

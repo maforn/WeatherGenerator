@@ -1,0 +1,18 @@
+{
+ "run": "zm0tjco5",
+ "job": "2760610",
+ "date": "2026-11-08",
+ "state": "COMPLETED",
+ "elapsed": "00:05:15",
+ "setup": "default_config.yml",
+ "steps": 30,
+ "s_per_step": 6.27,
+ "gpu_peak_gib": 7.48,
+ "host_rss_gib": 41.6,
+ "source_gb_per_sample": 1.21,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "L5, all options, bf16 source tokens in the workers, 12 workers, 30 steps (train-direct)"
+}

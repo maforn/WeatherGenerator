@@ -1,0 +1,18 @@
+{
+ "run": "f0lkhiju",
+ "job": "2766351",
+ "date": "2026-11-08",
+ "state": "COMPLETED",
+ "elapsed": "00:14:24",
+ "setup": "default_config.yml",
+ "steps": 100,
+ "s_per_step": 4.92,
+ "gpu_peak_gib": 7.6,
+ "host_rss_gib": 60.0,
+ "source_gb_per_sample": 0.13,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "L5, all options + efficiency.yml (unpadded + compile) (train-direct)"
+}

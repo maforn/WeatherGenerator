@@ -1,0 +1,18 @@
+{
+ "run": "sjr8t2bc",
+ "job": "2681668",
+ "date": "2026-11-04",
+ "state": "COMPLETED",
+ "elapsed": "00:12:46",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml",
+ "steps": 100,
+ "s_per_step": 4.99,
+ "gpu_peak_gib": 11.11,
+ "host_rss_gib": null,
+ "source_gb_per_sample": 1.21,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "near-final: fsdp+forecast+encoder options, embed_checkpoint_per_chunk, decoder_num_chunks=4, ema_on_cpu, fsdp_cpu_offload"
+}

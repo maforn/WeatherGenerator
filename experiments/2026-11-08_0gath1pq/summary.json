@@ -1,0 +1,18 @@
+{
+ "run": "0gath1pq",
+ "job": "2766350",
+ "date": "2026-11-08",
+ "state": "FAILED",
+ "elapsed": "00:14:44",
+ "setup": "default_config.yml",
+ "steps": 100,
+ "s_per_step": 5.1,
+ "gpu_peak_gib": 7.49,
+ "host_rss_gib": 82.9,
+ "source_gb_per_sample": 1.21,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "L5, all options + compile_blocks; segfault at exit after saving (train-direct)"
+}

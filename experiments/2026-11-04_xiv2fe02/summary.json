@@ -1,0 +1,18 @@
+{
+ "run": "xiv2fe02",
+ "job": "2681104",
+ "date": "2026-11-04",
+ "state": "COMPLETED",
+ "elapsed": "00:11:28",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml",
+ "steps": 100,
+ "s_per_step": 4.51,
+ "gpu_peak_gib": 17.11,
+ "host_rss_gib": 79.8,
+ "source_gb_per_sample": 1.21,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "combined fsdp+forecast+encoder options"
+}

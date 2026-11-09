@@ -1,0 +1,18 @@
+{
+ "run": "apxxme4n",
+ "job": "2680020",
+ "date": "2026-11-04",
+ "state": "COMPLETED",
+ "elapsed": "00:11:44",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml",
+ "steps": 100,
+ "s_per_step": 4.43,
+ "gpu_peak_gib": 18.29,
+ "host_rss_gib": 77.0,
+ "source_gb_per_sample": 1.21,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "fe_residual_bf16 (FE LayerNorm keeps bf16): step-0 loss differs (0.718024), last-20 0.5474; 4 steps spiked to 18.3 GiB, median 16.70"
+}

@@ -1,0 +1,73 @@
+379257 events over 22.1 s
+peak allocated 9.35 GiB (0.10 allocated before recording + 9.26 recorded), at 7.2 s
+allocation that reached the peak (0.00 GiB): _ops.py:__call__ <- flash_attn_interface.py:_flash_attn_backward <- flash_attn_interface.py:backward <- function.py:apply
+
+highest memory reached while each phase allocates:
+     9.35 GiB  backward     (no model frame)
+     8.06 GiB  forward      (no model frame)
+     8.06 GiB  forward      MLP.forward
+     7.99 GiB  forward      engines.py:_run_layers
+     7.70 GiB  FSDP buffers (no model frame)
+     7.65 GiB  backward     engines.py:_run_layers
+     7.58 GiB  forward      MultiSelfAttentionHead.forward
+     7.58 GiB  backward     MultiSelfAttentionHead.forward
+     7.56 GiB  forward      StreamEmbedTransformer._layers
+     7.25 GiB  forward      MultiCrossAttentionHeadVarlen.forward
+     7.25 GiB  backward     MultiCrossAttentionHeadVarlen.forward
+     7.24 GiB  forward      MultiSelfAttentionHeadVarlen.forward
+
+live at the peak, by category:
+     5.68 GiB  forward
+     1.78 GiB  backward
+     1.52 GiB  input batch
+     0.28 GiB  FSDP buffers
+     0.10 GiB  allocated before recording (weights etc.)
+
+live at the peak, by model part:
+     2.36 GiB  forward      (no model frame)
+     1.52 GiB  input batch  (no model frame)
+     1.52 GiB  backward     (no model frame)
+     1.51 GiB  forward      MultiSelfAttentionHead.forward
+     1.01 GiB  forward      EmbeddingEngine._embed_stream
+     0.50 GiB  forward      StreamEmbedTransformer._layers
+     0.28 GiB  FSDP buffers (no model frame)
+     0.26 GiB  backward     MultiSelfAttentionHead.forward
+     0.19 GiB  forward      ForecastingEngine.forward
+     0.07 GiB  forward      Model.predict_decoders
+     0.03 GiB  forward      EncoderModule.forward
+     0.00 GiB  forward      MLP.forward
+
+live at the peak, by operation (innermost weathergen frame):
+     2.36 GiB  forward      (outside weathergen)
+     1.52 GiB  backward     (outside weathergen)
+     1.52 GiB  input batch  StreamData.to_device
+     1.00 GiB  forward      MultiSelfAttentionHead.forward
+     1.00 GiB  forward      positional_encoding.py:positional_encoding_harmonic
+     0.76 GiB  forward      RMSNorm.forward
+     0.44 GiB  forward      MLP.forward
+     0.26 GiB  backward     MultiSelfAttentionHead.forward
+     0.15 GiB  FSDP buffers run_train.py:run_train
+     0.12 GiB  FSDP buffers (outside weathergen)
+     0.07 GiB  forward      EnsPredictionHead.forward
+     0.05 GiB  forward      StreamEmbedTransformer.forward
+
+live at the peak, by call stack (innermost 4 weathergen frames):
+     2.36 GiB  forward      (outside weathergen)
+     1.52 GiB  backward     (outside weathergen)
+     1.16 GiB  input batch  StreamData.to_device:165 <- Sample.to_device:73 <- BatchSamples.to_device:185 <- ModelBatch.to_device:342
+     1.00 GiB  forward      positional_encoding.py:positional_encoding_harmonic:33 <- StreamEmbedTransformer.forward:120 <- EmbeddingEngine._embed_stream:185
+     0.26 GiB  forward      RMSNorm.forward:81 <- norms.py:norm_in_input_dtype:141 <- MultiSelfAttentionHead.forward:648
+     0.26 GiB  forward      RMSNorm.forward:81 <- norms.py:norm_in_input_dtype:141 <- MultiSelfAttentionHead.forward:649
+     0.26 GiB  backward     MultiSelfAttentionHead.forward:657
+     0.25 GiB  forward      RMSNorm.forward:81 <- norms.py:norm_in_input_dtype:141 <- MultiSelfAttentionHead.forward:640
+     0.25 GiB  forward      MultiSelfAttentionHead.forward:648
+     0.25 GiB  forward      MultiSelfAttentionHead.forward:649
+     0.25 GiB  forward      MultiSelfAttentionHead.forward:650
+     0.25 GiB  forward      MultiSelfAttentionHead.forward:661 <- StreamEmbedTransformer._layers:144
+
+largest model parts, by allocation size (count x MiB):
+  forward      (no model frame): 1 x 1020.7, 4 x 255.2, 1 x 199.7, 29 x 2.0
+  input batch  (no model frame): 1 x 244.8, 1 x 237.4, 1 x 227.8, 1 x 221.3
+  backward     (no model frame): 1 x 768.5, 3 x 255.2, 2 x 12.0, 1 x 0.1
+  forward      MultiSelfAttentionHead.forward: 6 x 255.2, 2 x 8.0, 3 x 0.5, 1 x 1.0
+  forward      EmbeddingEngine._embed_stream: 1 x 1020.7, 1 x 15.9

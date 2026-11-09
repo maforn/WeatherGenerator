@@ -1,0 +1,73 @@
+404801 events over 22.3 s
+peak allocated 7.46 GiB (0.10 allocated before recording + 7.37 recorded), at 5.7 s
+allocation that reached the peak (0.00 GiB): _ops.py:__call__ <- flash_attn_interface.py:_flash_attn_backward <- flash_attn_interface.py:backward <- function.py:apply
+
+highest memory reached while each phase allocates:
+     7.46 GiB  backward     (no model frame)
+     6.71 GiB  forward      (no model frame)
+     6.66 GiB  forward      engines.py:_run_layers
+     6.37 GiB  FSDP buffers (no model frame)
+     6.32 GiB  backward     engines.py:_run_layers
+     5.96 GiB  forward      MLP.forward
+     5.92 GiB  forward      MultiCrossAttentionHeadVarlen.forward
+     5.92 GiB  backward     MultiCrossAttentionHeadVarlen.forward
+     5.91 GiB  forward      MultiSelfAttentionHeadVarlen.forward
+     5.91 GiB  backward     MultiSelfAttentionHeadVarlen.forward
+     5.54 GiB  forward      MultiSelfAttentionHead.forward
+     5.54 GiB  backward     MultiSelfAttentionHead.forward
+
+live at the peak, by category:
+     4.42 GiB  backward
+     2.12 GiB  forward
+     0.47 GiB  FSDP buffers
+     0.37 GiB  input batch
+     0.10 GiB  allocated before recording (weights etc.)
+
+live at the peak, by model part:
+     4.32 GiB  backward     (no model frame)
+     0.72 GiB  forward      (no model frame)
+     0.61 GiB  forward      engines.py:_run_layers
+     0.37 GiB  input batch  (no model frame)
+     0.30 GiB  forward      LocalAssimilationEngine.forward
+     0.25 GiB  FSDP buffers (no model frame)
+     0.23 GiB  forward      EncoderModule.forward
+     0.19 GiB  FSDP buffers LocalAssimilationEngine.forward
+     0.19 GiB  forward      ForecastingEngine.forward
+     0.10 GiB  backward     engines.py:_run_layers
+     0.07 GiB  forward      Model.predict_decoders
+     0.03 GiB  FSDP buffers engines.py:_run_layers
+
+live at the peak, by operation (innermost weathergen frame):
+     4.32 GiB  backward     (outside weathergen)
+     0.72 GiB  forward      (outside weathergen)
+     0.49 GiB  forward      MLP.forward
+     0.36 GiB  input batch  StreamData.to_device
+     0.31 GiB  forward      RMSNorm.forward
+     0.30 GiB  forward      MultiSelfAttentionHeadVarlen.forward
+     0.22 GiB  FSDP buffers engines.py:_run_layers
+     0.20 GiB  forward      EmbeddingEngine.forward
+     0.15 GiB  FSDP buffers run_train.py:run_train
+     0.10 GiB  backward     MultiSelfAttentionHeadVarlen.forward
+     0.09 GiB  FSDP buffers (outside weathergen)
+     0.07 GiB  forward      EnsPredictionHead.forward
+
+live at the peak, by call stack (innermost 4 weathergen frames):
+     4.32 GiB  backward     (outside weathergen)
+     0.72 GiB  forward      (outside weathergen)
+     0.30 GiB  forward      MLP.forward:90 <- engines.py:_run_layers:64 <- engines.py:checkpoint_layers:52 <- LocalAssimilationEngine.forward:298
+     0.21 GiB  input batch  StreamData.to_device:162 <- Sample.to_device:73 <- BatchSamples.to_device:185 <- ModelBatch.to_device:343
+     0.20 GiB  forward      EmbeddingEngine.forward:179 <- EncoderModule.forward:190 <- Model.forward:699 <- run_train.py:run_train:189
+     0.19 GiB  FSDP buffers engines.py:_run_layers:62 <- engines.py:checkpoint_layers:52 <- LocalAssimilationEngine.forward:298
+     0.19 GiB  forward      MLP.forward:90 <- engines.py:_run_layers:64 <- engines.py:checkpoint_layers:52 <- ForecastingEngine.forward:707
+     0.15 GiB  FSDP buffers run_train.py:run_train:189 <- run_train.py:main:54 <- run_train.py:<module>:198
+     0.15 GiB  input batch  StreamData.to_device:164 <- Sample.to_device:73 <- BatchSamples.to_device:185 <- ModelBatch.to_device:344
+     0.10 GiB  forward      RMSNorm.forward:81 <- norms.py:norm_in_input_dtype:141 <- MultiSelfAttentionHeadVarlen.forward:100 <- engines.py:_run_layers:64
+     0.10 GiB  forward      RMSNorm.forward:81 <- norms.py:norm_in_input_dtype:141 <- MultiSelfAttentionHeadVarlen.forward:101 <- engines.py:_run_layers:64
+     0.10 GiB  backward     MultiSelfAttentionHeadVarlen.forward:114 <- engines.py:_run_layers:64
+
+largest model parts, by allocation size (count x MiB):
+  backward     (no model frame): 1 x 4046.2, 3 x 103.1, 2 x 31.6, 1 x 0.4
+  forward      (no model frame): 2 x 103.1, 1 x 199.7, 16 x 8.0, 6 x 16.0
+  forward      engines.py:_run_layers: 6 x 103.1, 2 x 1.6, 1 x 0.1, 1 x 0.0
+  input batch  (no model frame): 2 x 105.2, 2 x 74.8, 44 x 0.1, 1 x 3.8
+  forward      LocalAssimilationEngine.forward: 3 x 103.1

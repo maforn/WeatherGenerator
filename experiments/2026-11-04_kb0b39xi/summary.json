@@ -1,0 +1,18 @@
+{
+ "run": "kb0b39xi",
+ "job": "2681666",
+ "date": "2026-11-04",
+ "state": "COMPLETED",
+ "elapsed": "00:12:46",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml",
+ "steps": 100,
+ "s_per_step": 4.94,
+ "gpu_peak_gib": 12.76,
+ "host_rss_gib": 83.6,
+ "source_gb_per_sample": 1.21,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "near-final: fsdp+forecast+encoder options, embed_checkpoint_per_chunk, decoder_num_chunks=4, ema_on_cpu"
+}

@@ -1,0 +1,18 @@
+{
+ "run": "tn6df0qr",
+ "job": "2683975",
+ "date": "2026-11-04",
+ "state": "COMPLETED",
+ "elapsed": "00:13:09",
+ "setup": "config_operan_georing_avhrr_forecasting_lowres.yml + dphpc_memory_baseline_100steps.yml + optimizations.yml",
+ "steps": 100,
+ "s_per_step": 5.25,
+ "gpu_peak_gib": 7.49,
+ "host_rss_gib": 86.7,
+ "source_gb_per_sample": 1.21,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "source_tokens_on_cpu without embed_checkpoint_per_stream"
+}

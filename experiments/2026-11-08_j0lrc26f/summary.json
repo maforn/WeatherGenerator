@@ -1,0 +1,18 @@
+{
+ "run": "j0lrc26f",
+ "job": "2769600",
+ "date": "2026-11-08",
+ "state": "COMPLETED",
+ "elapsed": "00:11:57",
+ "setup": "default_config.yml",
+ "steps": 30,
+ "s_per_step": 15.6,
+ "gpu_peak_gib": 20.04,
+ "host_rss_gib": 23.3,
+ "source_gb_per_sample": 0.14,
+ "data_s": {},
+ "data_s_by_rank": {},
+ "host_memory_gib": {},
+ "error": "",
+ "note": "L6, all options + efficiency.yml (unpadded), 6 workers, control for the model-size runs"
+}
