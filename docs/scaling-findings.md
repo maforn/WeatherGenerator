@@ -78,6 +78,22 @@ All options, 1 sample per GPU, `make train-direct` with the CPU fix (s per step 
   wrapper work (twice per attention module, split at flash-attention), also in every recompute.
   Compiled processes sometimes segfault at exit, after the model is saved.
 
+## Bigger models at level 6
+
+All options + `efficiency.yml`, 6 workers, 30 steps; parameters estimated from the checkpoint
+size (float32):
+
+| Run | Change | Parameters | s per step | Peak per GPU |
+|---|---|---|---|---|
+| j0lrc26f | none | ~0.92 B | 15.6 | 20.0 GiB |
+| oguq1ja3 | `fe_num_blocks=32` | ~1.46 B | 25.0 | 21.4 GiB |
+| sxdacewj | `ae_global_dim_embed=3072` | ~1.80 B | 20.3 | 25.1 GiB |
+| 6l1ncv26 | 2 samples per GPU | ~0.92 B | 30.1 (15.05 per sample) | 39.2 GiB |
+
+With the memory options, model size at level 6 costs time, not memory: twice the parameters fit
+in 25 GiB of the 96 GB per GPU. A second sample per GPU adds only 3.5% throughput, as the GPU is
+already busy at level 6.
+
 ## Next
 
 - Bigger compiled regions: register flash-attention 3 as a torch custom op (with fake kernels),

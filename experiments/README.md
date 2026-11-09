@@ -6,6 +6,10 @@ the per-step `train_metrics.json` and the `summary.json` shown here.
 
 | Run | Date | Setup | State | Steps | s/step | Peak GPU GiB | Host RSS GiB | Host memory per rank GiB | Source GB/sample | Data loading, s per step | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|
+| [6l1ncv26](2026-11-08_6l1ncv26/) | 2026-11-08 | default_config.yml | COMPLETED | 30 | 30.11 | 39.2 |  |  | 0.14 |  | L6, as j0lrc26f with 2 samples per GPU |
+| [sxdacewj](2026-11-08_sxdacewj/) | 2026-11-08 | default_config.yml | COMPLETED | 30 | 20.34 | 25.05 | 31.1 |  | 0.14 |  | L6, as j0lrc26f with ae_global_dim_embed=3072 (1.5x wider latent) |
+| [oguq1ja3](2026-11-08_oguq1ja3/) | 2026-11-08 | default_config.yml | COMPLETED | 30 | 24.98 | 21.44 |  |  | 0.14 |  | L6, as j0lrc26f with fe_num_blocks=32 (2x deeper forecast engine) |
+| [j0lrc26f](2026-11-08_j0lrc26f/) | 2026-11-08 | default_config.yml | COMPLETED | 30 | 15.6 | 20.04 | 23.3 |  | 0.14 |  | L6, all options + efficiency.yml (unpadded), 6 workers, control for the model-size runs |
 | [160m47a2](2026-11-08_160m47a2/) | 2026-11-08 | default_config.yml | FAILED | 30 | 16.34 | 20.05 | 55.9 |  | 0.14 |  | L6, all options + efficiency.yml, 12 workers; segfault at exit after saving (train-direct) |
 | [yi4knvey](2026-11-08_yi4knvey/) | 2026-11-08 | default_config.yml | FAILED | 30 | 16.44 | 20.06 | 35.7 |  | 0.14 |  | L6, all options + efficiency.yml, 3 workers; segfault at exit after saving (train-direct) |
 | [h4tgdnkt](2026-11-08_h4tgdnkt/) | 2026-11-08 | default_config.yml | COMPLETED | 30 | 15.5 | 21.02 | 43.9 |  | 4.7 |  | L6, all options, 3 workers, control for efficiency.yml (train-direct) |
