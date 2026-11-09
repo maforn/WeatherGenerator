@@ -157,6 +157,14 @@ for 1 node.
    so we expect ~140–150 s per sample on 4 GPUs: about 4× less throughput than data-parallel.
    The 4 ranks also read the same sample. Source tokenization (where the 72 GiB peak is) is
    split, so the worker peak may drop. ~0.5–1 node-hour.
+   - **Loader side measured without Jonah's run (2026-11-09):** Alejandro's L5 pairs (SP4 vs DP4,
+     LOG.md): SP=4 trains ~3× fewer samples/s and spends ~3× more loader CPU per trained sample,
+     for −46% GPU peak. **SPLOAD** (job 2801802, `scripts/sp_loader_cost.py`, same samples, no GPU):
+     at L7 a spatial rank needs 40–48 s and peaks at 21–23 GiB per sample against 91 s and 77 GiB
+     for a DP worker (the split part is the padded source token build); at L5 10.5 vs 12.4 s.
+     Read (~3 s), coordinate mapping and target construction stay on every rank (dev does not
+     shard targets; the loss after the gather needs them), so per-rank reading saves ≤ 3 s.
+     Still open: the SP7 step time on the GPU (Jonah).
 2. **READ: storage stress on 1 node.** A new read-only script (Martin's area) with 16/64/128/256
    processes doing only the read stage; record per-sample read time and aggregate GB/s. So far
    only 8–64 concurrent readers have been seen, and the time was flat. One node can only show the
@@ -207,7 +215,9 @@ for 1 node.
 Storage → CPU is not the limit on 1 node in data-parallel mode. The levels hit host memory
 (level 7) and CPU (tokenize/build) first.
 - With spatial parallelism (Jonah), the issue is 4× duplicated per-rank work, not the storage
-  bandwidth itself.
+  bandwidth itself. Measured 2026-11-09: the duplicated part is the read (~3 s), coordinate
+  mapping and target construction; the padded source build is split, so at L7 SP lowers the
+  per-worker peak 77 → ~22 GiB.
 - Rechunking pays off only if reads become bandwidth-bound (multi-node, higher-resolution
   dataset).
 
