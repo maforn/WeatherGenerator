@@ -87,3 +87,8 @@ masked_counts_bincount: True
 
 # data loader: target local coordinates on the flat points, not split per cell (same values)
 target_coords_flat: True
+
+# EMA weights in pinned CPU memory
+# requires: FSDP (distributed.data_parallel.with_fsdp, several GPUs) and
+#   validation_config.validate_with_ema.enabled (otherwise there is no EMA model)
+ema_on_cpu: True
