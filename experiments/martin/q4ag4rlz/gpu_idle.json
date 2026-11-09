@@ -1,0 +1,94 @@
+[
+ {
+  "step": "ProfilerStep#2",
+  "step_s": 160.129010483,
+  "gpu_ops": 56823,
+  "busy_any": 0.9883070087695133,
+  "busy_compute": 0.975232029846603,
+  "busy_nccl": 0.02579896623727139,
+  "idle_s": 1.872387115234375,
+  "num_gaps": 52459,
+  "idle_by_gap_size_s": {
+   "<20us": 0.09040873193359318,
+   "20-100us": 0.43133391943359484,
+   "0.1-1ms": 0.580227274414063,
+   "1-5ms": 0.12062488476562497,
+   ">5ms": 0.6497923046875002
+  },
+  "phases": {
+   "before backward (data, forward, loss)": {
+    "s": 29.94894130419922,
+    "gpu_idle_s": 1.0242955947265624
+   },
+   "backward": {
+    "s": 129.70194497705077,
+    "gpu_idle_s": 0.38921465478515627
+   },
+   "backward -> optimizer": {
+    "s": 0.120477251953125,
+    "gpu_idle_s": 0.120477251953125
+   },
+   "optimizer": {
+    "s": 0.11509765185546875,
+    "gpu_idle_s": 0.11509765185546875
+   },
+   "after optimizer (EMA, logging)": {
+    "s": 0.2425492978515625,
+    "gpu_idle_s": 0.2233019619140625
+   }
+  },
+  "dataloader_wait_ms": 209.737511,
+  "longest_gaps": [
+   {
+    "ms": 242.1827412109375,
+    "at_ms": 159645.53950097656,
+    "frames": [
+     "aten::mul_ (0 ms)",
+     "aten::_foreach_mul_ (9 ms)",
+     "<built-in method  of pybind11_builtins.pybind11_detail_function_record (9 ms)",
+     "torch/_ops.py(840): __call__ (9 ms)"
+    ]
+   },
+   {
+    "ms": 211.20684326171875,
+    "at_ms": 0.0,
+    "frames": [
+     "omegaconf/base.py(119): __setstate__ (152 ms)",
+     "<built-in function loads> (208 ms)",
+     "multiprocessing/queues.py(98): get (210 ms)",
+     "torch/utils/data/dataloader.py(1262): _try_get_data (210 ms)"
+    ]
+   },
+   {
+    "ms": 31.0390439453125,
+    "at_ms": 242.13734521484375,
+    "frames": [
+     "aten::copy_ (28 ms)",
+     "aten::_pin_memory (28 ms)",
+     "aten::pin_memory (28 ms)",
+     "<built-in method pin_memory of Tensor object at 0x40008bedc1e0> (28 ms)"
+    ]
+   },
+   {
+    "ms": 30.517388671875,
+    "at_ms": 273.6695654296875,
+    "frames": [
+     "aten::copy_ (27 ms)",
+     "aten::_pin_memory (27 ms)",
+     "aten::pin_memory (27 ms)",
+     "<built-in method pin_memory of Tensor object at 0x40008bedc1e0> (27 ms)"
+    ]
+   },
+   {
+    "ms": 29.5554521484375,
+    "at_ms": 304.68259375,
+    "frames": [
+     "aten::copy_ (26 ms)",
+     "aten::_pin_memory (26 ms)",
+     "aten::pin_memory (26 ms)",
+     "<built-in method pin_memory of Tensor object at 0x40008bedc1e0> (26 ms)"
+    ]
+   }
+  ]
+ }
+]
