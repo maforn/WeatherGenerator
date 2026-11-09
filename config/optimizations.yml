@@ -92,3 +92,10 @@ target_coords_flat: True
 # requires: FSDP (distributed.data_parallel.with_fsdp, several GPUs) and
 #   validation_config.validate_with_ema.enabled (otherwise there is no EMA model)
 ema_on_cpu: True
+
+# FSDP keeps weights, gradients and AdamW states in pinned CPU memory, the optimizer step runs
+# on the CPU (rounds differently from the GPU step; fsdp_cpu_offload_num_threads, default 16,
+# torch threads so the step does not compete with the data-loader workers)
+# requires: FSDP (distributed.data_parallel.with_fsdp, several GPUs) and
+#   mixed_precision_dtype bf16 (the loss scaler needed for fp16 is skipped)
+fsdp_cpu_offload: True

@@ -309,6 +309,22 @@ class Trainer(TrainerBase):
             self.dataset_val, **loader_params, sampler=None
         )
 
+        is_model_sharded = (
+            cf.distributed.data_parallel.with_ddp and cf.distributed.data_parallel.with_fsdp
+        )
+        # weights, gradients and AdamW states in pinned CPU memory (FSDP only)
+        fsdp_cpu_offload = cf.get("fsdp_cpu_offload", False) and is_model_sharded
+        if cf.get("fsdp_cpu_offload", False) and not fsdp_cpu_offload:
+            logger.warning(
+                "fsdp_cpu_offload is ignored: it needs FSDP "
+                "(distributed.data_parallel.with_fsdp, several GPUs)"
+            )
+        float16 = cf.with_mixed_precision and self.mixed_precision_dtype == torch.float16
+        if fsdp_cpu_offload and float16:
+            logger.warning(
+                "fsdp_cpu_offload runs without the loss scaler that float16 needs: "
+                "use mixed_precision_dtype bf16"
+            )
         self.model, self.model_params = init_model_and_shard(
             cf,
             self.dataset,
@@ -317,6 +333,7 @@ class Trainer(TrainerBase):
             self.training_cfg.training_mode,
             devices[0],
             cf.distributed.data_parallel,
+            cpu_offload=fsdp_cpu_offload,
         )
 
         validate_with_ema_cfg = self.validation_cfg.get("validate_with_ema")
@@ -327,9 +344,6 @@ class Trainer(TrainerBase):
             self.validate_with_ema = False
         self.ema_model = None
         if self.validate_with_ema:
-            is_model_sharded = (
-                cf.distributed.data_parallel.with_ddp and cf.distributed.data_parallel.with_fsdp
-            )
             # keep the EMA weights in pinned CPU memory (FSDP only)
             ema_on_cpu = cf.get("ema_on_cpu", False) and is_model_sharded
             meta_ema_model, _ = init_model_and_shard(
@@ -379,7 +393,14 @@ class Trainer(TrainerBase):
             eps=eps,
             fused=True,
         )
-        if cf.get("training_config").get("optimizer").get("grad_scaling", True):
+        # the CPU optimizer step and gradient clipping are memory bound: a few threads are as
+        # fast, while one per core contends with the data-loader workers (~20x slower)
+        if fsdp_cpu_offload:
+            torch.set_num_threads(cf.get("fsdp_cpu_offload_num_threads", 16))
+        grad_scaling = cf.get("training_config").get("optimizer").get("grad_scaling", True)
+        # GradScaler copies its GPU scale and inf flag to CPU gradients without waiting for the
+        # copies (a race); bfloat16 needs no loss scaling
+        if grad_scaling and not fsdp_cpu_offload:
             self.grad_scaler = torch.amp.GradScaler("cuda")
         assert len(self.dataset) > 0, f"No data found in {self.dataset}"
 
