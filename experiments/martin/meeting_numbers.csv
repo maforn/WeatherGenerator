@@ -1,0 +1,120 @@
+study,level,setting,metric,value,unit,run,note
+per_level,5,data parallel 4 GPUs,step_time,4.1,s,ykm2kcxf,A; all loader and GPU options; 12 workers
+per_level,6,data parallel 4 GPUs,step_time,15.9,s,pv39uted,C; 8 workers
+per_level,7,data parallel 4 GPUs,step_time,162,s,ywaqq3tw,D; 1 worker
+per_level,5,data parallel 4 GPUs,loader_wait_share,1.4,%,ykm2kcxf,
+per_level,6,data parallel 4 GPUs,loader_wait_share,0.3,%,pv39uted,
+per_level,7,data parallel 4 GPUs,loader_wait_share,0.0,%,ywaqq3tw,
+per_level,5,data parallel 4 GPUs,loader_time_per_sample,13.7,s,ykm2kcxf,one worker
+per_level,6,data parallel 4 GPUs,loader_time_per_sample,32.4,s,pv39uted,one worker
+per_level,7,data parallel 4 GPUs,loader_time_per_sample,92.1,s,ywaqq3tw,one worker
+per_level,5,data parallel 4 GPUs,read_time_per_sample,4.6,s,ykm2kcxf,
+per_level,6,data parallel 4 GPUs,read_time_per_sample,5.2,s,pv39uted,
+per_level,7,data parallel 4 GPUs,read_time_per_sample,5.0,s,ywaqq3tw,
+per_level,5,data parallel 4 GPUs,tokenize_time_per_sample,2.9,s,ykm2kcxf,
+per_level,6,data parallel 4 GPUs,tokenize_time_per_sample,6.2,s,pv39uted,
+per_level,7,data parallel 4 GPUs,tokenize_time_per_sample,14.3,s,ywaqq3tw,
+per_level,5,data parallel 4 GPUs,build_time_per_sample,5.7,s,ykm2kcxf,
+per_level,6,data parallel 4 GPUs,build_time_per_sample,20.5,s,pv39uted,
+per_level,7,data parallel 4 GPUs,build_time_per_sample,72.1,s,ywaqq3tw,
+per_level,5,data parallel 4 GPUs,workers_per_gpu_needed,4,count,kdi7cfy9,checked by W4
+per_level,6,data parallel 4 GPUs,workers_per_gpu_needed,3,count,pv39uted,estimate: prep / step
+per_level,7,data parallel 4 GPUs,workers_per_gpu_needed,1,count,ywaqq3tw,
+per_level,5,data parallel 4 GPUs,payload_per_sample_bf16,1.5,GiB,ykm2kcxf,
+per_level,6,data parallel 4 GPUs,payload_per_sample_bf16,4.8,GiB,pv39uted,
+per_level,7,data parallel 4 GPUs,payload_per_sample_bf16,17,GiB,ywaqq3tw,
+per_level,5,data parallel 4 GPUs,workers_rss_per_rank,64,GiB,ykm2kcxf,12 workers
+per_level,6,data parallel 4 GPUs,workers_rss_per_rank,70,GiB,pv39uted,8 workers
+per_level,7,data parallel 4 GPUs,workers_rss_per_rank,47,GiB,ywaqq3tw,1 worker
+per_level,5,data parallel 4 GPUs,gpu_peak_allocated,7.3,GiB,ykm2kcxf,of 96
+per_level,6,data parallel 4 GPUs,gpu_peak_allocated,17.1,GiB,pv39uted,of 96
+per_level,7,data parallel 4 GPUs,gpu_peak_allocated,59.6,GiB,ywaqq3tw,of 96
+per_level,5,data parallel 4 GPUs,node_used_peak,409,GiB,ykm2kcxf,CPU + HBM of 858
+per_level,6,data parallel 4 GPUs,node_used_peak,486,GiB,pv39uted,CPU + HBM of 858
+per_level,7,data parallel 4 GPUs,node_used_peak,630,GiB,ywaqq3tw,CPU + HBM of 858
+workers_l5,5,12 workers per GPU,step_time,4.19,s,ykm2kcxf,
+workers_l5,5,4 workers per GPU,step_time,3.99,s,kdi7cfy9,W4
+workers_l5,5,12 workers per GPU,node_used_peak,409,GiB,ykm2kcxf,
+workers_l5,5,4 workers per GPU,node_used_peak,246,GiB,kdi7cfy9,W4
+read_stress,5,1 reader,samples_per_s,0.19,samples/s,job 2766316,one node; read stage only
+read_stress,5,16 readers,samples_per_s,2.8,samples/s,job 2766316,
+read_stress,5,64 readers,samples_per_s,9.9,samples/s,job 2766316,
+read_stress,5,128 readers,samples_per_s,13.6,samples/s,job 2766316,
+read_stress,5,192 readers,samples_per_s,12.9,samples/s,job 2766316,
+read_stress,5,1 reader,wall_per_sample,5.4,s,job 2766316,median
+read_stress,5,16 readers,wall_per_sample,5.6,s,job 2766316,median
+read_stress,5,64 readers,wall_per_sample,6.4,s,job 2766316,median
+read_stress,5,128 readers,wall_per_sample,9.0,s,job 2766316,median
+read_stress,5,192 readers,wall_per_sample,14.2,s,job 2766316,median
+read_stress,5,1 reader,cpu_per_sample,4.2,s,job 2766316,median
+read_stress,5,16 readers,cpu_per_sample,4.4,s,job 2766316,median
+read_stress,5,64 readers,cpu_per_sample,5.5,s,job 2766316,median
+read_stress,5,128 readers,cpu_per_sample,8.0,s,job 2766316,median
+read_stress,5,192 readers,cpu_per_sample,13.0,s,job 2766316,median
+read_stress,5,demand,samples_per_s_needed,1,samples/s,ykm2kcxf,L5 training per node (4 GPUs / 4.1 s step)
+padding,5,source tokens,padding_share,89,%,PAD,scripts/padding_stats.py
+padding,6,source tokens,padding_share,97,%,PAD,
+padding,7,source tokens,padding_share,99.3,%,PAD,
+padding,8,source tokens,padding_share,99.5,%,PAD,
+padding,5,source tokens,size_per_sample_bf16,1.2,GiB,PAD,3.36 M real points = 0.16 GiB at every level
+padding,6,source tokens,size_per_sample_bf16,4.5,GiB,PAD,
+padding,7,source tokens,size_per_sample_bf16,16.5,GiB,PAD,
+padding,8,source tokens,size_per_sample_bf16,23.5,GiB,PAD,
+padding,5,geostationary streams,points_per_occupied_cell,109,count,PAD,token_size 1024
+padding,6,geostationary streams,points_per_occupied_cell,28,count,PAD,
+padding,7,geostationary streams,points_per_occupied_cell,7,count,PAD,
+padding,8,geostationary streams,points_per_occupied_cell,5,count,PAD,
+padding,7,token_size 64,size_per_sample_bf16,1.32,GiB,PAD,what-if
+gpu_busy,5,data parallel 4 GPUs,gpu_busy_share,64.1,%,i3f3hngb,Jonah; profiler step 2; 4.00 s step
+gpu_busy,5,data parallel 4 GPUs,gpu_busy_share,60.1,%,i3f3hngb,Jonah; profiler step 3; 3.56 s step
+gpu_busy,5,data parallel 4 GPUs,idle_per_step,1.43,s,i3f3hngb,~21300 gaps; 0.94 s in 0.1-1 ms gaps
+gpu_busy,5,data parallel 4 GPUs,dataloader_wait,0.16,ms,i3f3hngb,
+gpu_busy,7,data parallel 4 GPUs,gpu_busy_share,98.8,%,q4ag4rlz,PROF7; 160 s step
+gpu_busy,7,data parallel 4 GPUs,attention_share_of_kernel_time,86,%,q4ag4rlz,
+gpu_options,5,dev all merged options,step_time_median,3.35,s,wbdqj67x,DEV
+gpu_options,5,bottleneck branch all options,step_time_median,4.10,s,ykm2kcxf,A
+gpu_options,5,no GPU options,step_time_median,2.75,s,bb2w5nyg,NOOPT
+gpu_options,5,dev all merged options,gpu_peak_allocated,8.21,GiB,wbdqj67x,
+gpu_options,5,bottleneck branch all options,gpu_peak_allocated,7.49,GiB,ykm2kcxf,
+gpu_options,5,no GPU options,gpu_peak_allocated,28.16,GiB,bb2w5nyg,
+gpu_options,5,dev all merged options,loss_last,0.486,,wbdqj67x,after 100 steps
+gpu_options,5,bottleneck branch all options,loss_last,0.494,,ykm2kcxf,after 100 steps
+gpu_options,5,no GPU options,loss_last,0.493,,bb2w5nyg,after 100 steps
+sp_vs_dp_l5,5,SP 4,samples_per_s,0.143,samples/s,qb0vmkdr,Alejandro; 4 workers; 1 sample per step / mean step 6.99 s
+sp_vs_dp_l5,5,SP 4,samples_per_s,0.128,samples/s,cnkr2ooi,Alejandro; mean step 7.82 s
+sp_vs_dp_l5,5,DP 4,samples_per_s,0.380,samples/s,pi2vsvu1,Alejandro; 4 samples per step / mean step 10.54 s
+sp_vs_dp_l5,5,DP 4,samples_per_s,0.389,samples/s,n3tagpzt,Alejandro; mean step 10.30 s
+sp_vs_dp_l5,5,SP 4,waited_share,65,%,qb0vmkdr,all four runs loader-bound
+sp_vs_dp_l5,5,SP 4,waited_share,74,%,cnkr2ooi,
+sp_vs_dp_l5,5,DP 4,waited_share,73,%,pi2vsvu1,
+sp_vs_dp_l5,5,DP 4,waited_share,73,%,n3tagpzt,
+sp_vs_dp_l5,5,SP 4,gpu_peak_allocated,15.46,GiB,qb0vmkdr,
+sp_vs_dp_l5,5,SP 4,gpu_peak_allocated,15.77,GiB,cnkr2ooi,
+sp_vs_dp_l5,5,DP 4,gpu_peak_allocated,28.14,GiB,pi2vsvu1,
+sp_vs_dp_l5,5,DP 4,gpu_peak_allocated,29.30,GiB,n3tagpzt,
+sp_loader,5,DP worker,time_per_sample,12.4,s,job 2801802,SPLOAD; same 3 samples; fp32; no GPU
+sp_loader,5,SP rank 0,time_per_sample,10.6,s,job 2801802,cells 0-3072
+sp_loader,5,SP rank 1,time_per_sample,10.4,s,job 2801802,
+sp_loader,5,SP rank 2,time_per_sample,10.5,s,job 2801802,
+sp_loader,5,SP rank 3,time_per_sample,10.5,s,job 2801802,
+sp_loader,7,DP worker,time_per_sample,90.7,s,job 2801802,
+sp_loader,7,SP rank 0,time_per_sample,47.7,s,job 2801802,cells 0-49152
+sp_loader,7,SP rank 1,time_per_sample,39.9,s,job 2801802,
+sp_loader,7,SP rank 2,time_per_sample,45.3,s,job 2801802,
+sp_loader,7,SP rank 3,time_per_sample,40.3,s,job 2801802,
+sp_loader,5,DP worker,peak_rss,8.2,GiB,job 2801802,
+sp_loader,5,SP rank 0,peak_rss,3.4,GiB,job 2801802,
+sp_loader,5,SP rank 1,peak_rss,3.1,GiB,job 2801802,
+sp_loader,5,SP rank 2,peak_rss,3.3,GiB,job 2801802,
+sp_loader,5,SP rank 3,peak_rss,3.2,GiB,job 2801802,
+sp_loader,7,DP worker,peak_rss,77.0,GiB,job 2801802,
+sp_loader,7,SP rank 0,peak_rss,22.6,GiB,job 2801802,
+sp_loader,7,SP rank 1,peak_rss,21.7,GiB,job 2801802,
+sp_loader,7,SP rank 2,peak_rss,22.6,GiB,job 2801802,
+sp_loader,7,SP rank 3,peak_rss,21.3,GiB,job 2801802,
+sp_loader,7,DP worker,read_time,3.38,s,job 2801802,
+sp_loader,7,SP rank 0,read_time,3.12,s,job 2801802,
+sp_loader,7,DP worker,tokenize_time,14.82,s,job 2801802,
+sp_loader,7,SP rank 0,tokenize_time,15.69,s,job 2801802,
+sp_loader,7,DP worker,build_time,71.88,s,job 2801802,
+sp_loader,7,SP rank 0,build_time,28.75,s,job 2801802,
