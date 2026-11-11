@@ -1,0 +1,6 @@
+# Latent-width study, baseline: the current widths of
+# config_operan_georing_avhrr_forecasting_lowres.yml, written out so all three runs take the same
+# overlays (no change; head dims: local 2048/16 = 128, global and forecast 2048/32 = 64).
+# Use after config/dphpc_memory_baseline_100steps.yml and config/optimizations.yml.
+ae_local_dim_embed: 2048
+ae_global_dim_embed: 2048

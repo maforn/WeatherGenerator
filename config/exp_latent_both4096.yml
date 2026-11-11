@@ -1,0 +1,7 @@
+# Latent-width study, second run: double the whole model width, local and global 2048 -> 4096.
+# Head counts stay; head dims: local 128 -> 256 (16 heads; FlashAttention-3 has hdim-256
+# kernels), global and forecast 64 -> 128 (32 heads). The local-to-global adapter keeps its
+# 128-wide heads (ae_adapter_embed).
+# Use after config/dphpc_memory_baseline_100steps.yml and config/optimizations.yml.
+ae_local_dim_embed: 4096
+ae_global_dim_embed: 4096

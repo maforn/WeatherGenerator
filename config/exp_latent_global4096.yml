@@ -1,0 +1,7 @@
+# Latent-width study, main run: double the latent space (global width) 2048 -> 4096.
+# ae_global_dim_embed is the width of the latent cell queries, the global engine, the forecast
+# engine and the decoder keys/values. Head counts stay; head dims of the global and forecast
+# engines go 64 -> 128 (32 heads). The local engine stays at 2048.
+# Use after config/dphpc_memory_baseline_100steps.yml and config/optimizations.yml.
+ae_local_dim_embed: 2048
+ae_global_dim_embed: 4096
