@@ -367,8 +367,8 @@ def plot_host(runs, numbers):
     finish(fig, "latent_host_memory", "Host memory at 2048 vs 4096 latent width",
            "; ".join(parts) + ".", source_line(runs,
            "MaxRSS: sacct, srun step .0 (counts the workers' shared pages per process). "
-           "Node used: `free` inside the job (excludes page cache and /dev/shm); on GH200 it "
-           "also counts the 4 GPUs' HBM (node total 858 GiB)."))
+           "Node used: `free` inside the job (excludes page cache; includes the loader's /dev/shm "
+           "and, on GH200, the 4 GPUs' HBM: node total 858 GiB, 478 of it CPU)."))
 
 
 def plot_params(runs, numbers):

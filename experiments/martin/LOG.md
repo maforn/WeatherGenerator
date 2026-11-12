@@ -120,10 +120,20 @@ window would record start-up at L5), `exp_latent_seed2.yml` (`rng_seed` 2: data 
 
 | date | overlays | run_id | job_id | state | notes |
 | --- | --- | --- | --- | --- | --- |
-| 2026-11-12 | `1000steps`, `base2048` | `o7inoh04` | `2852891` | PENDING | 1:30 limit |
-| 2026-11-12 | `1000steps`, `global4096` | `am9aimgs` | `2852899` | PENDING | 2:00 limit |
-| 2026-11-12 | `1000steps`, `global4096`, `lrhalf` | `zg4e8rya` | `2852903` | PENDING | 2:00 limit |
-| 2026-11-12 | `torchprof`, `global4096` | — | — | waiting for a slot | 0:30 limit |
-| 2026-11-12 | `torchprof`, `base2048` | — | — | waiting for a slot | 0:30 limit; the reference for the split |
-| 2026-11-12 | `seed2`, `global4096` | — | — | waiting for a slot | 0:45 limit |
+| 2026-11-12 | `1000steps`, `base2048` | `o7inoh04` | `2852891` | COMPLETED (1:00:26, 10:23–11:23, jpbo-028-03) | 3.37 s/step; loss last 100 steps 0.239, val 0.238 (64 samples); GPU 8.22 alloc / 10.17 reserved / 12.0 smi; CPU-node used peak 366 of 478 GiB (min free 111; no file pages 264; /dev/shm 127) |
+| 2026-11-12 | `1000steps`, `global4096` | `am9aimgs` | `2852899` | COMPLETED (1:29:05, jpbo-028-15) | 4.79 s/step (1.42×); loss last 100 0.259 (**+0.020**), val 0.256 (**+0.019**); GPU 15.24 / 17.04 / 19.0; CPU-node used 428 (min free 50) |
+| 2026-11-12 | `1000steps`, `global4096`, `lrhalf` | `zg4e8rya` | `2852903` | COMPLETED (1:29:05, jpbo-061-18) | 4.84 s/step; loss last 100 0.255 (**+0.016**), val 0.258 (+0.021); GPU 15.24 / 17.04 / 19.0; CPU-node used 439 (min free 39) |
+| 2026-11-12 | `torchprof`, `global4096` | `yjd08xgt` | `2855715` | PENDING | 0:30 limit |
+| 2026-11-12 | `torchprof`, `base2048` | `f19gti52` | `2856290` | PENDING | 0:30 limit; the reference for the split |
+| 2026-11-12 | `seed2`, `global4096` | `zx3x27rw` | `2856297` | PENDING | 0:45 limit |
 | 2026-11-12 | `seed2`, `base2048` | — | — | waiting for a slot | 0:30 limit |
+
+Verdict (1000 steps, one seed): global 4096 ends **worse**, not better: +0.020 training loss over the last 100
+steps and +0.019 on validation (64 samples). The gap is largest at the peak LR (steps 250–499: +0.106 mean paired
+difference) and shrinks in the cooldown. Halving `lr_max` halves that mid-run gap (+0.047) but leaves the end
+nearly the same (+0.016 train, +0.021 val). So at equal steps and samples the wider model learns more slowly,
+and the LR alone doesn't explain it. Untested causes: the initialisation scale or other hyperparameters that
+don't transfer with width, or too few samples (4000) for a 3.3× larger model. Cost: 1.42× step time, GPU 19.0 GiB
+(< 20), CPU-node memory up to 439 of 478 GiB. Figures `latent/figures/latent_long_{loss,cost}.png` from
+`scripts/plot_latent_long.py`, numbers `latent/figures/numbers_long.json`. The CPU numbers come from the NUMA
+columns (MemTotal − MemFree of the CPU nodes); `free`'s "used" also includes /dev/shm and the GPUs' HBM.

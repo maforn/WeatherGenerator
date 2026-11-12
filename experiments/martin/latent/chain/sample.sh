@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Runs inside a training job (srun --overlap) and appends one line every 10 s to $1:
-# node memory from `free -b` (used excludes page cache and /dev/shm; shared is mostly /dev/shm),
+# node memory from `free -b` (used excludes page cache but includes /dev/shm (shared) and, on GH200,
+# the GPUs' HBM),
 # RSS of the training ranks and of their loader workers (process tree of this user's python
 # processes; RSS counts shared pages once per process), and nvidia-smi memory/utilisation per GPU.
 # On GH200 nodes `free` also counts the GPUs' HBM (it is onlined as CPU-less NUMA nodes), so the
