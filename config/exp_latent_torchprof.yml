@@ -1,0 +1,14 @@
+# Latent-width study, where the step time goes: torch profiler on rank 0 (CPU + CUDA activity,
+# one record_function range per module forward) over steps 10-13, then the job stops
+# (only_profiling). Trace: <run>/profiling_traces/*.json.gz.
+# Not `make profile`: nsys_profiling.sh records 120-240 s after launch, and at L5 training starts
+# ~180 s after the job starts (wo1ggc4k), so nsys would record mostly start-up and step 0.
+# The profiler adds CPU overhead (shapes, stacks, memory), so compare the two widths with each
+# other, not with the step times of the unprofiled runs.
+profiling:
+  pytorch_profiling: True
+  only_profiling: True
+  wait_iteration: 8
+  warmup_iteration: 2
+  active_iteration: 4
+  repeat: 1

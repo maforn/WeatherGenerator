@@ -90,8 +90,12 @@ link plots when available. Record failures and the reason for the final verdict.
 
 Same code for all rows: dev `4f11a5be` plus `config/optimizations.yml` (with `fsdp_cpu_offload`, `ema_on_cpu`), L5,
 1 node × 4 GPUs, 100 steps, seed 1, overlays from `22789398` on `martin/latentspace`. Data and figures:
-`latent/<run_id>/`, `latent/figures/` (numbers in `latent/figures/numbers.json`). All 100 steps are inside the
-LR warm-up (logged lr 4.0e-6 → 2.0e-5), so the loss columns say nothing yet about final model quality.
+`latent/<run_id>/`, `latent/figures/` (numbers in `latent/figures/numbers.json`). LR: at 100 steps the scheduler
+cuts the configured warm-up (256) and cooldown (512) to 10 and 5 steps (`lr_scheduler.py`, they don't fit), so the
+logged lr goes 4.0e-6 → peak 1.0e-4 (5e-5 × √4) at step 8, holds to step 95, then 2.0e-5 at step 99. (Corrected
+2026-11-12: I first wrote that all 100 steps were inside the warm-up.) 100 steps say nothing yet about final model
+quality. "node used" is `free` inside the job, which on GH200 also counts the 4 GPUs' HBM (858 GiB total, 478 of
+it CPU); used minus the nvidia-smi total of the same sample peaks at 360 / 413 / 433 GiB.
 
 | date | overlay | run_id | job_id | state | median s/step (11–100) | GPU GiB alloc / reserved / nvidia-smi | MaxRSS per task / node used peak / 4 ranks RSS (GiB) | params | loss last / val / mean Δ vs 2048, steps 50–99 | notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -101,6 +105,25 @@ LR warm-up (logged lr 4.0e-6 → 2.0e-5), so the loss columns say nothing yet ab
 
 Verdict: 4096 costs 1.46–1.58× step time and ~2× GPU memory, and stays just under 20 GiB on L5. At 100 steps the
 loss shows no gain: last-step and validation loss are within the 0.015 run-to-run noise, and the mean over steps
-50–99 is 0.02–0.03 higher than at 2048 (the repeat pair: −0.002). Needs runs past the warm-up, and probably a
+50–99 is 0.02–0.03 higher than at 2048 (the repeat pair: −0.002). Needs longer runs, and probably a
 lower learning rate for the wider model, before saying anything about quality.
 Node-hours: 0.58 for the three training jobs (plus three short cleanup jobs).
+
+### Follow-up runs (submitted 2026-11-12 08:30, Martin's OK for next steps 1, 2, 3 and 6)
+
+Same setup as above. Submitted by `latent/chain/queue_followup.sh` on the login node (≤ 3 training jobs queued,
+lock + budget check each). The sampler (`latent/chain/sample.sh`) now also records CPU-NUMA and HBM-NUMA memory.
+Overlays after `config/optimizations.yml`: `exp_latent_1000steps.yml` (4000 samples = 1000 steps, the configured
+256-step warm-up and 512-step cooldown, validation 64 samples), `exp_latent_lrhalf.yml` (`lr_max` 2.5e-5),
+`exp_latent_torchprof.yml` (PyTorch profiler on rank 0, steps 10–13, then stop; not nsys, whose fixed 120–240 s
+window would record start-up at L5), `exp_latent_seed2.yml` (`rng_seed` 2: data order and init).
+
+| date | overlays | run_id | job_id | state | notes |
+| --- | --- | --- | --- | --- | --- |
+| 2026-11-12 | `1000steps`, `base2048` | `o7inoh04` | `2852891` | PENDING | 1:30 limit |
+| 2026-11-12 | `1000steps`, `global4096` | `am9aimgs` | `2852899` | PENDING | 2:00 limit |
+| 2026-11-12 | `1000steps`, `global4096`, `lrhalf` | `zg4e8rya` | `2852903` | PENDING | 2:00 limit |
+| 2026-11-12 | `torchprof`, `global4096` | — | — | waiting for a slot | 0:30 limit |
+| 2026-11-12 | `torchprof`, `base2048` | — | — | waiting for a slot | 0:30 limit; the reference for the split |
+| 2026-11-12 | `seed2`, `global4096` | — | — | waiting for a slot | 0:45 limit |
+| 2026-11-12 | `seed2`, `base2048` | — | — | waiting for a slot | 0:30 limit |

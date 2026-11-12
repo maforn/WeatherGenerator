@@ -1,0 +1,5 @@
+# Latent-width study, second seed: rng_seed 2 instead of 1. The data order and the model
+# initialisation (torch.manual_seed in TrainerBase.init_seeds) both come from it.
+# 100 steps, otherwise the same as st092ps4 (2048) and wo1ggc4k (global 4096).
+data_loading:
+  rng_seed: 2

@@ -116,7 +116,8 @@
    "node_shared_peak": 134.17047119140625,
    "ranks_rss_peak": 33.9271240234375,
    "workers_rss_peak": 237.431396484375,
-   "node_total": 857.9451904296875
+   "node_total": 857.9451904296875,
+   "node_used_minus_gpu_peak": 359.73822021484375
   },
   "wo1ggc4k": {
    "slurm_maxrss_per_task": 73.44317626953125,
@@ -125,7 +126,8 @@
    "node_shared_peak": 154.41497802734375,
    "ranks_rss_peak": 89.47100830078125,
    "workers_rss_peak": 244.576171875,
-   "node_total": 857.9451904296875
+   "node_total": 857.9451904296875,
+   "node_used_minus_gpu_peak": 412.9434814453125
   },
   "xs51dbll": {
    "slurm_maxrss_per_task": 73.470703125,
@@ -134,7 +136,8 @@
    "node_shared_peak": 159.61749267578125,
    "ranks_rss_peak": 102.14154052734375,
    "workers_rss_peak": 251.6153564453125,
-   "node_total": 857.9451904296875
+   "node_total": 857.9451904296875,
+   "node_used_minus_gpu_peak": 433.0096435546875
   }
  },
  "params": {

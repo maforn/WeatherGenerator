@@ -1,0 +1,13 @@
+# Latent-width study, longer runs: 1000 steps instead of 100, with the config's own learning-rate
+# schedule. At 100 steps the scheduler shortened the warm-up to 10 steps and the cooldown to 5
+# (warm-up 256 + cooldown 512 > 80% of 100 steps); at 1000 steps it keeps them: cosine warm-up
+# over 256 steps to lr_max, then the linear cooldown to 0 over the last 512 steps.
+# Validation on 64 samples instead of 4 (16 batches over 4 GPUs).
+# Use after config/dphpc_memory_baseline_100steps.yml and config/optimizations.yml, before the
+# width overlay.
+training_config:
+  # 1 sample per GPU x 4 GPUs -> 1000 steps
+  samples_per_mini_epoch: 4000
+
+validation_config:
+  samples_per_mini_epoch: 64

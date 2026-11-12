@@ -229,12 +229,15 @@ def plot_loss(runs, numbers):
         + (f" / {mean_diff[r['run']]:+.3f}" if r["run"] in mean_diff else " / -")
         for label, r in shown
     )
-    lr = rows[0][3]["lr"]
+    lr = [x for x in rows[0][3]["lr"] if x is not None]
+    peak_step = next(i for i, x in enumerate(lr) if x >= 0.999 * max(lr))
     noise = (f"Noise reference (gray): 2048 repeat {rep['run']} (job {rep['job']}), same code, "
              f"configuration and seed as 2048. " if rep else "")
     finish(fig, "latent_loss", "Training loss at 2048 vs 4096 latent width", sub,
-           source_line(runs, f"{noise}The learning rate is still in its warm-up for all 100 "
-                       f"steps ({lr[0]:.1e} -> {lr[-1]:.1e}, logged); validation = 4 samples."))
+           source_line(runs, f"{noise}Logged learning rate: {lr[0]:.1e} at step 0, peak "
+                       f"{max(lr):.1e} from step {peak_step}, {lr[-1]:.1e} at the last step (at 100 "
+                       f"steps the scheduler shortens the warm-up to 10 steps and the cooldown to "
+                       f"5); validation = 4 samples."))
 
 
 def plot_step_time(runs, numbers):
@@ -326,7 +329,7 @@ def plot_host(runs, numbers):
                      label=f"{label}, 4 ranks RSS")
         ax1.set_xlabel("minutes since the first training step")
         ax1.set_ylabel("host memory (GiB)")
-        ax1.set_title("Node CPU memory over time (sampled every 10 s)", loc="left")
+        ax1.set_title("Node memory used, CPU + GPU HBM (`free`)", loc="left")
         ax1.set_ylim(0, max(max(r["mem"]["used_gib"]) for _, _, _, r in sampled) * 1.55)
         ax1.legend(loc="upper left", fontsize=9, ncol=2)
     else:
@@ -345,6 +348,12 @@ def plot_host(runs, numbers):
             "ranks_rss_peak": max(r["mem"]["rank_rss_gib"]) if r["mem"] else None,
             "workers_rss_peak": max(r["mem"]["worker_rss_gib"]) if r["mem"] else None,
             "node_total": r["mem"]["total_gib"] if r["mem"] else None,
+            # `free` on GH200 counts the GPUs' HBM; used minus the nvidia-smi total at the same
+            # sample, max over samples
+            "node_used_minus_gpu_peak": max(
+                u - sum(g) / 1024 for u, g in zip(r["mem"]["used_gib"], r["mem"]["gpu_used_mib"],
+                                                   strict=True) if g
+            ) if r["mem"] and r["mem"]["gpu_used_mib"] else None,
         }
         for _, _, _, r in rows
     }
@@ -358,7 +367,8 @@ def plot_host(runs, numbers):
     finish(fig, "latent_host_memory", "Host memory at 2048 vs 4096 latent width",
            "; ".join(parts) + ".", source_line(runs,
            "MaxRSS: sacct, srun step .0 (counts the workers' shared pages per process). "
-           "Node used: `free` inside the job (excludes page cache and /dev/shm)."))
+           "Node used: `free` inside the job (excludes page cache and /dev/shm); on GH200 it "
+           "also counts the 4 GPUs' HBM (node total 858 GiB)."))
 
 
 def plot_params(runs, numbers):

@@ -1,0 +1,7 @@
+# Latent-width study: half the peak learning rate, to test whether the 4096 runs need a smaller
+# step. lr_max 5e-5 -> 2.5e-5 before the sqrt(4 GPUs) scaling, i.e. 1e-4 -> 5e-5 as applied.
+# lr_start, lr_final_decay and the schedule stay.
+# Use with config/exp_latent_1000steps.yml and config/exp_latent_global4096.yml.
+training_config:
+  learning_rate_scheduling:
+    lr_max: 2.5e-5
