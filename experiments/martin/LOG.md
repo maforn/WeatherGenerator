@@ -129,6 +129,8 @@ window would record start-up at L5), `exp_latent_seed2.yml` (`rng_seed` 2: data 
 | 2026-11-12 | `seed2`, `base2048` | `oa41mero` | `2856605` | COMPLETED (8:59) | 3.30 s/step; loss last 0.490, val 0.485. Same batches as `zx3x27rw` (MB per step identical) |
 | 2026-11-12 | `1000steps`, `warmup512`, `base2048` | `izsidoyc` | `2867860` | PENDING (21:12) | Warm-up 512 / cooldown 256 instead of 256 / 512 (the scheduler needs ≥ 20 % constant phase). Pair with the row below; compare the gap with o7inoh04 / am9aimgs (+0.020) |
 | 2026-11-12 | `1000steps`, `warmup512`, `global4096` | `ss2hc25n` | `2867864` | PENDING (21:12) | Does a longer warm-up close the 4096 gap? Submitted by `chain/queue_runs.sh runs_warmup.txt` |
+| 2026-11-12 | `2000steps`, `base2048` | `s9mw12qw` | `2868998` | PENDING (22:15) | 2000 steps (8000 samples), full schedule (256 warm-up, 512 cooldown). Does the 4096 gap shrink with more data? Martin: "If you deem it helpful for project yes" |
+| 2026-11-12 | `2000steps`, `global4096` | — | — | waiting for a slot | 3:30 limit; `chain/queue_runs.sh runs_2000steps.txt` submits it when fewer than 3 training jobs are queued |
 
 Verdict (1000 steps, one seed): global 4096 ends **worse**, not better: +0.020 training loss over the last 100
 steps and +0.019 on validation (64 samples). The gap is largest at the peak LR (steps 250–499: +0.106 mean paired

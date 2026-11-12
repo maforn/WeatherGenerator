@@ -1,3 +1,4 @@
-# Latent width: 2000 steps (8000 samples), both widths. NOT submitted: needs Martin's OK (~4.6 node-hours)
+# Latent width: 2000 steps (8000 samples), both widths. Martin: "If you deem it helpful for project yes" (2026-11-12 ~22:05)
+# Time: 1000 steps took 1:00:26 (2048) and 1:29:05 (4096), so ~2:00 and ~2:55 expected.
 s2k2048=02:30:00=exp_latent_2000steps,exp_latent_base2048
-s2kg4096=03:15:00=exp_latent_2000steps,exp_latent_global4096
+s2kg4096=03:30:00=exp_latent_2000steps,exp_latent_global4096
