@@ -1,0 +1,3 @@
+# Latent width: 2000 steps (8000 samples), both widths. NOT submitted: needs Martin's OK (~4.6 node-hours)
+s2k2048=02:30:00=exp_latent_2000steps,exp_latent_base2048
+s2kg4096=03:15:00=exp_latent_2000steps,exp_latent_global4096

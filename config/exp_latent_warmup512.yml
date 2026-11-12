@@ -1,0 +1,9 @@
+# Latent-width study: does global 4096 learn more slowly because the warm-up is too short?
+# Warm-up 256 -> 512 steps. The cooldown goes 512 -> 256 so the scheduler keeps both: it falls
+# back to 10% / 5% when the constant phase is shorter than 20% of the steps
+# (1000 - 512 - 256 = 232 >= 200). Run it at both widths, since the cooldown also changes.
+# Use with config/exp_latent_1000steps.yml and a width overlay; compare with o7inoh04 / am9aimgs.
+training_config:
+  learning_rate_scheduling:
+    num_steps_warmup: 512
+    num_steps_cooldown: 256

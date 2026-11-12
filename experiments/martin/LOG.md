@@ -127,6 +127,8 @@ window would record start-up at L5), `exp_latent_seed2.yml` (`rng_seed` 2: data 
 | 2026-11-12 | `torchprof`, `base2048` | `f19gti52` | `2856290` | COMPLETED (8:38) | wall 5.00 s, GPU busy 2.45 s, AdamW 0.12 s. **Extra time at 4096 = GPU work** (+1.60 s busy vs +1.42 s unprofiled step): GEMM 0.57 → 1.36 s, NCCL 0.33 → 0.68, FlashAttention 0.88 → 1.31, elementwise 0.72 → 0.91; by part: forecast-engine forward +0.52, its recompute +0.16, backward +0.31, other (loss/optimizer/comm) +0.64. The CPU optimizer (+0.04 s) doesn't matter, so `fsdp_cpu_offload: False` would not buy speed. Figure `latent_profile.png` (`scripts/plot_latent_profile.py`, `scripts/latent_prof.py`) |
 | 2026-11-12 | `seed2`, `global4096` | `zx3x27rw` | `2856297` | COMPLETED (12:01) | 4.87 s/step, GPU 15.24 alloc; loss last 0.499, val 0.499; mean Δ vs seed-2 2048 over steps 50–99 **+0.018** (seed 1: +0.030), val +0.014 |
 | 2026-11-12 | `seed2`, `base2048` | `oa41mero` | `2856605` | COMPLETED (8:59) | 3.30 s/step; loss last 0.490, val 0.485. Same batches as `zx3x27rw` (MB per step identical) |
+| 2026-11-12 | `1000steps`, `warmup512`, `base2048` | `izsidoyc` | `2867860` | PENDING (21:12) | Warm-up 512 / cooldown 256 instead of 256 / 512 (the scheduler needs ≥ 20 % constant phase). Pair with the row below; compare the gap with o7inoh04 / am9aimgs (+0.020) |
+| 2026-11-12 | `1000steps`, `warmup512`, `global4096` | `ss2hc25n` | `2867864` | PENDING (21:12) | Does a longer warm-up close the 4096 gap? Submitted by `chain/queue_runs.sh runs_warmup.txt` |
 
 Verdict (1000 steps, one seed): global 4096 ends **worse**, not better: +0.020 training loss over the last 100
 steps and +0.019 on validation (64 samples). The gap is largest at the peak LR (steps 250–499: +0.106 mean paired

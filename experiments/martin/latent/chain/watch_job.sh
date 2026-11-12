@@ -6,7 +6,13 @@ name=$1
 D=/e/scratch/weatherai/maranonpaliz1/latent_chain
 log() { echo "$(date +%FT%T) $*" >> "$D/status.txt"; }
 read -r JOB RUN < "$D/$name.jobid"
-while st=$(squeue -h -j "$JOB" -o %T 2>/dev/null); [[ "$st" == PENDING || "$st" == CONFIGURING ]]; do sleep 30; done
+TERMINAL=" COMPLETED FAILED CANCELLED TIMEOUT NODE_FAIL OUT_OF_MEMORY PREEMPTED BOOT_FAIL DEADLINE "
+state() {  # squeue state; if squeue returns nothing (it can for a moment), the latest sacct state
+  local s; s=$(squeue -h -j "$JOB" -o %T 2>/dev/null)
+  [[ -n "$s" ]] || s=$(sacct -X -n -P -j "$JOB" -o State 2>/dev/null | tail -1 | cut -d' ' -f1)
+  echo "$s"
+}
+while st=$(state); [[ "$TERMINAL" != *" $st "* && "$st" != RUNNING ]]; do sleep 30; done
 if [[ "$st" == RUNNING ]]; then
   csv=$D/$name.$JOB.mem.csv
   srun --jobid="$JOB" --overlap -N1 -n1 --gpus-per-node=4 bash "$D/sample.sh" "$csv" \
@@ -19,5 +25,5 @@ if [[ "$st" == RUNNING ]]; then
   fi
   log "$name running (job $JOB, node $(squeue -h -j "$JOB" -o %N)), sampler -> $csv"
 fi
-while [[ -n "$(squeue -h -j "$JOB" 2>/dev/null)" ]]; do sleep 60; done
-log "$name finished: run $RUN job $JOB $(sacct -X -n -P -j "$JOB" -o State,Elapsed | head -1)"
+while [[ "$TERMINAL" != *" $(state) "* ]]; do sleep 60; done
+log "$name finished: run $RUN job $JOB $(sacct -X -n -P -j "$JOB" -o State,Elapsed | tail -1)"

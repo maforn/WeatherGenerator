@@ -1,0 +1,12 @@
+# Latent-width study, more samples: 2000 steps (8000 samples) instead of 1000, with the config's
+# own schedule (cosine warm-up over 256 steps, linear cooldown to 0 over the last 512).
+# Tests whether global 4096 catches up with 2048 when it sees more data.
+# Validation on 64 samples, as in exp_latent_1000steps.yml.
+# Use after config/dphpc_memory_baseline_100steps.yml and config/optimizations.yml, before the
+# width overlay (not together with exp_latent_1000steps.yml).
+training_config:
+  # 1 sample per GPU x 4 GPUs -> 2000 steps
+  samples_per_mini_epoch: 8000
+
+validation_config:
+  samples_per_mini_epoch: 64
