@@ -25,6 +25,8 @@ ROOT = Path(__file__).resolve().parents[1] / "experiments" / "martin" / "latent"
 OUT = ROOT / "figures"
 GIB = 2**30
 SKIP = 10  # steps left out of the step-time statistics (start-up, first batches)
+HALF = 50  # second half of the run, over which the mean loss difference is taken
+TARGET_GIB = 20  # Yuejiang: keep the GPU peak under 20 GiB (SUPERVISOR_FEEDBACK.md)
 
 # fixed order and colour per configuration (reference categorical slots 1-3)
 CONFIGS = [
@@ -33,6 +35,9 @@ CONFIGS = [
     ("both4096", "local + global 4096", "#1baf7a"),
 ]
 GRAY = "#9aa3ae"
+# the DEV check run: same code, configuration and seed as base2048, so the gap between the two
+# is run-to-run noise (non-deterministic GPU kernels); drawn only as a reference in the loss plot
+REPEAT = ("dev", "2048 repeat", GRAY)
 INK, MUTED, GRID = "#1f2937", "#6b7280", "#e5e7eb"
 
 plt.rcParams.update(
@@ -172,7 +177,7 @@ def label_bars(ax, bars, fmt):
 def bar_axis(ax, rows, values, fmt, ylabel):
     xs = range(len(rows))
     bars = ax.bar(xs, values, width=0.6, color=[c for _, _, c, _ in rows])
-    ax.set_xticks(list(xs), [label for _, label, _, _ in rows])
+    ax.set_xticks(list(xs), [textwrap.fill(label, 11) for _, label, _, _ in rows])
     ax.set_ylim(0, max(values) * 1.18)
     ax.set_ylabel(ylabel)
     label_bars(ax, bars, fmt)
@@ -184,36 +189,52 @@ def plot_loss(runs, numbers):
     for _, label, color, r in rows:
         ax1.plot(range(len(r["loss"])), r["loss"], color=color, lw=2, label=label)
     ax1.set_xlabel("training step")
-    ax1.set_ylabel("training loss (mean MSE, all streams)")
+    ax1.set_ylabel("training loss (MSE)")
     ax1.set_title("Loss per step (same batches in every run)", loc="left")
     ax1.legend(loc="upper right", fontsize=11)
     base = runs.get("base2048")
+    rep = runs.get(REPEAT[0])
+    mean_diff = {}
     if base:
         ax2.axhline(0, color=MUTED, lw=1)
-        for name, label, color, r in rows:
-            if name == "base2048":
-                continue
+        others = [(REPEAT[1], GRAY, rep)] if rep else []
+        others += [(label, color, r) for name, label, color, r in rows if name != "base2048"]
+        lo = hi = 0.0
+        for label, color, r in others:
             n = min(len(r["loss"]), len(base["loss"]))
             diff = [r["loss"][i] - base["loss"][i] for i in range(n)]
-            ax2.plot(range(n), diff, color=color, lw=2, label=f"{label} - 2048")
+            ax2.plot(range(SKIP, n), diff[SKIP:], color=color, lw=1.4 if r is rep else 1.8,
+                     label=f"{label} - 2048" + (" (noise)" if r is rep else ""))
+            lo, hi = min(lo, *diff[SKIP:]), max(hi, *diff[SKIP:])
+            mean_diff[r["run"]] = statistics.mean(diff[HALF:])
+        ax2.set_ylim(lo - 0.05 * (hi - lo), hi + 0.75 * (hi - lo))
         ax2.set_xlabel("training step")
         ax2.set_ylabel("loss difference to 2048")
-        ax2.set_title("Paired difference per step", loc="left")
-        ax2.legend(loc="lower left", fontsize=11)
+        ax2.set_title(f"Paired difference, steps {SKIP}-99", loc="left")
+        ax2.legend(loc="upper right", fontsize=10)
     last = {r["run"]: {"first": r["loss"][0], "last": r["loss"][-1],
                        "mean_last10": statistics.mean(r["loss"][-10:]), "val": r["val_loss"]}
             for _, _, _, r in rows}
+    if rep:
+        last[rep["run"]] = {"first": rep["loss"][0], "last": rep["loss"][-1],
+                            "mean_last10": statistics.mean(rep["loss"][-10:]),
+                            "val": rep["val_loss"], "note": "2048 repeat (DEV check run)"}
+    for run, d in mean_diff.items():
+        last[run][f"mean_diff_to_2048_steps_{HALF}_99"] = d
     numbers["loss"] = last
-    sub = "; ".join(
-        f"{label}: {r['loss'][0]:.3f} -> {r['loss'][-1]:.3f}, mean of last 10 steps "
-        f"{statistics.mean(r['loss'][-10:]):.3f}"
-        + (f", validation {r['val_loss']:.3f}" if r["val_loss"] is not None else "")
-        for _, label, _, r in rows
+    shown = [(label, r) for _, label, _, r in rows] + ([(REPEAT[1], rep)] if rep else [])
+    sub = f"Last step / validation / mean difference to 2048 over steps {HALF}-99:  " + ";  ".join(
+        f"{label} {r['loss'][-1]:.3f} / "
+        + (f"{r['val_loss']:.3f}" if r["val_loss"] is not None else "-")
+        + (f" / {mean_diff[r['run']]:+.3f}" if r["run"] in mean_diff else " / -")
+        for label, r in shown
     )
     lr = rows[0][3]["lr"]
+    noise = (f"Noise reference (gray): 2048 repeat {rep['run']} (job {rep['job']}), same code, "
+             f"configuration and seed as 2048. " if rep else "")
     finish(fig, "latent_loss", "Training loss at 2048 vs 4096 latent width", sub,
-           source_line(runs, f"The learning rate is still in its warm-up for all 100 steps "
-                       f"({lr[0]:.1e} -> {lr[-1]:.1e}, logged); validation = 4 samples."))
+           source_line(runs, f"{noise}The learning rate is still in its warm-up for all 100 "
+                       f"steps ({lr[0]:.1e} -> {lr[-1]:.1e}, logged); validation = 4 samples."))
 
 
 def plot_step_time(runs, numbers):
@@ -224,7 +245,8 @@ def plot_step_time(runs, numbers):
     ax1.set_xlabel("training step")
     ax1.set_ylabel("step time (s)")
     ax1.set_title("Time per step", loc="left")
-    ax1.legend(loc="upper right", fontsize=11)
+    ax1.set_ylim(0, max(max(r["step_s"]) for _, _, _, r in rows) * 1.3)
+    ax1.legend(loc="upper left", fontsize=10.5, ncol=3)
     meds = [statistics.median(r["step_s"][SKIP:]) for _, _, _, r in rows]
     bar_axis(ax2, rows, meds, "{:.2f} s", "median step time (s)")
     ax2.set_title(f"Median, steps {SKIP + 1}-100", loc="left")
@@ -255,15 +277,40 @@ def plot_gpu(runs, numbers):
     ax1.set_ylim(bottom=0)
     peaks = [max(v for v in r["gpu_alloc"] if v is not None) for _, _, _, r in rows]
     resv = [max(v for v in r["gpu_resv"] if v is not None) for _, _, _, r in rows]
-    bar_axis(ax2, rows, peaks, "{:.1f}", "GPU peak allocated over the run (GiB)")
+    # nvidia-smi memory.used of the busiest GPU, from the in-job sampler: what the device
+    # actually holds, i.e. PyTorch's reserved pool plus the CUDA context and NCCL buffers
+    smi = [max(max(g) for g in r["mem"]["gpu_used_mib"]) / 1024
+           if r["mem"] and r["mem"]["gpu_used_mib"] else 0.0 for _, _, _, r in rows]
+    width = 0.26
+    kinds = [("allocated (PyTorch)", peaks, 1.0), ("reserved (PyTorch)", resv, 0.6),
+             ("used (nvidia-smi)", smi, 0.32)]
+    for k, (kind, vals, alpha) in enumerate(kinds):
+        xs = [i + (k - 1) * width for i in range(len(rows))]
+        bars = ax2.bar(xs, vals, width=width * 0.92, color=[c for _, _, c, _ in rows],
+                       alpha=alpha, edgecolor="none")
+        ax2.bar([0], [0], color=MUTED, alpha=alpha, label=kind)  # neutral legend swatch
+        for b, v in zip(bars, vals, strict=True):
+            if v:
+                ax2.text(b.get_x() + b.get_width() / 2, v + 0.25, f"{v:.1f}", ha="center",
+                         va="bottom", fontsize=9.5, color=INK)
+    ax2.axhline(TARGET_GIB, color=INK, lw=1.2, ls="--")
+    ax2.text(-0.45, TARGET_GIB + 0.4, f"target: peak < {TARGET_GIB} GiB", fontsize=10, color=INK)
+    ax2.set_xticks(range(len(rows)), [textwrap.fill(label, 11) for _, label, _, _ in rows])
+    ax2.set_ylim(0, TARGET_GIB * 1.65)
+    ax2.set_ylabel("GPU memory, run peak (GiB)")
     ax2.set_title("Run peak (of 96 GiB per GPU)", loc="left")
-    numbers["gpu_gib"] = {r["run"]: {"peak_allocated": p, "peak_reserved": q}
-                          for (_, _, _, r), p, q in zip(rows, peaks, resv, strict=True)}
-    sub = "; ".join(f"{label}: {p:.1f} GiB allocated, {q:.1f} GiB reserved"
-                    for (_, label, _, _), p, q in zip(rows, peaks, resv, strict=True))
+    ax2.legend(loc="upper left", fontsize=9.5, ncol=1)
+    numbers["gpu_gib"] = {r["run"]: {"peak_allocated": p, "peak_reserved": q,
+                                     "peak_nvidia_smi_used": m or None}
+                          for (_, _, _, r), p, q, m in zip(rows, peaks, resv, smi, strict=True)}
+    sub = "; ".join(f"{label}: {p:.1f} GiB allocated, {q:.1f} GiB reserved, {m:.1f} GiB used "
+                    f"(nvidia-smi)" for (_, label, _, _), p, q, m in
+                    zip(rows, peaks, resv, smi, strict=True))
     finish(fig, "latent_gpu_memory", "GPU memory at 2048 vs 4096 latent width", sub + ".",
            source_line(runs, "PyTorch max_memory_allocated / max_memory_reserved per step "
-                       "(train_global = max over ranks)."))
+                       "(train_global = max over ranks); nvidia-smi memory.used of the busiest "
+                       f"GPU, sampled every 10 s in the job. Target from Yuejiang: keep the "
+                       f"peak under {TARGET_GIB} GiB."))
 
 
 def plot_host(runs, numbers):
@@ -274,21 +321,21 @@ def plot_host(runs, numbers):
         for _, label, color, r in sampled:
             m = r["mem"]
             t = [(x - r["t0"]) / 60 for x in m["t"]]
-            ax1.plot(t, m["used_gib"], color=color, lw=2, label=f"{label}: node used")
+            ax1.plot(t, m["used_gib"], color=color, lw=2, label=f"{label}, node used")
             ax1.plot(t, m["rank_rss_gib"], color=color, lw=1.4, ls="--",
-                     label=f"{label}: 4 training ranks (RSS)")
+                     label=f"{label}, 4 ranks RSS")
         ax1.set_xlabel("minutes since the first training step")
         ax1.set_ylabel("host memory (GiB)")
         ax1.set_title("Node CPU memory over time (sampled every 10 s)", loc="left")
-        ax1.legend(loc="lower right", fontsize=9.5, ncol=1)
-        ax1.set_ylim(bottom=0)
+        ax1.set_ylim(0, max(max(r["mem"]["used_gib"]) for _, _, _, r in sampled) * 1.55)
+        ax1.legend(loc="upper left", fontsize=9, ncol=2)
     else:
         ax1.text(0.5, 0.5, "no in-job memory samples for these runs", ha="center",
                  transform=ax1.transAxes, color=MUTED)
         ax1.set_axis_off()
     maxrss = [r["sacct"].get("maxrss_gib", 0.0) for _, _, _, r in rows]
-    bar_axis(ax2, rows, maxrss, "{:.1f}", "Slurm MaxRSS per training task (GiB)")
-    ax2.set_title("Peak RSS of one rank + its workers", loc="left")
+    bar_axis(ax2, rows, maxrss, "{:.1f}", "MaxRSS per training task (GiB)")
+    ax2.set_title("Slurm MaxRSS, one rank", loc="left")
     numbers["host_gib"] = {
         r["run"]: {
             "slurm_maxrss_per_task": r["sacct"].get("maxrss_gib"),
@@ -365,7 +412,7 @@ def check_same_batches(runs, numbers):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    runs = {k: v for k, v in load_runs().items() if k in {n for n, _, _ in CONFIGS}}
+    runs = {k: v for k, v in load_runs().items() if k in {n for n, _, _ in [*CONFIGS, REPEAT]}}
     numbers = {"runs": {k: {"run": v["run"], "job": v["job"], **v["sacct"]} for k, v in runs.items()}}
     check_same_batches(runs, numbers)
     plot_loss(runs, numbers)

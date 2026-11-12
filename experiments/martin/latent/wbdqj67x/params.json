@@ -1,0 +1,15 @@
+{
+ "total": 922274487,
+ "by_module": {
+  "embed_target_coords": 115712,
+  "encoder": 360042191,
+  "forecast_engine": 537001984,
+  "latent_pre_norm": 4096,
+  "pred_heads": 45144,
+  "target_token_engines": 25065360
+ },
+ "dtypes": {
+  "torch.float32": 922274487
+ },
+ "n_tensors": 1178
+}

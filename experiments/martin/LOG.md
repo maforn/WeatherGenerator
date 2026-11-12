@@ -85,3 +85,22 @@ Implement default-off profiling, measure a baseline, then test isolated flags.
 Check level-6 feasibility before committing to full comparisons. Append a row
 immediately after each submission with its run/job IDs, then update results and
 link plots when available. Record failures and the reason for the final verdict.
+
+## Latent width, 2048 → 4096 (2026-11-12)
+
+Same code for all rows: dev `4f11a5be` plus `config/optimizations.yml` (with `fsdp_cpu_offload`, `ema_on_cpu`), L5,
+1 node × 4 GPUs, 100 steps, seed 1, overlays from `22789398` on `martin/latentspace`. Data and figures:
+`latent/<run_id>/`, `latent/figures/` (numbers in `latent/figures/numbers.json`). All 100 steps are inside the
+LR warm-up (logged lr 4.0e-6 → 2.0e-5), so the loss columns say nothing yet about final model quality.
+
+| date | overlay | run_id | job_id | state | median s/step (11–100) | GPU GiB alloc / reserved / nvidia-smi | MaxRSS per task / node used peak / 4 ranks RSS (GiB) | params | loss last / val / mean Δ vs 2048, steps 50–99 | notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-12 | `exp_latent_base2048.yml` | `st092ps4` | `2846737` | COMPLETED (9:34) | 3.30 | 8.21 / 10.13 / 11.7 | 62.0 / 404 / 34 | 922 M | 0.501 / 0.502 / — | Reproduces DEV `wbdqj67x` (same config): 3.30 vs 3.35 s, GPU identical, MaxRSS 62.0 vs 60.3. **Noise:** last step 0.501 vs 0.486, val 0.502 vs 0.488, mean Δ over steps 50–99 −0.002. |
+| 2026-11-12 | `exp_latent_global4096.yml` | `wo1ggc4k` | `2846892` | COMPLETED (12:10) | **4.81 (1.46×)** | 15.24 / 16.94 / **18.9** | 73.4 / 487 / 89 | **3,011 M (3.3×)** | 0.499 / 0.505 / **+0.030** | Forecast engine 537 → 2,148 M, encoder 360 → 830 M. Step-2 loss spike 1.89 (2048: 0.89). Same MB per step as 2048 (loader payload unchanged). |
+| 2026-11-12 | `exp_latent_both4096.yml` | `xs51dbll` | `2846897` | COMPLETED (12:50) | **5.21 (1.58×)** | 15.66 / 17.43 / **19.5** | 73.5 / 509 / 102 | **3,439 M (3.7×)** | 0.499 / 0.500 / **+0.020** | Local engine at head dim 256 runs on FA3 (no errors). Encoder 1,257 M. Step-2 spike 2.17. Same MB per step. nvidia-smi peak 0.5 GiB under the 20 GiB target. |
+
+Verdict: 4096 costs 1.46–1.58× step time and ~2× GPU memory, and stays just under 20 GiB on L5. At 100 steps the
+loss shows no gain: last-step and validation loss are within the 0.015 run-to-run noise, and the mean over steps
+50–99 is 0.02–0.03 higher than at 2048 (the repeat pair: −0.002). Needs runs past the warm-up, and probably a
+lower learning rate for the wider model, before saying anything about quality.
+Node-hours: 0.58 for the three training jobs (plus three short cleanup jobs).
