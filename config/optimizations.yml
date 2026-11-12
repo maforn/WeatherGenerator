@@ -99,3 +99,10 @@ ema_on_cpu: True
 # requires: FSDP (distributed.data_parallel.with_fsdp, several GPUs) and
 #   mixed_precision_dtype bf16 (the loss scaler needed for fp16 is skipped)
 fsdp_cpu_offload: True
+
+# EXPERIMENT (alejandro/unpadded-exp; Andres's commit 2e530d53 on andres/efficiency, rebased on
+# dphpc/dev): the DataLoader workers send only the real points of the source tokens, with the
+# number of real points per token and the row each token is padded with; the embedding pads
+# them on the GPU, chunk by chunk
+# requires: embed_checkpoint_per_chunk for the chunk-by-chunk padding
+source_tokens_unpadded: False

@@ -50,6 +50,7 @@ class TokenizerMasking(Tokenizer):
         target_requested_fields_only: bool = False,
         masked_counts_bincount: bool = False,
         target_coords_flat: bool = False,
+        source_unpadded: bool = False,
     ):
         super().__init__(healpix_level)
         self.vectorize_hpy_splits = vectorize_hpy_splits
@@ -57,6 +58,7 @@ class TokenizerMasking(Tokenizer):
         self.masked_counts_bincount = masked_counts_bincount
         self.target_coords_flat = target_coords_flat
         self.masker = masker
+        self.source_unpadded = source_unpadded
         self.rng = None
         self.token_size = None
         self.source_cell_start = source_cell_start
@@ -181,6 +183,7 @@ class TokenizerMasking(Tokenizer):
             self.hpy_verts_rots_source[-1][self.source_cell_start : self.source_cell_end],
             encode_times_source,
             counts_bincount=self.masked_counts_bincount,
+            unpadded=self.source_unpadded,
         )
 
         return (source_tokens_cells, source_tokens_lens)

@@ -6,6 +6,7 @@ from torch import Tensor
 
 from weathergen.common.io import IOReaderData
 from weathergen.datasets.healpix_domain import build_local_healpix_cell_splits
+from weathergen.datasets.packed_tokens import PackedTokens
 from weathergen.datasets.utils import (
     locs_to_cell_coords_ctrs,
     locs_to_ctr_coords,
@@ -320,6 +321,7 @@ def tokenize_apply_mask_source(
     hpy_verts_rots,
     enc_time,
     counts_bincount=False,
+    unpadded=False,
 ):
     """
     Apply masking to the data.
@@ -363,17 +365,6 @@ def tokenize_apply_mask_source(
     coords_padded = torch.cat([zeros_like(rdata.coords[0]).unsqueeze(0), rdata.coords])
     data_padded = torch.cat([zeros_like(rdata.data[0]).unsqueeze(0), rdata.data])
 
-    # apply mask
-    datetimes = datetimes_enc_padded[idxs_data]
-    geoinfos = geoinfos_padded[idxs_data]
-    coords = coords_padded[idxs_data]
-    data = data_padded[idxs_data]
-
-    if mask_channels is not None:
-        assert False, "to be implemented"
-        # data = data_padded[ : channel_mask]
-
-    # local coords
     if counts_bincount:
         tokens_per_cell, masked_points_per_cell = masked_counts_per_cell(
             idxs_cells_lens, idxs_lens, mask_tokens
@@ -388,11 +379,50 @@ def tokenize_apply_mask_source(
                 for tt, mm in zip(idxs_cells, mask_tokens_per_cell, strict=False)
             ]
         ).to(dtype=torch.int32)
+    if unpadded:
+        # only the real points (index > 0), their number per token and per cell
+        real = idxs_data > 0
+        point_lens = real.view(len(idxs_data_lens), -1).sum(1)
+        cell_of_token = torch.repeat_interleave(torch.arange(len(tokens_per_cell)), tokens_per_cell)
+        masked_points_per_cell = torch.zeros_like(masked_points_per_cell).index_add_(
+            0, cell_of_token, point_lens.to(masked_points_per_cell.dtype)
+        )
+        idxs_data = idxs_data[real]
+
+    # apply mask
+    datetimes = datetimes_enc_padded[idxs_data]
+    geoinfos = geoinfos_padded[idxs_data]
+    coords = coords_padded[idxs_data]
+    data = data_padded[idxs_data]
+
+    if mask_channels is not None:
+        assert False, "to be implemented"
+        # data = data_padded[ : channel_mask]
+
+    # local coords
     coords_local = get_source_coords_local(coords, hpy_verts_rots, masked_points_per_cell)
 
     # create tensor that contains all data
     stream_ids = torch.full([len(datetimes), 1], stream_id, dtype=torch.float32)
     tokens = torch.cat((stream_ids, datetimes, coords_local, geoinfos, data), 1)
+
+    if unpadded:
+        # the padding row of each token: index 0, with the local coordinates of its cell
+        num_tokens = len(point_lens)
+        rots = torch.repeat_interleave(hpy_verts_rots, tokens_per_cell, dim=0)
+        posr3 = s2tor3(*theta_phi_to_standard_coords(coords_padded[:1].expand(num_tokens, -1)))
+        pad_local = r3tos2(torch.bmm(rots, posr3.unsqueeze(-1)).squeeze(-1)).to(torch.float32)
+        pad = torch.cat(
+            (
+                torch.full([num_tokens, 1], stream_id, dtype=torch.float32),
+                datetimes_enc_padded[:1].expand(num_tokens, -1),
+                pad_local,
+                geoinfos_padded[:1].expand(num_tokens, -1),
+                data_padded[:1].expand(num_tokens, -1),
+            ),
+            1,
+        )
+        return PackedTokens(tokens, point_lens, pad, len(real) // num_tokens), tokens_per_cell
 
     # split up tensor into tokens
     # TODO: idxs_data_lens is currently only defined when mask_tokens is not None

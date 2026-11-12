@@ -17,6 +17,7 @@ from torch.distributed.fsdp import FSDPModule
 from torch.utils.checkpoint import checkpoint
 
 from weathergen.common.config import Config
+from weathergen.datasets.packed_tokens import PackedTokens
 from weathergen.model.attention import (
     MultiCrossAttentionHeadVarlen,
     MultiCrossAttentionHeadVarlenSlicedQ,
@@ -132,16 +133,12 @@ class EmbeddingEngine(torch.nn.Module):
             if all(s is None for s in sdata):
                 continue
 
-            # with source_tokens_on_cpu the tokens are copied to the GPU here, also in the
-            # recompute of the encoder's checkpoint around this engine, so no copy is kept
-            sdata = torch.cat([s.to(tokens_all.device, non_blocking=True) for s in sdata])
-            sdata = sdata.to(tokens_all.dtype)
             # skip empty stream
-            if sdata.numel() == 0:
+            if sum(s.numel() for s in sdata) == 0:
                 continue
 
             # embedding from physical space to per patch latent representation
-            x_embeds += [self.embeds[stream_name](sdata).flatten(0, 1)]
+            x_embeds += [self._embed_stream(stream_name, sdata, tokens_all.device)]
 
         # switch from stream to cell-based ordering and apply per cell positional encoding
 
@@ -175,6 +172,17 @@ class EmbeddingEngine(torch.nn.Module):
         tokens_all = tokens_all + pe_embed[pe_idxs]
 
         return tokens_all
+
+    def _embed_stream(self, stream_name, sdata, device):
+        # collected source tokens of one stream -> per patch latent tokens; with
+        # source_tokens_on_cpu they are copied to the GPU here, also in the recompute
+        packed = [s for s in sdata if isinstance(s, PackedTokens) and s.numel() > 0]
+        if packed:
+            # source_tokens_unpadded: the embedding pads them, chunk by chunk
+            sdata = PackedTokens.cat(packed, device).to(dtype=self.dtype)
+        else:
+            sdata = torch.cat([s.to(device, non_blocking=True) for s in sdata]).to(self.dtype)
+        return self.embeds[stream_name](sdata).flatten(0, 1)
 
     def get_pe_idxs_vectorized(self, batch):
         """
