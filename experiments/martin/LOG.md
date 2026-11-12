@@ -123,10 +123,10 @@ window would record start-up at L5), `exp_latent_seed2.yml` (`rng_seed` 2: data 
 | 2026-11-12 | `1000steps`, `base2048` | `o7inoh04` | `2852891` | COMPLETED (1:00:26, 10:23–11:23, jpbo-028-03) | 3.37 s/step; loss last 100 steps 0.239, val 0.238 (64 samples); GPU 8.22 alloc / 10.17 reserved / 12.0 smi; CPU-node used peak 366 of 478 GiB (min free 111; no file pages 264; /dev/shm 127) |
 | 2026-11-12 | `1000steps`, `global4096` | `am9aimgs` | `2852899` | COMPLETED (1:29:05, jpbo-028-15) | 4.79 s/step (1.42×); loss last 100 0.259 (**+0.020**), val 0.256 (**+0.019**); GPU 15.24 / 17.04 / 19.0; CPU-node used 428 (min free 50) |
 | 2026-11-12 | `1000steps`, `global4096`, `lrhalf` | `zg4e8rya` | `2852903` | COMPLETED (1:29:05, jpbo-061-18) | 4.84 s/step; loss last 100 0.255 (**+0.016**), val 0.258 (+0.021); GPU 15.24 / 17.04 / 19.0; CPU-node used 439 (min free 39) |
-| 2026-11-12 | `torchprof`, `global4096` | `yjd08xgt` | `2855715` | PENDING | 0:30 limit |
-| 2026-11-12 | `torchprof`, `base2048` | `f19gti52` | `2856290` | PENDING | 0:30 limit; the reference for the split |
-| 2026-11-12 | `seed2`, `global4096` | `zx3x27rw` | `2856297` | PENDING | 0:45 limit |
-| 2026-11-12 | `seed2`, `base2048` | — | — | waiting for a slot | 0:30 limit |
+| 2026-11-12 | `torchprof`, `global4096` | `yjd08xgt` | `2855715` | COMPLETED (9:06) | Profiled steps 10–13 (rank 0): wall 6.46 s, GPU busy 4.05 s, CPU AdamW step 0.16 s. Trace `shared_work/logs/yjd08xgt/profiling_traces/` (194 MB), summary `latent/profile/yjd08xgt.json` |
+| 2026-11-12 | `torchprof`, `base2048` | `f19gti52` | `2856290` | COMPLETED (8:38) | wall 5.00 s, GPU busy 2.45 s, AdamW 0.12 s. **Extra time at 4096 = GPU work** (+1.60 s busy vs +1.42 s unprofiled step): GEMM 0.57 → 1.36 s, NCCL 0.33 → 0.68, FlashAttention 0.88 → 1.31, elementwise 0.72 → 0.91; by part: forecast-engine forward +0.52, its recompute +0.16, backward +0.31, other (loss/optimizer/comm) +0.64. The CPU optimizer (+0.04 s) doesn't matter, so `fsdp_cpu_offload: False` would not buy speed. Figure `latent_profile.png` (`scripts/plot_latent_profile.py`, `scripts/latent_prof.py`) |
+| 2026-11-12 | `seed2`, `global4096` | `zx3x27rw` | `2856297` | COMPLETED (12:01) | 4.87 s/step, GPU 15.24 alloc; loss last 0.499, val 0.499; mean Δ vs seed-2 2048 over steps 50–99 **+0.018** (seed 1: +0.030), val +0.014 |
+| 2026-11-12 | `seed2`, `base2048` | `oa41mero` | `2856605` | COMPLETED (8:59) | 3.30 s/step; loss last 0.490, val 0.485. Same batches as `zx3x27rw` (MB per step identical) |
 
 Verdict (1000 steps, one seed): global 4096 ends **worse**, not better: +0.020 training loss over the last 100
 steps and +0.019 on validation (64 samples). The gap is largest at the peak LR (steps 250–499: +0.106 mean paired
@@ -137,3 +137,8 @@ don't transfer with width, or too few samples (4000) for a 3.3× larger model. C
 (< 20), CPU-node memory up to 439 of 478 GiB. Figures `latent/figures/latent_long_{loss,cost}.png` from
 `scripts/plot_latent_long.py`, numbers `latent/figures/numbers_long.json`. The CPU numbers come from the NUMA
 columns (MemTotal − MemFree of the CPU nodes); `free`'s "used" also includes /dev/shm and the GPUs' HBM.
+
+Across pairs (figure `latent_seeds.png`): global 4096 − 2048 training-loss mean difference +0.030 (seed 1) and
++0.018 (seed 2) over steps 50–99, +0.020 over the last 100 of 1000 steps, against −0.002 for the identical 2048
+pair. Validation: +0.003 / +0.014 at 100 steps (4 samples; the identical pair differs by −0.014, so inside the
+noise) and +0.019 at 1000 steps (64 samples). All seven follow-up runs: ~5.2 node-hours.

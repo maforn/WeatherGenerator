@@ -95,5 +95,55 @@
    "shm_peak": 153.973388671875,
    "smi_peak": 19.0458984375
   }
+ },
+ "seeds": {
+  "2048 repeat (noise)": {
+   "runs": [
+    "st092ps4",
+    "wbdqj67x"
+   ],
+   "train_window": [
+    50,
+    100
+   ],
+   "train_diff": -0.0017765265703201293,
+   "val_diff": -0.01434856653213501
+  },
+  "seed 1 100 steps": {
+   "runs": [
+    "st092ps4",
+    "wo1ggc4k"
+   ],
+   "train_window": [
+    50,
+    100
+   ],
+   "train_diff": 0.030464138388633728,
+   "val_diff": 0.0033992528915405273
+  },
+  "seed 2 100 steps": {
+   "runs": [
+    "oa41mero",
+    "zx3x27rw"
+   ],
+   "train_window": [
+    50,
+    100
+   ],
+   "train_diff": 0.01762016534805298,
+   "val_diff": 0.013583570718765259
+  },
+  "seed 1 1000 steps": {
+   "runs": [
+    "o7inoh04",
+    "am9aimgs"
+   ],
+   "train_window": [
+    900,
+    1000
+   ],
+   "train_diff": 0.019844927340745926,
+   "val_diff": 0.018739179708063602
+  }
  }
 }

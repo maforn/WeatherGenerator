@@ -202,6 +202,49 @@ def plot_cost(rows, numbers):
                         "used here."), wspace=0.22)
 
 
+def plot_seeds(runs, numbers):
+    """Paired 2048 vs global-4096 differences across the runs: noise, two seeds, 1000 steps."""
+    pairs = [  # (label, 2048 run name, other run name, train window, colour)
+        ("2048 repeat\n(noise)", "base2048", "dev", (50, 100), "#9aa3ae"),
+        ("seed 1\n100 steps", "base2048", "global4096", (50, 100), ORANGE),
+        ("seed 2\n100 steps", "seed2b2048", "seed2g4096", (50, 100), ORANGE),
+        ("seed 1\n1000 steps", "long2048", "longg4096", (900, 1000), ORANGE),
+    ]
+    rows = [p for p in pairs if p[1] in runs and p[2] in runs]
+    train = [statistics.fmean(b - a for a, b in zip(runs[x]["loss"][w[0]:w[1]],
+                                                    runs[y]["loss"][w[0]:w[1]], strict=True))
+             for _, x, y, w, _ in rows]
+    val = [runs[y]["val_loss"] - runs[x]["val_loss"] for _, x, y, _, _ in rows]
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 5.6))
+    for ax, vals, title in [(ax1, train, "Training loss: mean paired difference"),
+                            (ax2, val, "Validation loss: difference")]:
+        xs = range(len(rows))
+        b = ax.bar(xs, vals, width=0.6, color=[c for *_, c in rows])
+        ax.axhline(0, color=MUTED, lw=1)
+        ax.set_xticks(list(xs), [label for label, *_ in rows], fontsize=12)
+        lo, hi = min(vals + [0]), max(vals)
+        ax.set_ylim(lo - 0.25 * (hi - lo), hi + 0.25 * (hi - lo))
+        for bar, v in zip(b, vals, strict=True):
+            ax.text(bar.get_x() + bar.get_width() / 2, v + (0.01 if v >= 0 else -0.01) *
+                    (hi - lo) * 3, f"{v:+.3f}", ha="center", va="bottom" if v >= 0 else "top",
+                    fontsize=12, color=INK)
+        ax.set_title(title, loc="left")
+        ax.set_ylabel("other run - 2048")
+    numbers["seeds"] = {label.replace("\n", " "): {"runs": [runs[x]["run"], runs[y]["run"]],
+                                                    "train_window": list(w), "train_diff": t,
+                                                    "val_diff": v}
+                        for (label, x, y, w, _), t, v in zip(rows, train, val, strict=True)}
+    ids = "  ".join(f"{label.split(chr(10))[0]}: {runs[x]['run']} vs {runs[y]['run']}"
+                    for label, x, y, *_ in rows)
+    finish(fig, "latent_seeds", "Global 4096 vs 2048: the same direction in every pair",
+           "Gray: two identical 2048 runs, the run-to-run noise. Orange: global 4096 minus 2048 on "
+           "the same batches, for two seeds at 100 steps and for the 1000-step run. Training "
+           "window: steps 50-99 (100 steps) or the last 100 steps (1000 steps).",
+           f"Runs  {ids}\nL5, 1 node x 4 GPUs, dev 4f11a5be + config/optimizations.yml. Validation: "
+           "4 samples (100 steps) or 64 samples (1000 steps). seed 2 = rng_seed 2 (data order and "
+           "initialisation).", wspace=0.3)
+
+
 def main():
     runs = load_runs()
     rows = [(n, label, c, ls, h, runs[n]) for n, label, c, ls, h in LONG if n in runs]
@@ -209,6 +252,7 @@ def main():
                         for *_, r in rows}}
     plot_loss(rows, numbers)
     plot_cost(rows, numbers)
+    plot_seeds(runs, numbers)
     (OUT / "numbers_long.json").write_text(json.dumps(numbers, indent=1))
     print(json.dumps(numbers, indent=1))
 
