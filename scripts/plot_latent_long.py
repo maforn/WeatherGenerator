@@ -234,15 +234,16 @@ def plot_seeds(runs, numbers):
                                                     "train_window": list(w), "train_diff": t,
                                                     "val_diff": v}
                         for (label, x, y, w, _), t, v in zip(rows, train, val, strict=True)}
-    ids = "  ".join(f"{label.split(chr(10))[0]}: {runs[x]['run']} vs {runs[y]['run']}"
-                    for label, x, y, *_ in rows)
+    short = {"base2048": "repeat", "seed2b2048": "seed 2", "long2048": "1000 steps"}
+    ids = [f"{'seed 1' if y == 'global4096' else short[x]} {runs[x]['run']}/{runs[y]['run']}"
+           for _, x, y, *_ in rows]
     finish(fig, "latent_seeds", "Global 4096 vs 2048: the same direction in every pair",
            "Gray: two identical 2048 runs, the run-to-run noise. Orange: global 4096 minus 2048 on "
            "the same batches, for two seeds at 100 steps and for the 1000-step run. Training "
            "window: steps 50-99 (100 steps) or the last 100 steps (1000 steps).",
-           f"Runs  {ids}\nL5, 1 node x 4 GPUs, dev 4f11a5be + config/optimizations.yml. Validation: "
-           "4 samples (100 steps) or 64 samples (1000 steps). seed 2 = rng_seed 2 (data order and "
-           "initialisation).", wspace=0.3)
+           f"Runs (2048/other)  {'  '.join(ids[:3])}\n{'  '.join(ids[3:])}  L5, 1 node x 4 GPUs, "
+           "dev 4f11a5be + config/optimizations.yml.\nValidation: 4 samples (100 steps) or 64 "
+           "(1000 steps). Seed 2 = rng_seed 2 (data order and initialisation).", wspace=0.3)
 
 
 def main():
