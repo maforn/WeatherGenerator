@@ -1,0 +1,2 @@
+{"f19gti52": {"name": "prof2048", "label": "2048", "job": "2856290", "trace": "shared_work/logs/f19gti52/profiling_traces/Nov_12_12_06_56_rank_0.json.gz"},
+ "yjd08xgt": {"name": "profg4096", "label": "global 4096", "job": "2855715", "trace": "shared_work/logs/yjd08xgt/profiling_traces/Nov_12_12_07_17_rank_0.json.gz"}}

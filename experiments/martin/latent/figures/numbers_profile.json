@@ -1,0 +1,92 @@
+{
+ "runs": {
+  "f19gti52": {
+   "name": "prof2048",
+   "label": "2048",
+   "job": "2856290",
+   "trace": "shared_work/logs/f19gti52/profiling_traces/Nov_12_12_06_56_rank_0.json.gz"
+  },
+  "yjd08xgt": {
+   "name": "profg4096",
+   "label": "global 4096",
+   "job": "2855715",
+   "trace": "shared_work/logs/yjd08xgt/profiling_traces/Nov_12_12_07_17_rank_0.json.gz"
+  }
+ },
+ "per_step_mean_s": {
+  "f19gti52": {
+   "wall_s": 5.00321888425,
+   "gpu_busy_s": 2.451707521118164,
+   "optimizer_step_cpu_s": 0.118293819
+  },
+  "yjd08xgt": {
+   "wall_s": 6.4566841435,
+   "gpu_busy_s": 4.051352732177734,
+   "optimizer_step_cpu_s": 0.1620336805
+  }
+ },
+ "kernel_s_by_class": {
+  "f19gti52": {
+   "gemm": 0.5667587199999999,
+   "nccl": 0.3289072205000009,
+   "flash-attention forward": 0.4514357232499998,
+   "flash-attention backward": 0.42763499550000006,
+   "elementwise/other": 0.7225410767499995,
+   "copy host->device": 0.034051160000000254,
+   "copy device->host": 0.01622623749999997
+  },
+  "yjd08xgt": {
+   "gemm": 1.3566913432500014,
+   "nccl": 0.684928954499996,
+   "flash-attention forward": 0.6545848424999998,
+   "flash-attention backward": 0.65649045825,
+   "elementwise/other": 0.9072254479999999,
+   "copy host->device": 0.07345531124999927,
+   "copy device->host": 0.04264350525000042
+  }
+ },
+ "kernel_s_by_phase": {
+  "f19gti52": {
+   "backward": 0.6845548282500046,
+   "copies/memset": 0.05555327774999709,
+   "forward model.embed_target_coords": 0.0006371325000000001,
+   "forward model.encoder": 0.08863134825000002,
+   "forward model.encoder.ae_global_engine": 0.02960200425,
+   "forward model.encoder.ae_local_engine": 0.031541296499999996,
+   "forward model.encoder.ae_local_global_engine": 0.004340965499999999,
+   "forward model.encoder.embed_engine": 0.1671535395000001,
+   "forward model.forecast_engine": 0.30766889299999994,
+   "forward model.pred_heads": 0.0008849835000000001,
+   "forward model.target_token_engines": 0.08678955049999997,
+   "other (loss, optimizer, comm)": 0.5034922272499901,
+   "recompute model.embed_target_coords": 0.0001079345,
+   "recompute model.encoder.ae_global_engine": 0.031020104249999996,
+   "recompute model.encoder.ae_local_engine": 0.06282155449999999,
+   "recompute model.encoder.ae_local_global_engine": 0.016460793749999997,
+   "recompute model.encoder.embed_engine": 0.20150132874999982,
+   "recompute model.forecast_engine": 0.23204103649999996,
+   "recompute model.target_token_engines": 0.04802821474999997
+  },
+  "yjd08xgt": {
+   "backward": 0.9935392874999995,
+   "copies/memset": 0.12198924224999594,
+   "forward model.embed_target_coords": 0.0007616267500000001,
+   "forward model.encoder": 0.10232438749999999,
+   "forward model.encoder.ae_global_engine": 0.09658415725,
+   "forward model.encoder.ae_local_engine": 0.032967404750000005,
+   "forward model.encoder.ae_local_global_engine": 0.00793315375,
+   "forward model.encoder.embed_engine": 0.16982939625000026,
+   "forward model.forecast_engine": 0.82321568975,
+   "forward model.pred_heads": 0.000909631,
+   "forward model.target_token_engines": 0.09874850399999993,
+   "other (loss, optimizer, comm)": 1.143260531000009,
+   "recompute model.embed_target_coords": 0.00010830200000000001,
+   "recompute model.encoder.ae_global_engine": 0.053818256999999994,
+   "recompute model.encoder.ae_local_engine": 0.06539891000000002,
+   "recompute model.encoder.ae_local_global_engine": 0.0179785465,
+   "recompute model.encoder.embed_engine": 0.20421455049999998,
+   "recompute model.forecast_engine": 0.39644357475,
+   "recompute model.target_token_engines": 0.051885136249999964
+  }
+ }
+}

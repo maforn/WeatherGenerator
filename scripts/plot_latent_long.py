@@ -40,7 +40,7 @@ SETUP = (
 )
 
 
-def finish(fig, name, title, subtitle, source, *, hspace=0.3, wspace=0.28):
+def finish(fig, name, title, subtitle, source, *, hspace=0.3, wspace=0.28, left=0.08):
     """Title, wrapped subtitle and source line; margins fixed in inches for any figure height."""
     sub = textwrap.fill(subtitle, 112)
     src = "\n".join(textwrap.fill(part, 128) for part in source.split("\n"))
@@ -53,7 +53,7 @@ def finish(fig, name, title, subtitle, source, *, hspace=0.3, wspace=0.28):
              family="monospace", linespacing=1.4)
     top_in = 0.55 + 0.25 * n_sub + 0.55  # title + subtitle + room for the panel titles
     bottom_in = 0.1 + 0.19 * n_src + 0.75  # source + room for the x labels
-    fig.subplots_adjust(top=1 - top_in / h, bottom=bottom_in / h, left=0.08, right=0.98,
+    fig.subplots_adjust(top=1 - top_in / h, bottom=bottom_in / h, left=left, right=0.98,
                         hspace=hspace, wspace=wspace)
     fig.savefig(OUT / f"{name}.png", dpi=200)
     plt.close(fig)
