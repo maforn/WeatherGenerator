@@ -141,4 +141,4 @@ columns (MemTotal − MemFree of the CPU nodes); `free`'s "used" also includes /
 Across pairs (figure `latent_seeds.png`): global 4096 − 2048 training-loss mean difference +0.030 (seed 1) and
 +0.018 (seed 2) over steps 50–99, +0.020 over the last 100 of 1000 steps, against −0.002 for the identical 2048
 pair. Validation: +0.003 / +0.014 at 100 steps (4 samples; the identical pair differs by −0.014, so inside the
-noise) and +0.019 at 1000 steps (64 samples). All seven follow-up runs: ~5.2 node-hours.
+noise) and +0.019 at 1000 steps (64 samples). All seven follow-up runs: 4.62 node-hours (3.98 for the three 1000-step runs, 0.65 for the four short ones).
