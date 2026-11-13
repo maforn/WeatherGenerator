@@ -246,6 +246,96 @@ def plot_seeds(runs, numbers):
            "(1000 steps). Seed 2 = rng_seed 2 (data order and initialisation).", wspace=0.3)
 
 
+def plot_schedule(runs, numbers):
+    """Global 4096 - 2048 gap for three schedules: default 1000 steps, warm-up 512, 2000 steps."""
+    pairs = [  # (label, 2048 run, 4096 run, colour, line style); colours checked with the
+        # dataviz validator (contrast below 3:1 for two of them, so every line has a legend entry
+        # and a line style as well)
+        ("1000 steps, warm-up 256", "long2048", "longg4096", "#1baf7a", "-"),
+        ("1000 steps, warm-up 512", "warm2048", "warmg4096", "#6250d6", "--"),
+        ("2000 steps, warm-up 256", "s2k2048", "s2kg4096", "#eda100", ":"),
+    ]
+    rows = [p for p in pairs if p[1] in runs and p[2] in runs]
+    if len(rows) < 2:
+        return
+    fig, axes = plt.subplots(2, 2, figsize=(11, 10), gridspec_kw={"width_ratios": [3, 2]})
+    (ax_diff, ax_end), (ax_lr, ax_slope) = axes
+    out = {}
+    for label, a, b, color, ls in rows:
+        ra, rb = runs[a], runs[b]
+        diff = [y - x for x, y in zip(ra["loss"], rb["loss"], strict=True)]
+        ax_diff.plot(range(len(diff)), rolling(diff, ROLL_DIFF), color=color, lw=2, ls=ls, label=label)
+        ax_lr.plot(range(len(ra["lr"])), [x or 0 for x in ra["lr"]], color=color, lw=2, ls=ls,
+                   label=label)
+        out[label] = {"runs": [ra["run"], rb["run"]],
+                      "loss_last_100": [statistics.fmean(ra["loss"][-LAST:]),
+                                        statistics.fmean(rb["loss"][-LAST:])],
+                      "train_diff_last_100": statistics.fmean(diff[-LAST:]),
+                      "val_loss": [ra["val_loss"], rb["val_loss"]],
+                      "val_diff": rb["val_loss"] - ra["val_loss"],
+                      "diff_by_250_steps": [statistics.fmean(diff[s:s + 250])
+                                            for s in range(0, len(diff), 250)],
+                      "median_step_s": [statistics.median(ra["step_s"][SKIP:]),
+                                        statistics.median(rb["step_s"][SKIP:])]}
+    numbers["schedule"] = out
+    ax_diff.axhline(0, color=MUTED, lw=1)
+    ax_diff.set_title(f"4096 minus 2048, training loss (rolling {ROLL_DIFF} steps)", loc="left")
+    ax_diff.set_xlabel("training step")
+    ax_diff.set_ylabel("loss difference")
+    ax_diff.legend(loc="upper right")
+    ax_lr.set_title("Learning rate (logged; colours and lines as above)", loc="left")
+    ax_lr.set_xlabel("training step")
+    ax_lr.set_ylabel("learning rate")
+    ax_lr.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+
+    xs = range(len(rows))
+    tr = [out[label]["train_diff_last_100"] for label, *_ in rows]
+    va = [out[label]["val_diff"] for label, *_ in rows]
+    w = 0.4
+    b1 = ax_end.bar([x - w / 2 for x in xs], tr, width=w, color=[c for *_, c, _ in rows])
+    b2 = ax_end.bar([x + w / 2 for x in xs], va, width=w, color="white",
+                    edgecolor=[c for *_, c, _ in rows], hatch="///", linewidth=1.5)
+    for bars_, vals, dx in [(b1, tr, -0.05), (b2, va, 0.05)]:  # nudged apart so labels don't touch
+        for bar, v in zip(bars_, vals, strict=True):
+            ax_end.text(bar.get_x() + bar.get_width() / 2 + dx, v + 0.0004, f"{v:+.3f}",
+                        ha="center", va="bottom", fontsize=9.5, color=INK)
+    ax_end.set_xticks(list(xs), ["1000 steps\nwarm-up 256", "1000 steps\nwarm-up 512",
+                                 "2000 steps\nwarm-up 256"][:len(rows)], fontsize=11)
+    ax_end.set_ylim(0, max(tr + va) * 1.6)
+    ax_end.set_title("Gap at the end", loc="left")
+    ax_end.legend([b1[0], b2[0]], ["training, last 100 steps", "validation, 64 samples"],
+                  loc="upper center", fontsize=10.5)
+    ax_end.get_legend().legend_handles[0].set_color(MUTED)
+    ax_end.get_legend().legend_handles[1].set_edgecolor(MUTED)
+
+    sl = [r for r in rows if r[1] in ("long2048", "warm2048")]
+    for width, idx, color in [("2048", 1, BLUE), ("global 4096", 2, ORANGE)]:
+        ys = [statistics.fmean(runs[r[idx]]["loss"][-LAST:]) for r in sl]
+        ax_slope.plot(range(len(ys)), ys, color=color, lw=2, marker="o", ms=9, label=width)
+        for x, y in zip(range(len(ys)), ys, strict=True):
+            ax_slope.text(x + (0.08 if x else -0.08), y, f"{y:.3f}", ha="left" if x else "right",
+                          va="center", fontsize=11, color=INK)
+    ax_slope.set_xticks(range(len(sl)), ["warm-up 256", "warm-up 512"], fontsize=11)
+    ax_slope.set_xlim(-0.6, len(sl) - 0.4)
+    ax_slope.set_title("Loss, last 100 of 1000 steps", loc="left")
+    ax_slope.legend(loc="center left", fontsize=10.5)
+
+    get = lambda lab, k: out[lab][k] if lab in out else float("nan")  # noqa: E731
+    sub = (f"End gap: {get(rows[0][0], 'train_diff_last_100'):+.3f} with the default schedule, "
+           f"{get('1000 steps, warm-up 512', 'train_diff_last_100'):+.3f} with a 512-step warm-up, "
+           f"{get('2000 steps, warm-up 256', 'train_diff_last_100'):+.3f} after 2000 steps. The "
+           "longer warm-up helps global 4096 and costs 2048 a little; twice the data leaves the "
+           "gap where it was.")
+    ids = "  ".join(f"{label.split(', ')[0].replace(' steps', '')}/{label.split('-up ')[1]}: "
+                    f"{o['runs'][0]}/{o['runs'][1]}" for label, o in out.items())
+    finish(fig, "latent_schedule", "A longer warm-up shrinks the gap, more steps don't", sub,
+           f"Runs (steps/warm-up: 2048/4096)  {ids}\n"
+           "L5, 1 node x 4 GPUs, dev 4f11a5be + config/optimizations.yml, seed 1, one run per "
+           "configuration, peak LR 1e-4.\nWarm-up 512 also shortens the cooldown from 512 to 256 "
+           "steps (exp_latent_warmup512.yml): the scheduler\nneeds a constant phase of at least "
+           "20 % of the steps. Validation: 64 samples.", hspace=0.5)
+
+
 def main():
     runs = load_runs()
     rows = [(n, label, c, ls, h, runs[n]) for n, label, c, ls, h in LONG if n in runs]
@@ -254,6 +344,7 @@ def main():
     plot_loss(rows, numbers)
     plot_cost(rows, numbers)
     plot_seeds(runs, numbers)
+    plot_schedule(runs, numbers)
     (OUT / "numbers_long.json").write_text(json.dumps(numbers, indent=1))
     print(json.dumps(numbers, indent=1))
 
