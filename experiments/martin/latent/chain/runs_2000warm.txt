@@ -1,0 +1,4 @@
+# Latent width: global 4096 at 2000 steps with warm-up 512 and the default 512-step cooldown.
+# Only 4096: 2048's best schedule is the default one, already run at 2000 steps (s9mw12qw).
+# Time: s2kg4096 (stj7pc97) took 2:49:18, so 3:30 as before.
+s2kwg4096=03:30:00=exp_latent_2000steps,exp_latent_warmup512_only,exp_latent_global4096

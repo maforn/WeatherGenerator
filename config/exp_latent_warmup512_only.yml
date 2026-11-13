@@ -1,0 +1,9 @@
+# Latent-width study: warm-up 256 -> 512 steps with the config's own cooldown (512 steps), for
+# the 2000-step runs. At 1000 steps exp_latent_warmup512.yml also had to shorten the cooldown to
+# 256; at 2000 steps the constant phase is 2000 - 512 - 512 = 976 >= 400 (20% of the steps), so
+# the scheduler keeps both and only the warm-up differs from the default schedule.
+# Use with config/exp_latent_2000steps.yml and config/exp_latent_global4096.yml;
+# compare with stj7pc97 (4096, default schedule) and s9mw12qw (2048, default schedule).
+training_config:
+  learning_rate_scheduling:
+    num_steps_warmup: 512
