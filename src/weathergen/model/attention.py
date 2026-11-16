@@ -24,6 +24,10 @@ coordinates aligned with the token order (lat, lon in radians).
 """
 
 
+# FlashAttention-3 (flash_attn_3 3.0.0b1) varlen backward is correct for up to 65,535 sequences
+# per call and wrong for every sequence above that (tested on GH200, 12 Nov 2026)
+MAX_FLASH_ATTN_SEQUENCES = 65535
+
 class MultiSelfAttentionHeadVarlen(torch.nn.Module):
     def __init__(
         self,

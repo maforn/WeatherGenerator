@@ -16,6 +16,7 @@ from torch.utils.checkpoint import checkpoint
 
 from weathergen.common.config import Config
 from weathergen.datasets.batch import ModelBatch
+from weathergen.model.attention import MAX_FLASH_ATTN_SEQUENCES
 from weathergen.model.engines import (
     EmbeddingEngine,
     GlobalAssimilationEngine,
@@ -246,6 +247,9 @@ class EncoderModule(torch.nn.Module):
             clen = num_cells_per_sample
         else:
             clen = self.num_healpix_cells // (2 if self.cf.healpix_level <= 5 else 8)
+        # each cell is one sequence of the varlen attention; more than MAX_FLASH_ATTN_SEQUENCES
+        # in one call gives wrong gradients (e.g. a level-8 shard with 4 spatial ranks)
+        clen = min(clen, MAX_FLASH_ATTN_SEQUENCES)
         tokens_global_unmasked = []
         posteriors = []
         empty_chunk_dependency = tokens_global.new_zeros(())

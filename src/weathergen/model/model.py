@@ -26,6 +26,7 @@ from torch.utils.checkpoint import checkpoint
 from weathergen.common.config import Config
 from weathergen.datasets.batch import ModelBatch
 from weathergen.datasets.utils import healpix_verts_rots, r3tos2
+from weathergen.model.attention import MAX_FLASH_ATTN_SEQUENCES
 from weathergen.model.encoder import EncoderModule
 from weathergen.model.engines import (
     BilinearDecoder,
@@ -936,7 +937,13 @@ class Model(torch.nn.Module):
         """
         # only engines that support it get latent_index
         idx_kwarg = {} if latent_index is None else {"latent_index": latent_index}
-        num_chunks = self.cf.get("decoder_num_chunks", 1)
+        # each cell is one sequence of the varlen cross-attention, and the FlashAttention-3
+        # backward gives wrong gradients for more than MAX_FLASH_ATTN_SEQUENCES sequences in one
+        # call (forward unaffected): use at least as many chunks as that needs
+        num_cells = output_lens.shape[0] - 1
+        num_chunks = max(
+            self.cf.get("decoder_num_chunks", 1), -(-num_cells // MAX_FLASH_ATTN_SEQUENCES)
+        )
         if num_chunks <= 1:
             return engine(
                 latent=latent,
