@@ -53,12 +53,12 @@ def checkpoint_layers(layers, per_block: bool, x, *args, blocks_per_checkpoint: 
 
 
 def _run_layers(layers, x, *args):
-    # FSDP gathers a module's weights only for its own backward, so a recompute over several
-    # modules has to gather the weights of the others first
-    if len(layers) > 1:
-        for layer in layers:
-            if isinstance(layer, FSDPModule):
-                layer.unshard()
+    # FSDP gathers a module's weights only for its own backward, so a recompute has to gather
+    # them first: of the other modules when the group has several, and of the only one when its
+    # weights were freed after the forward (reshard_after_forward, fe_reshard_after_forward)
+    for layer in layers:
+        if isinstance(layer, FSDPModule):
+            layer.unshard()
     for layer in layers:
         x = layer(x) if isinstance(layer, torch.nn.LayerNorm) else layer(x, *args)
     return x
