@@ -14,6 +14,11 @@ fe_blocks_per_checkpoint: 2
 # requires: training_config.forecast.pushforward off (it relies on gathered weights)
 fe_reshard_after_forward: True
 
+# forecast engine: the LayerNorms of fe_layer_norm_after_blocks return the dtype of their input
+# (plain LayerNorm returns float32 under autocast, which keeps the residual stream float32 for
+# the later blocks and rollout steps)
+fe_layer_norm_in_input_dtype: True
+
 # decoder: project keys/values once per cell, then select each cell's 9 neighbours by index
 # instead of copying them
 decoder_gather_after_kv_projection: True
