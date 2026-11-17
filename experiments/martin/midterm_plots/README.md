@@ -7,6 +7,7 @@ Slide-ready PNGs (2200×1120 px, white background) for Matteo's shared presentat
 Regenerate from the raw run folders (all local, untracked) with:
 
     WeatherGenerator/.venv/bin/python scripts/plot_midterm_loader.py
+    WeatherGenerator/.venv/bin/python scripts/plot_loader_options.py   # figure 10 only
 
 | File | Message | Source runs |
 |---|---|---|
@@ -18,9 +19,11 @@ Regenerate from the raw run folders (all local, untracked) with:
 | `06_workers_l5.png` | 4 vs 12 workers per GPU at L5: step 3.98 vs 4.11 s; node CPU memory 155 vs 318 GiB | W4 `kdi7cfy9`, A |
 | `07_spatial_parallel_loader.png` | Loader per sample, data parallel vs one spatial rank: L5 12 vs 11 s, 8 vs 3 GiB; L7 91 vs 48 s, 77 vs 23 GiB; 4 ranks together 42 s (L5) and 173 s (L7) | SPLOAD job 2801802 |
 | `08_spatial_vs_data_parallel_l5.png` | Alejandro's L5 training: samples/s 0.38–0.39 data parallel vs 0.13–0.14 spatial; GPU peak 28–29 vs 15.5–15.8 GiB. All four runs were loader-bound (65–74 % waiting). | `pi2vsvu1`, `n3tagpzt`, `qb0vmkdr`, `cnkr2ooi` |
-| `09_gpu_busy.png` | GPU busy 64 % and 60 % of the step at L5, 99 % at L7; at L5, 1.44 s idle in 21,397 gaps, waiting for data 0.16 ms | Jonah's `i3f3hngb`, PROF7 `q4ag4rlz` |
+| `09_gpu_busy.png` | GPU busy 64 % and 60 % of the step at L5, 99 % at L7; at L5, 1.44 
+| `10_loader_options_l5.png` | My nine loader options, each alone at L5 against the runs that leave its stage alone: obs read −37 %, build −18 %, NaN filter −45 %, ERA5 read −25 %, step time with the even split −24 %; the four unmerged options stay inside the noise (−2 to +6 %). All nine together: step 4.61 → 2.88 s, loader wait per GPU 115 → 7 s. Values in `numbers_options.json` | single-flag runs 6 Nov: baseline `spcoicgc`, `vdhwy1yz`, `zi2h7d7a`, `hq52fbnw`, `fm6x4ski`, `ko1zio6z`, `cv2iljv2`, `t1te97ff`, `dom75441`, `mit3pxf0`; together: `jnsctk9d` / `svxaue1j` (1 Nov) |s idle in 21,397 gaps, waiting for data 0.16 ms | Jonah's `i3f3hngb`, PROF7 `q4ag4rlz` |
 
 ## How the values are computed
+- **Options (figure 10):** each option's stage is the median over its 400 samples of the seconds that stage takes (summed over the streams it touches), compared with the median and range of the other single-option runs that leave that stage alone (the baseline node read ~15 % slower). `even_workset_split` changes no stage, so its row is the step time: mean interval between batch arrivals from step 10 on (loader wait log timestamps), mean of the 4 GPUs.
 - **Step time:** median interval of `elapsed_training_time_seconds` in `<run>_train_metrics.json`.
 - **Waiting for data:** mean `wait_seconds` from `dataloader_profile/loader_wait_rank*.jsonl` over steps ≥ 1, divided by the mean step, averaged over the 4 ranks. Step 0, which waits while the workers start, is excluded.
 - **Loader stages:** per sample from `samples_rank*_worker*.jsonl`, summed over streams, median over samples. Read includes normalize; "other" is the total minus the stages.
