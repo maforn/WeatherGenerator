@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""Slide plot of Martin's nine data-loader options, each measured alone at L5.
+"""Slide plot of my five data-loader options merged into dphpc/dev (PRs #6-#10), each alone at L5.
 
 Every value comes from the runs' raw loader profiles (dataloader_profile/samples_rank*_worker*.jsonl
 and loader_wait_rank*.jsonl) in the main checkout's experiments/martin/<run>/. No estimates.
 
-Each option is judged on the loader stage it changes (median seconds per sample over the 400
-samples), against the runs that leave that stage alone. The baseline's node read ~15 % slower than
-the others, so the reference is the median and range of all those runs, not the baseline alone.
-even_workset_split changes no per-sample stage, only how samples are spread over the workers, so
-its row is the step time. Step time = mean interval between batch arrivals from step 10 on, per
-GPU, averaged over the 4 GPUs (from the loader wait log's timestamps).
+Four options make a loader stage faster. Each is judged on that stage (mean seconds per sample over
+the 400 samples) against the runs with the same samples that leave the stage alone: the all-off
+baseline and the other single-option runs. The baseline's node read ~15 % slower than the others,
+so the reference is the median and range of all those runs, not the baseline alone. This is the
+"other runs" column of the PR descriptions. The even-split run is never a reference for a stage:
+each worker samples different dates there, so its samples differ.
+
+even_workset_split changes no stage, only which worker gets the leftover batches, so its row is
+the time spent waiting for batches: summed over steps 1-99 per GPU, mean of the 4 GPUs. Step 0,
+which waits while the workers start, is excluded.
 
   WeatherGenerator/.venv/bin/python scripts/plot_loader_options.py
 """
@@ -19,79 +23,66 @@ import statistics
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from plot_midterm_loader import (
-    BLUE,
-    GRAY,
-    INK,
-    MUTED,
-    OUT,
-    finish,
-    json_lines,
-    label_bars,
-    report,
-)
+from plot_midterm_loader import BLUE, GRAY, INK, MUTED, OUT, finish, json_lines, report
 
 RUNS_DIR = Path(__file__).resolve().parents[2] / "WeatherGenerator" / "experiments" / "martin"
 OBS_SKIP = ("ERA5", "ERA5_in")  # the two anemoi streams; the other 7 are observation streams
 
 # 2026-11-06, martin/exp/single-flags feda61bb: L5, 1 node x 4 GPUs, 12 workers, seed 1, 100 steps
 BASE = "spcoicgc"
-SINGLE = {  # option: run
-    "even_workset_split": "vdhwy1yz",
-    "anemoi_select_vars": "zi2h7d7a",
+MERGED = {  # option: (PR into dphpc/dev, run with only this option on)
+    "even_workset_split": (6, "vdhwy1yz"),
+    "obs_single_read": (7, "fm6x4ski"),
+    "target_requested_fields_only": (8, "dom75441"),
+    "skip_all_valid_filter_copy": (9, "ko1zio6z"),
+    "anemoi_select_vars": (10, "zi2h7d7a"),
+}
+# My other four options had no effect alone and were never PR'd. Their runs (same day, same
+# samples) are used only as reference runs.
+REFERENCE_ONLY = {
     "anemoi_avoid_dtype_copy": "hq52fbnw",
-    "obs_single_read": "fm6x4ski",
-    "skip_all_valid_filter_copy": "ko1zio6z",
     "tokenize_coords_only": "cv2iljv2",
     "source_direct_build": "t1te97ff",
-    "target_requested_fields_only": "dom75441",
     "skip_train_inverse_indices": "mit3pxf0",
 }
-MERGED = {"even_workset_split", "anemoi_select_vars", "obs_single_read",
-          "skip_all_valid_filter_copy", "target_requested_fields_only"}  # PRs #6-#9, dphpc/dev
-# 2026-11-01, martin/backup-dump: every option off (jnsctk9d) and all nine on (svxaue1j)
-ALL_OFF, ALL_ON = "jnsctk9d", "svxaue1j"
+RUNS = {"baseline": BASE, **{o: r for o, (_, r) in MERGED.items()}, **REFERENCE_ONLY}
 
 
-def per_sample(samples, fn):
-    return statistics.median(fn(s["streams"]) for s in samples)
+def obs_read(st):
+    return sum(v["read_seconds"] for n, v in st.items() if n not in OBS_SKIP)
 
 
-BUILD_TOUCH = {"source_direct_build", "target_requested_fields_only", "skip_train_inverse_indices"}
-ANEMOI_TOUCH = {"anemoi_select_vars", "anemoi_avoid_dtype_copy"}
+def nan_filter(st):
+    return sum(v.get("normalize_seconds", 0) for v in st.values())
 
 
 def build_all(st):
     return sum(v.get("build_seconds", 0) for v in st.values())
 
 
-# option: (stage label, metric on one sample's streams, options that change the same metric)
-METRICS = {
-    "anemoi_select_vars": ("ERA5 read", lambda st: st["ERA5"]["read_seconds"], ANEMOI_TOUCH),
-    "anemoi_avoid_dtype_copy": (
-        "ERA5 + ERA5_in read",
-        lambda st: st["ERA5"]["read_seconds"] + st["ERA5_in"]["read_seconds"],
-        ANEMOI_TOUCH,
-    ),
+def era5_read(st):
+    return st["ERA5"]["read_seconds"]
+
+
+# option: (stage, metric on one sample's streams, options that change the same metric).
+# skip_all_valid_filter_copy also skips the obs time-window copy, which sits in the obs read.
+STAGES = {
     "obs_single_read": (
         "obs read, 7 streams",
-        lambda st: sum(v["read_seconds"] for n, v in st.items() if n not in OBS_SKIP),
-        {"obs_single_read"},
+        obs_read,
+        {"obs_single_read", "skip_all_valid_filter_copy"},
     ),
-    "skip_all_valid_filter_copy": (
-        "NaN filter",
-        lambda st: sum(v.get("normalize_seconds", 0) for v in st.values()),
-        {"skip_all_valid_filter_copy"},
+    "target_requested_fields_only": (
+        "build",
+        build_all,
+        {"target_requested_fields_only", "source_direct_build", "skip_train_inverse_indices"},
     ),
-    "tokenize_coords_only": ("ERA5_in tokenize", lambda st: st["ERA5_in"]["tokenize_seconds"],
-                             {"tokenize_coords_only"}),
-    "source_direct_build": (
-        "build, source",
-        lambda st: sum(v.get("build_seconds", 0) for n, v in st.items() if n != "ERA5"),
-        BUILD_TOUCH,
+    "skip_all_valid_filter_copy": ("NaN filter", nan_filter, {"skip_all_valid_filter_copy"}),
+    "anemoi_select_vars": (
+        "ERA5 read",
+        era5_read,
+        {"anemoi_select_vars", "anemoi_avoid_dtype_copy"},
     ),
-    "target_requested_fields_only": ("build, all", build_all, BUILD_TOUCH),
-    "skip_train_inverse_indices": ("build, all", build_all, BUILD_TOUCH),
 }
 
 
@@ -102,119 +93,175 @@ def samples(run):
     return out
 
 
-def steps(run):
-    """Mean step from step 10 on, loader wait per GPU after the first batch, waits over 5 s."""
-    step, wait, long_waits = [], [], 0
+def waits(run):
+    """Waiting for batches per GPU (steps >= 1, mean of the GPUs) and each step's longest wait."""
+    per_gpu, by_step = [], {}
     for path in sorted((RUNS_DIR / run / "dataloader_profile").glob("loader_wait_rank*.jsonl")):
-        rows = [r for r in json_lines(path) if r.get("stage") == "train"]
-        ts = [r["timestamp"] for r in rows]
-        step.append(statistics.fmean(b - a for a, b in list(zip(ts, ts[1:], strict=False))[9:]))
-        later = [r["wait_seconds"] for r in rows if r["step"] >= 1]
-        wait.append(sum(later))
-        long_waits += sum(w > 5 for w in later)
-    return {"step_s": statistics.fmean(step), "wait_per_gpu_s": statistics.fmean(wait),
-            "waits_over_5s": long_waits}
+        rows = [r for r in json_lines(path) if r.get("stage") == "train" and r["step"] >= 1]
+        per_gpu.append(sum(r["wait_seconds"] for r in rows))
+        for r in rows:
+            by_step[r["step"]] = max(by_step.get(r["step"], 0.0), r["wait_seconds"])
+    steps = sorted(by_step)
+    return {
+        "wait_per_gpu_s": statistics.fmean(per_gpu),
+        "longest_wait_s": max(by_step.values()),
+        "steps": steps,
+        "longest_wait_per_step_s": [by_step[s] for s in steps],
+    }
+
+
+def compare(value, ref):
+    mid = statistics.median(ref)
+    return {
+        "value_s": value,
+        "reference_median_s": mid,
+        "reference_range_s": [min(ref), max(ref)],
+        "reference_runs": len(ref),
+        "change_pct": 100 * (value / mid - 1),
+        "range_pct": [100 * (min(ref) / mid - 1), 100 * (max(ref) / mid - 1)],
+    }
+
+
+def measure():
+    data = {o: samples(r) for o, r in RUNS.items()}
+    timing = {o: waits(r) for o, r in RUNS.items()}
+    numbers = {}
+    for opt, (pr, run) in MERGED.items():
+        if opt == "even_workset_split":
+            stage = "waiting per GPU"
+            value = timing[opt]["wait_per_gpu_s"]
+            ref = [timing[o]["wait_per_gpu_s"] for o in RUNS if o != opt]
+        else:
+            stage, fn, touch = STAGES[opt]
+            value = statistics.fmean(fn(s["streams"]) for s in data[opt])
+            ref = [
+                statistics.fmean(fn(s["streams"]) for s in data[o])
+                for o in RUNS
+                if o not in touch and o != "even_workset_split"
+            ]
+        numbers[opt] = {"pr": pr, "run": run, "stage": stage, **compare(value, ref)}
+    return numbers, timing
+
+
+def seconds(x):
+    return f"{x:.0f} s" if x >= 10 else f"{x:.1f} s" if x >= 1 else f"{x:.2f} s"
+
+
+def plot_options(ax, numbers):
+    rows = sorted(numbers.items(), key=lambda kv: kv[1]["change_pct"], reverse=True)
+    names = ax.get_yaxis_transform()  # x in axes units, y in data units
+    for y, (opt, n) in enumerate(rows):
+        lo, hi = n["range_pct"]
+        change = n["change_pct"]
+        ax.barh(y, hi - lo, left=lo, height=0.42, color="#d1d5db", zorder=1)
+        ax.plot(change, y, marker="o", ms=11, color=BLUE, zorder=3)
+        right = lo - change >= 20  # the percentage goes right of the dot when it fits
+        ax.text(
+            change + 3 if right else change - 3,
+            y,
+            f"{change:+.0f} %".replace("-", "\u2212"),
+            ha="left" if right else "right",
+            va="center",
+            fontsize=12,
+            fontweight="bold",
+            color=INK,
+        )
+        ax.text(
+            -0.02,
+            y + 0.13,
+            f"{opt}  (#{n['pr']})",
+            transform=names,
+            ha="right",
+            va="bottom",
+            fontsize=11,
+            color=INK,
+        )
+        ax.text(
+            -0.02,
+            y + 0.07,
+            f"{n['stage']}: {seconds(n['reference_median_s'])} → {seconds(n['value_s'])}",
+            transform=names,
+            ha="right",
+            va="top",
+            fontsize=10,
+            color=MUTED,
+        )
+    ax.axvline(0, color=MUTED, lw=1, zorder=2)
+    ax.set_yticks([])
+    ax.set_xlim(-95, 25)
+    ax.set_xticks(range(-90, 30, 15))
+    ax.set_ylim(-0.6, len(rows) - 0.4)
+    ax.grid(axis="y", visible=False)
+    ax.grid(axis="x", visible=True)
+    ax.set_xlabel("change against the other runs' median (%)", loc="left")
+    ax.set_title("Each option alone", loc="left")
+
+
+def plot_even_split(ax, off, on):
+    ax.plot(off["steps"], off["longest_wait_per_step_s"], color=GRAY, lw=1.8, zorder=2)
+    ax.plot(on["steps"], on["longest_wait_per_step_s"], color=BLUE, lw=2.2, zorder=3)
+    ax.text(
+        94,
+        off["longest_wait_s"],
+        f"all options off: the GPUs wait for\nthe last worker's extra batches\n"
+        f"{off['wait_per_gpu_s']:.0f} s waiting per GPU",
+        ha="right",
+        va="top",
+        fontsize=10.5,
+        color=MUTED,
+    )
+    ax.text(
+        4,
+        13,
+        f"only even_workset_split\n{on['wait_per_gpu_s']:.0f} s waiting per GPU",
+        ha="left",
+        va="bottom",
+        fontsize=10.5,
+        color=BLUE,
+        fontweight="bold",
+    )
+    ax.set_xlim(0, 101)
+    ax.set_ylim(0, off["longest_wait_s"] * 1.12)
+    ax.set_xlabel("step of the 100-step mini-epoch", loc="left")
+    ax.set_ylabel("longest wait of the 4 GPUs (s)")
+    ax.set_title("Even split: wait per step", loc="left")
 
 
 def main():
-    runs = {"baseline": BASE, **SINGLE}
-    data = {opt: samples(run) for opt, run in runs.items()}
-    timing = {opt: steps(run) for opt, run in runs.items()}
-    rows, numbers = [], {"single": {}, "together": {}}
-    for opt, run in SINGLE.items():
-        if opt == "even_workset_split":
-            label = "step time"
-            value = timing[opt]["step_s"]
-            ref = [timing[o]["step_s"] for o in runs if o != opt]
-        else:
-            label, fn, touch = METRICS[opt]
-            value = per_sample(data[opt], fn)
-            ref = [per_sample(data[o], fn) for o in runs if o not in touch]
-        mid = statistics.median(ref)
-        rows.append((opt, label, 100 * (value / mid - 1), 100 * (min(ref) / mid - 1),
-                     100 * (max(ref) / mid - 1)))
-        numbers["single"][opt] = {"run": run, "stage": label, "value_s": value,
-                                  "reference_median_s": mid,
-                                  "reference_range_s": [min(ref), max(ref)],
-                                  "reference_runs": len(ref), "change_pct": rows[-1][2],
-                                  "merged": opt in MERGED}
-    off, on = steps(ALL_OFF), steps(ALL_ON)
-    numbers["together"] = {"all_off": {"run": ALL_OFF, **off}, "all_on": {"run": ALL_ON, **on}}
+    numbers, timing = measure()
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(11, 6), gridspec_kw={"width_ratios": [1.45, 1]})
+    plot_options(ax, numbers)
+    plot_even_split(ax2, timing["baseline"], timing["even_workset_split"])
 
-    # merged options first, each group sorted by effect
-    merged = sorted((r for r in rows if r[0] in MERGED), key=lambda r: r[2])
-    other = sorted((r for r in rows if r[0] not in MERGED), key=lambda r: r[2])
-    layout = [("Merged into dphpc/dev", None), *[(None, r) for r in merged],
-              ("Not merged: no change outside the noise", None), *[(None, r) for r in other]]
-
-    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(11, 6), gridspec_kw={"width_ratios": [2.4, 1]})
-    x_lo, x_hi, x_label = -56, 52, 24  # the stage names sit in a column right of x = 24
-    y = len(layout)
-    ticks, tick_labels = [], []
-    for header, row in layout:
-        y -= 1
-        if header:
-            ax.text(x_lo + 1, y, header, ha="left", va="center", fontsize=11.5, fontweight="bold",
-                    color=INK)
-            continue
-        opt, label, change, lo, hi = row
-        ax.barh(y, hi - lo, left=lo, height=0.5, color="#d1d5db", zorder=1)
-        merged_opt = opt in MERGED
-        ax.plot(change, y, marker="o", ms=10, zorder=3, color=BLUE if merged_opt else "white",
-                markeredgecolor=BLUE if merged_opt else MUTED, markeredgewidth=2)
-        # merged: right of the dot unless the gray bar is too close; not merged: left of the bar
-        right = merged_opt and lo - change >= 12
-        ax.text(change + 2.2 if right else min(change, lo) - 2.2, y, f"{change:+.0f} %",
-                ha="left" if right else "right", va="center", fontsize=11, color=INK)
-        ax.text(x_label, y, label, ha="left", va="center", fontsize=10, color=MUTED)
-        ticks.append(y)
-        tick_labels.append(opt)
-    ax.axvline(0, color=MUTED, lw=1, zorder=2)
-    ax.text(x_label, len(layout) - 1, "stage", ha="left", va="center", fontsize=10,
-            fontweight="bold", color=MUTED)
-    ax.set_yticks(ticks, tick_labels, fontsize=10.5)
-    ax.tick_params(axis="y", length=0)
-    ax.set_xlim(x_lo, x_hi)
-    ax.set_xticks(range(-50, 20, 10))
-    ax.set_ylim(-0.6, len(layout) - 0.4)
-    ax.grid(axis="y", visible=False)
-    ax.grid(axis="x", visible=True)
-    ax.set_xlabel("change in that stage against the other runs (%)", loc="left")
-    ax.set_title("Each option alone", loc="left")
-
-    bars = ax2.bar([0, 1], [off["step_s"], on["step_s"]], width=0.6, color=[GRAY, BLUE],
-                   edgecolor="white", linewidth=2)
-    ax2.set_ylim(0, off["step_s"] * 1.5)
-    label_bars(ax2, bars, "{:.2f} s")
-    ax2.set_xticks([0, 1], ["all off", "all nine on"], fontsize=12)
-    ax2.set_ylabel("step time (s)")
-    ax2.set_title("All nine together", loc="left")
-    ax2.text(0.5, off["step_s"] * 1.38,
-             f"loader wait per GPU {off['wait_per_gpu_s']:.0f} → {on['wait_per_gpu_s']:.0f} s\n"
-             f"waits over 5 s: {off['waits_over_5s']} → {on['waits_over_5s']}",
-             ha="center", va="center", fontsize=10.5, color=INK)
-
-    sel = numbers["single"]
+    ev = numbers["even_workset_split"]
+    lo, hi = ev["reference_range_s"]
     finish(
         fig,
         "10_loader_options_l5",
-        "Five of my nine loader options help, and those five are merged",
-        f"Each option alone at L5 on the same 400 samples (dot), against the spread of the runs "
-        f"that leave that stage alone (gray bar). Obs read "
-        f"{sel['obs_single_read']['change_pct']:+.0f} %, build "
-        f"{sel['target_requested_fields_only']['change_pct']:+.0f} %, NaN filter "
-        f"{sel['skip_all_valid_filter_copy']['change_pct']:+.0f} %, step time with the even split "
-        f"{sel['even_workset_split']['change_pct']:+.0f} %. All nine together: "
-        f"{off['step_s']:.2f} → {on['step_s']:.2f} s per step "
-        f"({100 * (on['step_s'] / off['step_s'] - 1):+.0f} %).",
-        f"Left (6 Nov, martin/exp/single-flags feda61bb): baseline {BASE}, "
-        + ", ".join(f"{o} {r}" for o, r in SINGLE.items())
-        + f"\nRight (1 Nov, martin/backup-dump): all off {ALL_OFF}, all on {ALL_ON}. "
-        "L5, 1 node x 4 GPUs, 12 workers/GPU, seed 1, 100 steps. Stage = median s per sample; "
-        "step = mean interval between batches from step 10 on, mean of 4 GPUs.",
-        left=0.25,
+        "My five merged loader options, each measured alone",
+        f"Four make one loader stage faster (dot), against the runs with the same samples that "
+        f"leave that stage alone (gray bar: their range). The even split removes the wait for "
+        f"the last worker's extra batches at the end of each mini-epoch: {lo:.0f}–{hi:.0f} s per "
+        f"GPU in the other runs, {ev['value_s']:.0f} s with it.",
+        f"6 Nov, L5, 1 node x 4 GPUs, 12 workers/GPU, seed 1, 100 steps (martin/exp/single-flags "
+        f"feda61bb). All off {BASE}; "
+        + ", ".join(f"{o} {r}" for o, (_, r) in MERGED.items())
+        + "; reference only (my four unmerged options) "
+        + ", ".join(REFERENCE_ONLY.values())
+        + ".\nStage = mean s per sample over 400 samples; waiting = steps 1-99, mean of 4 GPUs. "
+        "anemoi_select_vars was measured with the PR's first version (anemoi select view).",
+        left=0.29,
     )
-    (OUT / "numbers_options.json").write_text(json.dumps(numbers, indent=1))
+    out = {
+        **numbers,
+        "even_split_waits": {
+            "all_off": {k: v for k, v in timing["baseline"].items() if k != "steps"},
+            "even_workset_split": {
+                k: v for k, v in timing["even_workset_split"].items() if k != "steps"
+            },
+        },
+    }
+    (OUT / "numbers_options.json").write_text(json.dumps(out, indent=1))
     report(json.dumps(numbers, indent=1))
 
 
