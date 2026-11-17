@@ -7,7 +7,7 @@ Slide-ready PNGs (2200×1120 px, white background) for Matteo's shared presentat
 Regenerate from the raw run folders (all local, untracked) with:
 
     WeatherGenerator/.venv/bin/python scripts/plot_midterm_loader.py
-    WeatherGenerator/.venv/bin/python scripts/plot_loader_options.py   # figure 10 only
+    WeatherGenerator/.venv/bin/python scripts/plot_loader_options.py   # figures 10 and 11
 
 | File | Message | Source runs |
 |---|---|---|
@@ -21,9 +21,11 @@ Regenerate from the raw run folders (all local, untracked) with:
 | `08_spatial_vs_data_parallel_l5.png` | Alejandro's L5 training: samples/s 0.38–0.39 data parallel vs 0.13–0.14 spatial; GPU peak 28–29 vs 15.5–15.8 GiB. All four runs were loader-bound (65–74 % waiting). | `pi2vsvu1`, `n3tagpzt`, `qb0vmkdr`, `cnkr2ooi` |
 | `09_gpu_busy.png` | GPU busy 64 % and 60 % of the step at L5, 99 % at L7; at L5, 1.44 s idle in 21,397 gaps, waiting for data 0.16 ms | Jonah's `i3f3hngb`, PROF7 `q4ag4rlz` |
 | `10_loader_options_l5.png` | My five merged loader options (PRs #6–#10), each alone at L5 against the runs with the same samples that leave its stage alone: NaN filter −45 %, obs read −38 %, ERA5 read −24 %, build −18 %; the even split cuts waiting per GPU per 100-step mini-epoch from 81–119 s to 22 s (−78 % against the median). Right: each step's longest wait, all off vs even split. Values in `numbers_options.json` | single-option runs 6 Nov: all off `spcoicgc`; `vdhwy1yz`, `fm6x4ski`, `dom75441`, `ko1zio6z`, `zi2h7d7a`; reference only (my four unmerged options) `hq52fbnw`, `cv2iljv2`, `t1te97ff`, `mit3pxf0` |
+| `11_loader_options_time_memory.png` | The same five options on time and memory, against the runs with none of them on (all off + my four unmerged options): loader time per sample −10 % (obs_single_read), −7 % (target_requested_fields_only), −3 % (skip_all_valid_filter_copy); steps 0–99 −23 % (even split), −9 %, −6 %; host memory peak per GPU −4 % with obs_single_read, about 1 % or less otherwise; CUDA reserved peak 32.5 GiB in every run with the same samples (even split, other samples: +1 %). Values under `time_memory` in `numbers_options.json` | same runs as figure 10 |
 
 ## How the values are computed
 - **Options (figure 10):** each stage option's value is the mean over its 400 samples of the seconds that stage takes (summed over the streams it touches). The reference is the median and range of the runs with the same samples that leave that stage alone: the all-off run plus the other single-option runs (the all-off node read ~15 % slower). The even-split run is never a reference for a stage, because its workers sample different dates. This matches the "other runs" column of the PRs. `even_workset_split` changes no stage, so its row is the waiting for batches over steps 1–99 per GPU, mean of the 4 GPUs, against all nine other runs.
+- **Time and memory (figure 11):** reference = the all-off run and my four unmerged single-option runs. Loader time = mean `total_seconds` per sample; steps 0–99 = first to last batch arrival in `loader_wait_rank*.jsonl`, mean of the 4 GPUs; host = peak `total_rss_bytes` (training process + its workers) in `memory_rank*.csv`, worst GPU; GPU = peak `gpu_reserved_bytes` in the same file. The sampled `gpu_allocated_bytes` misses short peaks (it reads either ~26.9 or ~29.2 GiB regardless of option), so it isn't plotted.
 - **Step time:** median interval of `elapsed_training_time_seconds` in `<run>_train_metrics.json`.
 - **Waiting for data:** mean `wait_seconds` from `dataloader_profile/loader_wait_rank*.jsonl` over steps ≥ 1, divided by the mean step, averaged over the 4 ranks. Step 0, which waits while the workers start, is excluded.
 - **Loader stages:** per sample from `samples_rank*_worker*.jsonl`, summed over streams, median over samples. Read includes normalize; "other" is the total minus the stages.

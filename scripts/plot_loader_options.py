@@ -15,9 +15,15 @@ even_workset_split changes no stage, only which worker gets the leftover batches
 the time spent waiting for batches: summed over steps 1-99 per GPU, mean of the 4 GPUs. Step 0,
 which waits while the workers start, is excluded.
 
+Figure 11 puts whole-run time next to memory for the same runs, against the runs with none of
+my merged options on (all off and my four unmerged ones): loader seconds per sample, the time
+from the first to the last batch, the host memory peak (training process + its workers, from
+memory_rank*.csv) and the CUDA reserved peak sampled in the same file.
+
   WeatherGenerator/.venv/bin/python scripts/plot_loader_options.py
 """
 
+import csv
 import json
 import statistics
 from pathlib import Path
@@ -227,7 +233,133 @@ def plot_even_split(ax, off, on):
     ax.set_title("Even split: wait per step", loc="left")
 
 
+GIB = 2**30
+NO_MERGED = ["baseline", *REFERENCE_ONLY]  # the runs with none of my merged options on
+# key, panel title, format of the reference value
+TM_PANELS = [
+    ("loader_s_per_sample", "Loader time\nper sample", "{:.0f} s"),
+    ("steps_0_99_s", "Time for\nsteps 0–99", "{:.0f} s"),
+    ("host_peak_gib", "Host memory\nper GPU, peak", "{:.0f} GiB"),
+    ("gpu_reserved_peak_gib", "GPU memory\nreserved, peak", "{:.1f} GiB"),
+]
+
+
+def run_summary(run):
+    """Whole-run time and memory: loader s/sample, steps 0-99, host and CUDA reserved peaks."""
+    prof = RUNS_DIR / run / "dataloader_profile"
+    host = gpu = 0
+    for path in sorted(prof.glob("memory_rank*.csv")):
+        with open(path) as handle:
+            for row in csv.DictReader(handle):
+                if row["stage"] == "train":
+                    host = max(host, int(row["total_rss_bytes"]))  # training process + workers
+                    gpu = max(gpu, int(row["gpu_reserved_bytes"]))
+    spans = []
+    for path in sorted(prof.glob("loader_wait_rank*.jsonl")):
+        ts = [r["timestamp"] for r in json_lines(path) if r.get("stage") == "train"]
+        spans.append(ts[-1] - ts[0])
+    return {
+        "loader_s_per_sample": statistics.fmean(s["total_seconds"] for s in samples(run)),
+        "steps_0_99_s": statistics.fmean(spans),
+        "host_peak_gib": host / GIB,
+        "gpu_reserved_peak_gib": gpu / GIB,
+    }
+
+
+def pct_label(pct):
+    return "0 %" if abs(pct) < 0.5 else f"{pct:+.0f} %".replace("-", "−")
+
+
+def plot_time_memory():
+    summary = {o: run_summary(r) for o, r in RUNS.items()}
+    fig, axes = plt.subplots(1, 4, figsize=(11, 5.6), sharey=True)
+    opts = list(MERGED)  # PR order, #6 on top
+    out = {"runs": summary, "reference_runs": [RUNS[o] for o in NO_MERGED], "panels": {}}
+    for ax, (key, title, fmt) in zip(axes, TM_PANELS, strict=True):
+        ref = [summary[o][key] for o in NO_MERGED]
+        mid, lo, hi = statistics.median(ref), min(ref), max(ref)
+        lo_pct, hi_pct = 100 * (lo / mid - 1), 100 * (hi / mid - 1)
+        width = max(hi_pct - lo_pct, 0.8)  # keep a zero-width range visible
+        panel = {"reference_median": mid, "reference_range": [lo, hi], "change_pct": {}}
+        for i, opt in enumerate(opts):
+            y = len(opts) - 1 - i
+            value = summary[opt][key]
+            pct = 100 * (value / mid - 1)
+            outside = value < lo or value > hi
+            panel["change_pct"][opt] = pct
+            ax.barh(
+                y, width, left=(lo_pct + hi_pct - width) / 2, height=0.45, color="#d1d5db", zorder=1
+            )
+            ax.plot(
+                pct,
+                y,
+                marker="o",
+                ms=10,
+                zorder=3,
+                color=BLUE if outside else "white",
+                markeredgecolor=BLUE if outside else MUTED,
+                markeredgewidth=2,
+            )
+            if outside:  # a hollow dot inside the gray bar needs no number
+                ax.text(
+                    pct,
+                    y + 0.33,
+                    pct_label(pct),
+                    ha="center",
+                    va="bottom",
+                    fontsize=11,
+                    fontweight="bold",
+                    color=INK,
+                )
+        out["panels"][key] = panel
+        ax.axvline(0, color=MUTED, lw=1, zorder=2)
+        ax.set_xlim(-30, 12)
+        ax.set_xticks([-20, -10, 0, 10])
+        ax.tick_params(axis="x", labelsize=11)
+        ax.tick_params(axis="y", length=0)
+        ax.grid(axis="y", visible=False)
+        ax.grid(axis="x", visible=True)
+        ax.set_title(title, loc="left", fontsize=12.5)
+        ax.set_xlabel(f"% vs {fmt.format(mid)}", loc="left", fontsize=11)
+    axes[0].set_yticks(
+        range(len(opts)),
+        [f"{o} (#{MERGED[o][0]})" for o in reversed(opts)],
+        fontsize=10.5,
+        color=INK,
+    )
+    axes[0].set_ylim(-0.6, len(opts) - 0.3)
+
+    p = out["panels"]
+    host, gpu = p["host_peak_gib"], p["gpu_reserved_peak_gib"]
+    finish(
+        fig,
+        "11_loader_options_time_memory",
+        "My five options cut time and add no memory",
+        f"Each option alone at L5 (dot), against the runs without any of my merged options "
+        f"(gray bar: their range; filled dot = outside it). Time: steps 0–99 "
+        f"{pct_label(p['steps_0_99_s']['change_pct']['even_workset_split'])} with the even "
+        f"split; per sample "
+        f"{pct_label(p['loader_s_per_sample']['change_pct']['obs_single_read'])} "
+        f"(obs_single_read) and "
+        f"{pct_label(p['loader_s_per_sample']['change_pct']['target_requested_fields_only'])} "
+        f"(target_requested_fields_only). Memory: the GPU peak is the same "
+        f"{gpu['reference_median']:.1f} GiB in every run with the same samples; the host peak "
+        f"drops {abs(host['change_pct']['obs_single_read']):.0f} % with obs_single_read and "
+        f"moves about 1 % or less with the others.",
+        "6 Nov, L5, 1 node x 4 GPUs, 12 workers/GPU, seed 1, 100 steps. Options: "
+        + ", ".join(f"{o} {r}" for o, (_, r) in MERGED.items())
+        + f". Reference: all off {BASE}, my four unmerged options "
+        + ", ".join(REFERENCE_ONLY.values())
+        + ".\nLoader = mean s per sample (400); steps 0–99 = first to last batch, mean of 4 GPUs; "
+        "host = training process + its 12 workers, peak of the worst GPU; GPU = CUDA reserved, "
+        "peak. The even-split run trains on different samples.",
+        left=0.25,
+    )
+    return out
+
+
 def main():
+    time_memory = plot_time_memory()
     numbers, timing = measure()
     fig, (ax, ax2) = plt.subplots(1, 2, figsize=(11, 6), gridspec_kw={"width_ratios": [1.45, 1]})
     plot_options(ax, numbers)
@@ -254,6 +386,7 @@ def main():
     )
     out = {
         **numbers,
+        "time_memory": time_memory,
         "even_split_waits": {
             "all_off": {k: v for k, v in timing["baseline"].items() if k != "steps"},
             "even_workset_split": {
