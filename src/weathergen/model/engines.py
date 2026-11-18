@@ -52,6 +52,20 @@ def checkpoint_layers(layers, per_block: bool, x, *args, blocks_per_checkpoint: 
     return x
 
 
+class LayerNormInInputDtype(torch.nn.LayerNorm):
+    """``LayerNorm`` returning the dtype of its input.
+
+    Under autocast, ``layer_norm`` has a float32 cast policy, so a bfloat16 input comes back
+    float32. In the forecast engine's residual stream that promotes every later tensor to
+    float32 (a bfloat16 + float32 add is float32): the blocks after the norm and all later
+    rollout steps. The norm itself still computes in float32; only its result is cast back.
+    Same parameters and state dict as ``torch.nn.LayerNorm``.
+    """
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return super().forward(x).to(x.dtype)
+
+
 def _run_layers(layers, x, *args):
     # FSDP gathers a module's weights only for its own backward, so a recompute over several
     # modules has to gather the weights of the others first
@@ -663,8 +677,13 @@ class ForecastingEngine(torch.nn.Module):
                 )
                 # Optionally, add LayerNorm after i-th layer
                 if i in self.cf.get("fe_layer_norm_after_blocks", []):
+                    layer_norm = (
+                        LayerNormInInputDtype
+                        if self.cf.get("fe_layer_norm_in_input_dtype", False)
+                        else torch.nn.LayerNorm
+                    )
                     self.fe_blocks.append(
-                        torch.nn.LayerNorm(self.cf.ae_global_dim_embed, elementwise_affine=False)
+                        layer_norm(self.cf.ae_global_dim_embed, elementwise_affine=False)
                     )
 
         def init_weights_final(m):
