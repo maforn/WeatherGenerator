@@ -28,27 +28,56 @@ def save(fig, name, runs_line):
     plt.close(fig)
 
 
+def inside_top(ax, bar, fmt, color, box=False):
+    """Value label just inside the bar top, clear of the reference line above it."""
+    h = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width() / 2, h * 0.97, fmt.format(h), ha="center", va="top",
+            color=color, fontsize=11.5, fontweight="bold",
+            bbox={"facecolor": "white", "edgecolor": "none", "pad": 1} if box else None)
+
+
+def gpu_panel(ax, rows, mem):
+    """PyTorch's allocated peak (what the team's memory slides compare) next to nvidia-smi's
+    memory used (everything the process holds on the GPU, sampled every 10 s)."""
+    colors = [c for *_, c in rows]
+    alloc = [max(v for v in r["gpu_alloc"] if v is not None) for _, r, _ in rows]
+    smi = [m["smi_peak"] for m in mem]
+    w = 0.38
+    b1 = ax.bar([x - w / 2 for x in (0, 1)], alloc, width=w, color=colors)
+    b2 = ax.bar([x + w / 2 for x in (0, 1)], smi, width=w, color="white", edgecolor=colors,
+                hatch="///", linewidth=1.5)
+    for bar in b1:
+        inside_top(ax, bar, "{:.1f}", "white")
+    for bar in b2:
+        inside_top(ax, bar, "{:.1f}", INK, box=True)
+    leg = ax.legend([b1[0], b2[0]], ["allocated (PyTorch)", "nvidia-smi"], loc="upper left",
+                    fontsize=9.5, frameon=False)
+    leg.legend_handles[0].set_color(MUTED)
+    leg.legend_handles[1].set_edgecolor(MUTED)
+
+
 def cost(runs):
     rows = [("2048", runs["long2048"], BLUE), ("global 4096", runs["longg4096"], ORANGE)]
     mem = [numa(ROOT / r["run"]) for _, r, _ in rows]
     panels = [
         ("Step time (s)", [statistics.median(r["step_s"][SKIP:]) for _, r, _ in rows], "{:.2f}"),
-        ("GPU memory, peak (GiB)", [m["smi_peak"] for m in mem], "{:.1f}"),
+        ("GPU memory, peak (GiB)", None, None),
         ("CPU memory, peak (GiB)", [m["cpu_used_peak"] for m in mem], "{:.0f}"),
     ]
     fig, axes = plt.subplots(1, 3, figsize=SIZE)
     for k, (ax, (title, values, fmt)) in enumerate(zip(axes, panels, strict=True)):
-        bars = ax.bar([0, 1], values, width=0.6, color=[c for *_, c in rows])
-        if k == 0:
-            label_bars(ax, bars, fmt)
-        else:  # inside the bar top, clear of the reference line just above
-            for bar in bars:
-                ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() * 0.97,
-                        fmt.format(bar.get_height()), ha="center", va="top", color="white",
-                        fontsize=12, fontweight="bold")
+        if values is None:
+            gpu_panel(ax, rows, mem)
+        else:
+            bars = ax.bar([0, 1], values, width=0.6, color=[c for *_, c in rows])
+            ax.set_ylim(0, max(values) * 1.25)
+            if k == 0:
+                label_bars(ax, bars, fmt)
+            else:
+                for bar in bars:
+                    inside_top(ax, bar, fmt, "white")
         ax.set_xticks([0, 1], [name for name, *_ in rows], fontsize=12)
         ax.set_title(title, loc="left")
-        ax.set_ylim(0, max(values) * 1.25)
     axes[1].axhline(TARGET_GIB, color=INK, lw=1.2, ls="--")
     axes[1].text(1.42, TARGET_GIB * 1.02, f"{TARGET_GIB} GiB target", ha="right", va="bottom",
                  fontsize=10, color=INK)
