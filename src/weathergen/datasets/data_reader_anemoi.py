@@ -60,6 +60,9 @@ def _repeat_latlon(
 class DataReaderAnemoi(DataReaderTimestep):
     "Wrapper for Anemoi datasets"
 
+    # _get gathers new arrays from the read cube; see DataReaderBase
+    _get_returns_private_arrays = True
+
     def __init__(
         self,
         tw_handler: TimeWindowHandler,

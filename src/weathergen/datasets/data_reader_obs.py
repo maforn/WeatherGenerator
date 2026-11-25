@@ -49,6 +49,9 @@ def _columns_from_block(
 
 
 class DataReaderObs(DataReaderBase):
+    # _get reads a new block per call; see DataReaderBase
+    _get_returns_private_arrays = True
+
     def __init__(
         self, tw_handler: TimeWindowHandler, filename: Path, stream_info: dict, stage: Stage
     ) -> None:
@@ -305,6 +308,8 @@ class DataReaderObs(DataReaderBase):
         sname = self.stream_info["name"]
         with io_timer(sname, "obs _get : read block"):
             block = np.asarray(self.data[start_row:end_row])
+        if self.fast_read_copies:
+            return self._reader_data_from_block(block, idx, start_row, end_row, channels_idx)
         with io_timer(sname, "obs _get : split columns"):
             coords, geoinfos, data = _columns_from_block(
                 block, self.coords_idx, self.geoinfo_idx, channels_idx
@@ -325,5 +330,57 @@ class DataReaderObs(DataReaderBase):
             datetimes=datetimes[t_mask],
         )
         check_reader_data(rdata, t_win)
+
+        return rdata
+
+    def _reader_data_from_block(
+        self,
+        block: npt.NDArray,
+        idx: int,
+        start_row: int,
+        end_row: int,
+        channels_idx: list[int] | npt.NDArray,
+    ) -> ReaderData:
+        """
+        The ReaderData of _get with fewer copies (`data_loading.fast_read_copies`)
+
+        _get copies the coords, geoinfo and channel columns out of the block, then copies them
+        again to apply the time mask. Here one gather takes those columns, and only the rows in
+        the window if the mask drops any; coords, geoinfos and data are views of it. Values,
+        dtypes and shapes are those of _get; duplicate column indices stay separate columns.
+        """
+        sname = self.stream_info["name"]
+        with io_timer(sname, "obs _get : read dates"):
+            datetimes = self.dt[start_row:end_row][:, 0]
+        t_win = self.time_window_handler.window(idx)
+        t_mask = np.logical_and(datetimes >= t_win.start, datetimes < t_win.end)
+
+        num_geo = len(self.geoinfo_idx)
+        columns = np.concatenate(
+            [
+                np.asarray(self.coords_idx, dtype=np.intp),
+                np.asarray(self.geoinfo_idx, dtype=np.intp),
+                np.asarray(channels_idx, dtype=np.intp),
+            ]
+        )
+        with io_timer(sname, "obs _get : split columns"):
+            if t_mask.all():
+                selected = block[:, columns]
+            else:
+                selected = block[np.flatnonzero(t_mask)[:, np.newaxis], columns]
+                datetimes = datetimes[t_mask]
+
+        if num_geo > 0:
+            geoinfos = selected[:, 2 : 2 + num_geo]
+        else:
+            geoinfos = np.zeros((selected.shape[0], 0), dtype=np.float32)
+        rdata = ReaderData(
+            coords=selected[:, :2],
+            geoinfos=geoinfos,
+            data=selected[:, 2 + num_geo :],
+            datetimes=datetimes,
+        )
+        # the window test is the time mask above
+        check_reader_data(rdata, t_win, check_window=False)
 
         return rdata

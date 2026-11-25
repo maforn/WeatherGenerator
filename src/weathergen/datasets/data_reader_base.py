@@ -192,9 +192,18 @@ class ReaderData:
         """
         return len(self.datetimes)
 
-    def remove_nan_coords_and_geoinfos(self) -> "ReaderData":
+    def remove_nan_coords_and_geoinfos(
+        self, keep_arrays_if_all_valid: bool = False
+    ) -> "ReaderData":
         """
         Remove all data points where coords or geoinfos contain NaN
+
+        Parameters
+        ----------
+        keep_arrays_if_all_valid :
+            If no point is removed, return the arrays themselves instead of copies
+            (`data_loading.fast_read_copies`). Only for arrays that nothing else uses: the
+            normalization afterwards writes into them.
 
         Returns
         -------
@@ -207,6 +216,10 @@ class ReaderData:
         # also filter rows where any geoinfo field is NaN
         idx_valid_geoinfos = ~np.isnan(self.geoinfos).any(axis=1)
         idx_valid = np.logical_and(idx_valid, idx_valid_geoinfos)
+
+        # the boolean gathers below copy every array even if they keep every point
+        if keep_arrays_if_all_valid and idx_valid.all():
+            return ReaderData(self.coords, self.geoinfos, self.data, self.datetimes)
 
         # apply (datapoints without values have no data rows)
         return ReaderData(
@@ -254,7 +267,7 @@ class ReaderData:
         return self
 
 
-def check_reader_data(rdata: ReaderData, dtr: DTRange) -> None:
+def check_reader_data(rdata: ReaderData, dtr: DTRange, check_window: bool = True) -> None:
     """
     Check that ReaderData is valid
 
@@ -264,6 +277,9 @@ def check_reader_data(rdata: ReaderData, dtr: DTRange) -> None:
         ReaderData to check
     dtr :
         datetime range of window for which the rdata is valid
+    check_window :
+        Check that the datetimes lie in dtr. Callers that have just selected the points by
+        this window can skip it.
 
     Returns
     -------
@@ -290,9 +306,10 @@ def check_reader_data(rdata: ReaderData, dtr: DTRange) -> None:
         f"{rdata.datetimes.shape[0]}"
     )
 
-    assert np.logical_and(rdata.datetimes >= dtr.start, rdata.datetimes < dtr.end).all(), (
-        f"datetimes for data points violate window {dtr}."
-    )
+    if check_window:
+        assert np.logical_and(rdata.datetimes >= dtr.start, rdata.datetimes < dtr.end).all(), (
+            f"datetimes for data points violate window {dtr}."
+        )
 
 
 class DataReaderBase(metaclass=ABCMeta):
@@ -303,6 +320,14 @@ class DataReaderBase(metaclass=ABCMeta):
     latitude in degrees from -90 (South) to +90 (North),
     and longitude in degrees from -180 (West) to +180 (East).
     """
+
+    # data_loading.fast_read_copies, set by the sampler on every reader
+    fast_read_copies: bool = False
+    # A reader class that sets this in its own class body promises that every ReaderData its
+    # _get and _get_points return holds arrays nobody else uses (not cached, not read-only), so
+    # that data_loading.fast_read_copies may normalize them in place without the copy that the
+    # NaN filter made before. Subclasses do not inherit the promise.
+    _get_returns_private_arrays: bool = False
 
     # The fields that need to be set by the child classes
     source_channels: list[str] = abstract_attribute()
@@ -685,12 +710,40 @@ class DataReaderBase(metaclass=ABCMeta):
         """
 
         assert geoinfos.shape[-1] == len(self.geoinfo_idx), "incorrect number of geoinfo channels"
+        if self.fast_read_copies and self._normalize_geoinfos_all_channels(geoinfos):
+            return geoinfos
         for i, _ in enumerate(self.geoinfo_idx):
             # for constant fields, just center the data (resulting in 0s after subtracting mean)
             stdev = 1.0 if np.isclose(self.stdev_geoinfo[i], 0) else self.stdev_geoinfo[i]
             geoinfos[..., i] = (geoinfos[..., i] - self.mean_geoinfo[i]) / stdev
 
         return geoinfos
+
+    def _normalize_geoinfos_all_channels(self, geoinfos: NDArray[DType]) -> bool:
+        """
+        Normalize all geoinfo channels in two in-place operations (`fast_read_copies`)
+
+        Only if the geoinfos and their statistics have one dtype: every element is then
+        computed as in the per-channel loop of normalize_geoinfos, (x - mean) rounded to that
+        dtype and divided by the stdev, or by 1.0 for a constant field. Otherwise (mixed dtypes
+        promote per channel, see _normalize) nothing is done and False is returned.
+        """
+        num_channels = len(self.geoinfo_idx)
+        mean = np.asarray(self.mean_geoinfo)
+        stdev = np.asarray(self.stdev_geoinfo)
+        if (
+            num_channels == 0
+            or np.asarray(geoinfos) is not geoinfos  # not a plain numpy array
+            or not (mean.dtype == stdev.dtype == geoinfos.dtype)
+            or mean.shape != (num_channels,)
+            or stdev.shape != (num_channels,)
+            or not geoinfos.flags.writeable
+        ):
+            return False
+        stdev = np.where(np.isclose(stdev, 0), stdev.dtype.type(1.0), stdev)
+        geoinfos -= mean
+        geoinfos /= stdev
+        return True
 
     def normalize_source_channels(self, source: NDArray[DType]) -> NDArray[DType]:
         """

@@ -26,16 +26,35 @@ from weathergen.datasets.tokenizer_utils import (
 from weathergen.utils.utils import is_stream_diagnostic
 
 
-def readerdata_to_torch(rdata: IOReaderData) -> IOReaderData:
+def _numpy_to_torch(array, share_memory: bool) -> torch.Tensor:
+    """
+    torch.tensor(array), or with share_memory a tensor on the array's memory where torch allows
+    it (writeable, native byte order, non-negative strides): same dtype, shape and values
+    """
+    if (
+        share_memory
+        and np.asarray(array) is array  # a plain numpy array
+        and array.flags.writeable
+        and array.dtype.isnative
+        and all(stride >= 0 for stride in array.strides)
+    ):
+        return torch.from_numpy(array)
+    return torch.tensor(array)
+
+
+def readerdata_to_torch(rdata: IOReaderData, share_memory: bool = False) -> IOReaderData:
     """
     Convert data, coords, and geoinfos to torch tensor
+
+    share_memory (`data_loading.fast_read_copies`): use the numpy arrays' memory instead of
+    copying it; rdata no longer refers to the arrays afterwards.
     """
     if type(rdata.coords) is not torch.Tensor:
-        rdata.coords = torch.tensor(rdata.coords)
+        rdata.coords = _numpy_to_torch(rdata.coords, share_memory)
     if type(rdata.geoinfos) is not torch.Tensor:
-        rdata.geoinfos = torch.tensor(rdata.geoinfos)
+        rdata.geoinfos = _numpy_to_torch(rdata.geoinfos, share_memory)
     if type(rdata.data) is not torch.Tensor:
-        rdata.data = torch.tensor(rdata.data)
+        rdata.data = _numpy_to_torch(rdata.data, share_memory)
 
     return rdata
 
@@ -52,11 +71,13 @@ def _inverse_point_order(idxs_cells, coords: torch.Tensor) -> torch.Tensor | Non
 
 
 class TokenizerMasking(Tokenizer):
-    def __init__(self, healpix_level: int, masker: Masker):
+    def __init__(self, healpix_level: int, masker: Masker, fast_read_copies: bool = False):
         super().__init__(healpix_level)
         self.masker = masker
         self.rng = None
         self.token_size = None
+        # data_loading.fast_read_copies: tensors share the readers' arrays
+        self.fast_read_copies = fast_read_copies
 
     def reset_rng(self, rng) -> None:
         """
@@ -84,7 +105,7 @@ class TokenizerMasking(Tokenizer):
                 continue
             # tokenize data
             idxs_cells, idxs_cells_lens = tok(
-                readerdata_to_torch(rdata), token_size, hl, pad_tokens
+                readerdata_to_torch(rdata, self.fast_read_copies), token_size, hl, pad_tokens
             )
             tokens += [(idxs_cells, idxs_cells_lens)]
 

@@ -90,14 +90,49 @@ def cast_source_tokens(batch: ModelBatch, dtype: torch.dtype) -> None:
             ]
 
 
+def _single_nonempty_reader_data(rdatas: list) -> IOReaderData | None:
+    """
+    IOReaderData.combine(rdatas) without copies, if one item has points and combine would
+    return its arrays unchanged (`data_loading.fast_read_copies`); None otherwise
+
+    combine concatenates onto empty arrays shaped like the first item, so the first item's
+    dtypes and column counts must match the non-empty item's.
+    """
+    nonempty = [r for r in rdatas if not r.is_empty()]
+    if len(nonempty) != 1:
+        return None
+    first, other = rdatas[0], nonempty[0]
+    for name in ("coords", "geoinfos", "data", "datetimes"):
+        a, b = getattr(first, name), getattr(other, name)
+        if a.dtype != b.dtype or a.ndim != b.ndim or a.shape[1:] != b.shape[1:]:
+            return None
+    # the checks of combine
+    for r in rdatas:
+        n_datapoints = len(r.datetimes)
+        assert r.coords.shape == (n_datapoints, 2), "number of datapoints do not match"
+        assert r.geoinfos.shape[0] == n_datapoints, "number of datapoints do not match"
+        assert len(r.data) in (0, n_datapoints), "number of datapoints do not match"
+    return IOReaderData(
+        other.coords, other.geoinfos, other.data, other.datetimes, bool(other.is_spoof)
+    )
+
+
 def collect_datasources(
-    stream_datasets: list, idx: int, type: str, rng, with_values: bool = True
+    stream_datasets: list,
+    idx: int,
+    type: str,
+    rng,
+    with_values: bool = True,
+    fast_read_copies: bool = False,
 ) -> IOReaderData:
     """
     Utility function to collect all sources / targets from streams list
 
     rng and num_subset are used to drop data; with_values=False collects the target points
-    without their values (inference without targets)
+    without their values (inference without targets). fast_read_copies
+    (`data_loading.fast_read_copies`) skips the copies that keep every value: the NaN filter's
+    when it keeps every point and the reader's arrays are private, and the concatenation of
+    the readers when only one has points.
     """
 
     rdatas = []
@@ -121,8 +156,14 @@ def collect_datasources(
         sname = ds.stream_info["name"]
         # get source (of potentially multi-step length)
         rdata = get_reader_data(idx)
+        # only a reader class that declares it itself (not a subclass) has private arrays
+        keep_arrays = fast_read_copies and vars(ds.__class__).get(
+            "_get_returns_private_arrays", False
+        )
         with io_timer(sname, f"{type} shuffle + remove nan coords"):
-            rdata = rdata.shuffle(rng, shuffle, num_subset).remove_nan_coords_and_geoinfos()
+            rdata = rdata.shuffle(rng, shuffle, num_subset).remove_nan_coords_and_geoinfos(
+                keep_arrays
+            )
         with io_timer(sname, f"{type} normalize"):
             rdata.data = normalize_channels(rdata.data)
             rdata.geoinfos = ds.normalize_geoinfos(rdata.geoinfos)
@@ -130,6 +171,8 @@ def collect_datasources(
 
     sname = stream_datasets[0].stream_info["name"] if stream_datasets else ""
     with io_timer(sname, f"{type} combine readers"):
+        if fast_read_copies and (combined := _single_nonempty_reader_data(rdatas)) is not None:
+            return combined
         return IOReaderData.combine(rdatas)
 
 
@@ -155,12 +198,17 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self.source_tokens_bf16 = source_tokens_bf16_enabled(cf)
         # drop the generator's reference to the yielded batch (see __iter__)
         self.release_yielded_batch = cf.data_loading.get("release_yielded_batch", False)
+        # fewer copies between the read and the torch tensors, same batches (see
+        # collect_datasources)
+        self.fast_read_copies = cf.data_loading.get("fast_read_copies", False)
 
         # initialise healpix
         self.healpix_level = cf.healpix_level
         self.num_healpix_cells = 12 * 4**self.healpix_level
         self.masker = Masker(cf.healpix_level, stage, cf.streams, self.mode_cfg)
-        self.tokenizer = TokenizerMasking(cf.healpix_level, self.masker)
+        self.tokenizer = TokenizerMasking(
+            cf.healpix_level, self.masker, fast_read_copies=self.fast_read_copies
+        )
 
         forecast_cfg = FORECAST_DEFAULTS | OmegaConf.to_object(mode_cfg.get("forecast", {}))
         self.output_offset = forecast_cfg["offset"]
@@ -331,6 +379,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     )
                 with io_timer(stream_name, f"reader construction ({ds_type})"):
                     ds = dataset(filename=filename, **kwargs)
+                ds.fast_read_copies = self.fast_read_copies
 
                 streams_datasets[stream_info["name"]].readers += [ds]
 
@@ -677,7 +726,9 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             for idx in range(base_idx - num_steps_input_max + 1, base_idx + 1):
                 # TODO: check that we are not out of bounds when we go back in time
 
-                rdata = collect_datasources(stream_ds, idx, "source", self.rng)
+                rdata = collect_datasources(
+                    stream_ds, idx, "source", self.rng, fast_read_copies=self.fast_read_copies
+                )
 
                 if rdata.is_empty():
                     # work around for https://github.com/pytorch/pytorch/issues/158719
@@ -704,7 +755,12 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                 step_forecast_dt = base_idx + (self.time_step * timestep_idx) // self.step_timedelta
 
                 rdata = collect_datasources(
-                    stream_ds, step_forecast_dt, "target", self.rng, with_values
+                    stream_ds,
+                    step_forecast_dt,
+                    "target",
+                    self.rng,
+                    with_values,
+                    fast_read_copies=self.fast_read_copies,
                 )
 
                 if rdata.is_empty():
