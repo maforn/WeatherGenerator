@@ -81,6 +81,38 @@ def encode_times_source(times, time_win) -> torch.tensor:
     return time_tensor
 
 
+# data_loading.fast_time_encoding: encode one time per run of equal times only if there are at
+# most this many runs per time
+TIME_RUNS_MAX_SHARE = 0.5
+
+
+def encode_times_source_runs(times, time_win) -> torch.tensor:
+    """encode_times_source with one encoding per run of equal consecutive times
+    (`data_loading.fast_time_encoding`)
+
+    A geostationary window has a few times for millions of points, and gridded data repeats
+    each time for the whole grid, so the pandas and numpy work over all points is mostly
+    repeated. The first time of every run is encoded and the rows are repeated for the run.
+    Each encoded value depends only on its time (integer calendar fields, IEEE division, and
+    numpy's float32 sin/cos, which compute the tail of an array like its body), so the rows
+    are the same. With more than TIME_RUNS_MAX_SHARE runs per time (e.g. a time per point) or
+    non-datetime input, encode_times_source runs on all times.
+    """
+    times_np = np.asarray(times)
+    num = len(times_np)
+    if times_np.dtype.kind != "M" or times_np.ndim != 1 or num < 2:
+        return encode_times_source(times, time_win)
+    # NaT != NaT, so every NaT is a run of its own
+    change = times_np[1:] != times_np[:-1]
+    num_runs = int(np.count_nonzero(change)) + 1
+    if num_runs > TIME_RUNS_MAX_SHARE * num:
+        return encode_times_source(times, time_win)
+    starts = np.concatenate(([0], np.flatnonzero(change) + 1))
+    run_lens = np.diff(np.append(starts, num))
+    encoded = encode_times_source(times_np[starts], time_win)
+    return torch.repeat_interleave(encoded, torch.from_numpy(run_lens), dim=0)
+
+
 def encode_times_target(times, time_win) -> torch.tensor:
     """Encode times in the format used for target (relative time in window)
 

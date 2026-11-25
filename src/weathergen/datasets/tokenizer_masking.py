@@ -18,6 +18,7 @@ from weathergen.datasets.stream_data import SOURCE_MASK_VALUE
 from weathergen.datasets.tokenizer import Tokenizer
 from weathergen.datasets.tokenizer_utils import (
     encode_times_source,
+    encode_times_source_runs,
     encode_times_target,
     tokenize_apply_mask_source,
     tokenize_apply_mask_source_direct,
@@ -95,6 +96,7 @@ class TokenizerMasking(Tokenizer):
         masker: Masker,
         fast_read_copies: bool = False,
         fast_source_build: bool = False,
+        fast_time_encoding: bool = False,
     ):
         super().__init__(healpix_level)
         self.masker = masker
@@ -104,6 +106,10 @@ class TokenizerMasking(Tokenizer):
         self.fast_read_copies = fast_read_copies
         # data_loading.fast_source_build: source tokens written into one tensor
         self.fast_source_build = fast_source_build
+        # data_loading.fast_time_encoding: source times encoded once per run of equal times
+        self.encode_times_source = (
+            encode_times_source_runs if fast_time_encoding else encode_times_source
+        )
 
     def reset_rng(self, rng) -> None:
         """
@@ -220,7 +226,7 @@ class TokenizerMasking(Tokenizer):
                 rdata,
                 time_win,
                 self.hpy_verts_rots_source[-1],
-                encode_times_source,
+                self.encode_times_source,
                 SOURCE_MASK_VALUE,
             )
 
@@ -237,7 +243,7 @@ class TokenizerMasking(Tokenizer):
             rdata,
             time_win,
             self.hpy_verts_rots_source[-1],
-            encode_times_source,
+            self.encode_times_source,
         )
 
         return (source_tokens_cells, source_tokens_lens)
