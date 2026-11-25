@@ -15,6 +15,9 @@ from numpy.typing import NDArray
 from weathergen.common.io import IOReaderData
 from weathergen.train.utils import TRAIN, Stage
 
+# value of NaN entries of the source tokens
+SOURCE_MASK_VALUE = 0.0
+
 
 def _pin_tensor(tensor: torch.Tensor) -> torch.Tensor:
     """Pin a tensor to CPU pinned memory.
@@ -80,7 +83,7 @@ class StreamData:
         None
         """
 
-        self.mask_value = 0.0
+        self.mask_value = SOURCE_MASK_VALUE
 
         self.input_steps = input_steps
         self.output_steps = output_steps
@@ -203,6 +206,8 @@ class StreamData:
         ss_lens : torch.Tensor( number of healpix cells )
         ss_cells : list( number of healpix cells )
             [ torch.Tensor( tokens per cell, token size, number of channels) ]
+            or the stacked tensor with NaN already replaced by SOURCE_MASK_VALUE
+            (`data_loading.fast_source_build`)
 
         Returns
         -------
@@ -217,10 +222,14 @@ class StreamData:
 
         self.source_raw[step] = ss_raw
         self.source_tokens_lens[step] = ss_lens
-        self.source_tokens_cells[step] = torch.stack(ss_cells)
+        if isinstance(ss_cells, torch.Tensor):
+            assert self.mask_value == SOURCE_MASK_VALUE
+            self.source_tokens_cells[step] = ss_cells
+        else:
+            self.source_tokens_cells[step] = torch.stack(ss_cells)
 
-        idx = torch.isnan(self.source_tokens_cells[step])
-        self.source_tokens_cells[step][idx] = self.mask_value
+            idx = torch.isnan(self.source_tokens_cells[step])
+            self.source_tokens_cells[step][idx] = self.mask_value
 
         self.source_is_spoof[step] = is_spoof
 

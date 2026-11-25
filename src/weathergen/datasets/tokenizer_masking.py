@@ -14,11 +14,13 @@ import torch
 from weathergen.common.io import IOReaderData
 from weathergen.datasets.batch import SampleMetaData
 from weathergen.datasets.masking import Masker
+from weathergen.datasets.stream_data import SOURCE_MASK_VALUE
 from weathergen.datasets.tokenizer import Tokenizer
 from weathergen.datasets.tokenizer_utils import (
     encode_times_source,
     encode_times_target,
     tokenize_apply_mask_source,
+    tokenize_apply_mask_source_direct,
     tokenize_apply_mask_target,
     tokenize_space,
     tokenize_spacetime,
@@ -59,6 +61,22 @@ def readerdata_to_torch(rdata: IOReaderData, share_memory: bool = False) -> IORe
     return rdata
 
 
+def _tokens_per_cell(idxs_cells_lens) -> np.typing.NDArray:
+    """Number of tokens of every cell."""
+    return np.fromiter(
+        (len(lens) for lens in idxs_cells_lens), dtype=np.int64, count=len(idxs_cells_lens)
+    )
+
+
+def _cell_to_token_mask_repeat(idxs_cells_lens, mask):
+    """TokenizerMasking.cell_to_token_mask with np.repeat (`data_loading.fast_source_build`):
+    the same token mask, each cell's flag repeated for its tokens; None without tokens."""
+    num_tokens = _tokens_per_cell(idxs_cells_lens)
+    if num_tokens.sum() == 0:
+        return (None, None)
+    return (np.repeat(np.asarray(mask, dtype=bool), num_tokens), None)
+
+
 def _inverse_point_order(idxs_cells, coords: torch.Tensor) -> torch.Tensor | None:
     """Indices that restore the order of the points from their healpix cell-based order."""
     # points can come without values, so test the coords for emptiness
@@ -71,13 +89,21 @@ def _inverse_point_order(idxs_cells, coords: torch.Tensor) -> torch.Tensor | Non
 
 
 class TokenizerMasking(Tokenizer):
-    def __init__(self, healpix_level: int, masker: Masker, fast_read_copies: bool = False):
+    def __init__(
+        self,
+        healpix_level: int,
+        masker: Masker,
+        fast_read_copies: bool = False,
+        fast_source_build: bool = False,
+    ):
         super().__init__(healpix_level)
         self.masker = masker
         self.rng = None
         self.token_size = None
         # data_loading.fast_read_copies: tensors share the readers' arrays
         self.fast_read_copies = fast_read_copies
+        # data_loading.fast_source_build: source tokens written into one tensor
+        self.fast_source_build = fast_source_build
 
     def reset_rng(self, rng) -> None:
         """
@@ -169,13 +195,34 @@ class TokenizerMasking(Tokenizer):
         # input (Identity embed, no params), so they are intentionally left fully masked.
         # cell_mask may be a numpy array or a torch tensor depending on the masking strategy.
         if not is_stream_diagnostic(stream_info, self.masker.stage):
-            populated = np.array([len(lens_cell) > 0 for lens_cell in idxs_cells_lens], dtype=bool)
+            if self.fast_source_build:
+                populated = _tokens_per_cell(idxs_cells_lens) > 0
+            else:
+                populated = np.array(
+                    [len(lens_cell) > 0 for lens_cell in idxs_cells_lens], dtype=bool
+                )
             kept = np.asarray(cell_mask, dtype=bool)
             if populated.any() and not (kept & populated).any():
                 cell_mask = cell_mask.clone() if torch.is_tensor(cell_mask) else cell_mask.copy()
                 cell_mask[int(np.argmax(populated))] = True
 
         # select strategy from XXX depending on stream and if student or teacher
+
+        if self.fast_source_build:
+            (mask_tokens, mask_channels) = _cell_to_token_mask_repeat(idxs_cells_lens, cell_mask)
+            # a tensor (tokens, token_size, channels) with NaN masked, or the token list
+            return tokenize_apply_mask_source_direct(
+                idxs_cells,
+                idxs_cells_lens,
+                mask_tokens,
+                mask_channels,
+                stream_info["stream_id"],
+                rdata,
+                time_win,
+                self.hpy_verts_rots_source[-1],
+                encode_times_source,
+                SOURCE_MASK_VALUE,
+            )
 
         (mask_tokens, mask_channels) = self.cell_to_token_mask(
             idxs_cells, idxs_cells_lens, cell_mask

@@ -201,13 +201,19 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         # fewer copies between the read and the torch tensors, same batches (see
         # collect_datasources)
         self.fast_read_copies = cf.data_loading.get("fast_read_copies", False)
+        # source tokens written into one tensor, same batches (see
+        # tokenize_apply_mask_source_direct)
+        self.fast_source_build = cf.data_loading.get("fast_source_build", False)
 
         # initialise healpix
         self.healpix_level = cf.healpix_level
         self.num_healpix_cells = 12 * 4**self.healpix_level
         self.masker = Masker(cf.healpix_level, stage, cf.streams, self.mode_cfg)
         self.tokenizer = TokenizerMasking(
-            cf.healpix_level, self.masker, fast_read_copies=self.fast_read_copies
+            cf.healpix_level,
+            self.masker,
+            fast_read_copies=self.fast_read_copies,
+            fast_source_build=self.fast_source_build,
         )
 
         forecast_cfg = FORECAST_DEFAULTS | OmegaConf.to_object(mode_cfg.get("forecast", {}))

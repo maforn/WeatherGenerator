@@ -344,6 +344,116 @@ def tokenize_apply_mask_source(
     return tokens_cells, tokens_per_cell
 
 
+def tokenize_apply_mask_source_direct(
+    idxs_cells,
+    idxs_cells_lens,
+    mask_tokens,
+    mask_channels,
+    stream_id,
+    rdata,
+    time_win,
+    hpy_verts_rots,
+    enc_time,
+    mask_value: float,
+):
+    """
+    tokenize_apply_mask_source with the tokens written into one tensor
+    (`data_loading.fast_source_build`)
+
+    Returns the tensor that StreamData.add_source builds from the token list of
+    tokenize_apply_mask_source, (tokens, token_size, channels) with NaN replaced by mask_value,
+    and the same tokens_per_cell (int64). Instead of prepending a zero row to every field,
+    gathering every field for every row, concatenating, splitting into tokens and stacking them
+    again, all fields of all points are written into one block of rows after a padding row and
+    NaN masked, and the token rows are taken from it with one gather. Every value is copied or
+    cast as torch.cat would, and NaN masking is elementwise. (Gathering only the real rows into
+    a zero tensor was slower on the laptop even at 96 % padding.) The local
+    coordinates are computed by get_source_coords_local on the same rows as in
+    tokenize_apply_mask_source (padding included), since elementwise sin/cos/atan2 may round
+    differently at other positions of a tensor (vectorized body vs scalar tail). Other cases
+    (no kept tokens, tokens of different lengths, a channel mask) return what
+    tokenize_apply_mask_source returns.
+    """
+
+    def original():
+        return tokenize_apply_mask_source(
+            idxs_cells,
+            idxs_cells_lens,
+            mask_tokens,
+            mask_channels,
+            stream_id,
+            rdata,
+            time_win,
+            hpy_verts_rots,
+            enc_time,
+        )
+
+    if mask_tokens is None or mask_channels is not None:
+        return original()
+
+    num_cells = len(idxs_cells_lens)
+    tokens_per_cell_all = np.fromiter(
+        (len(lens) for lens in idxs_cells_lens), dtype=np.int64, count=num_cells
+    )
+    token_lens = np.fromiter(
+        (n for lens in idxs_cells_lens for n in lens),
+        dtype=np.int64,
+        count=int(tokens_per_cell_all.sum()),
+    )
+    keep = np.asarray(mask_tokens, dtype=bool)
+    if len(keep) != len(token_lens) or not keep.any():
+        return original()
+    token_size = int(token_lens[0])
+    if token_size == 0 or (token_lens != token_size).any():
+        return original()
+
+    # per-point indices of the kept tokens, 0 for padding rows
+    idxs_all = torch.cat([idxs for idxs_cell in idxs_cells for idxs in idxs_cell])
+    idxs_data = idxs_all.view(-1, token_size)[torch.from_numpy(keep)].reshape(-1)
+
+    # kept tokens and points per cell
+    cell_of_token = np.repeat(np.arange(num_cells), tokens_per_cell_all)
+    tokens_per_cell = torch.from_numpy(
+        np.bincount(cell_of_token[keep], minlength=num_cells).astype(np.int64)
+    )
+    masked_points_per_cell = (tokens_per_cell * token_size).to(torch.int32)
+
+    times_enc = enc_time(rdata.datetimes, time_win)
+    coords_padded = torch.cat([torch.zeros_like(rdata.coords[0]).unsqueeze(0), rdata.coords])
+    coords_local = get_source_coords_local(
+        coords_padded[idxs_data], hpy_verts_rots, masked_points_per_cell
+    )
+
+    # the dtype torch.cat gives the tokens in tokenize_apply_mask_source
+    stream_ids = torch.full([1, 1], stream_id, dtype=torch.float32)
+    dtype = stream_ids.dtype
+    for field in (times_enc, coords_local, rdata.geoinfos, rdata.data):
+        dtype = torch.promote_types(dtype, field.dtype)
+    # columns: stream id, times, local coordinates, geoinfos, data
+    num_times = times_enc.shape[1]
+    coords_cols = slice(1 + num_times, 3 + num_times)
+    num_cols = 3 + num_times + rdata.geoinfos.shape[1] + rdata.data.shape[1]
+    coords_local = coords_local.to(dtype)
+    coords_local[torch.isnan(coords_local)] = mask_value
+
+    # all fields of all points in one block of rows after the padding row, NaN masked; the
+    # token rows are then one gather (padding rows take row 0)
+    num_geo = rdata.geoinfos.shape[1]
+    rows = torch.empty((len(rdata.datetimes) + 1, num_cols), dtype=dtype)
+    rows[:, 0] = stream_ids[0, 0]
+    rows[0, 1:] = 0.0
+    rows[1:, 1 : 1 + num_times] = times_enc
+    rows[:, coords_cols] = 0.0
+    rows[1:, 3 + num_times : 3 + num_times + num_geo] = rdata.geoinfos
+    rows[1:, 3 + num_times + num_geo :] = rdata.data
+    rows[torch.isnan(rows)] = mask_value
+    tokens = rows.index_select(0, idxs_data)
+    del rows
+    tokens[:, coords_cols] = coords_local
+
+    return tokens.view(-1, token_size, tokens.shape[1]), tokens_per_cell
+
+
 def tokenize_apply_mask_target(
     stream_id,
     hl,
