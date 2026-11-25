@@ -36,7 +36,7 @@ from weathergen.readers_extra.registry import get_extra_reader
 from weathergen.train.utils import Stage, get_batch_size_from_config
 from weathergen.utils.distributed import is_root
 from weathergen.utils.io_timing import io_timer
-from weathergen.utils.utils import is_stream_diagnostic, is_stream_forcing
+from weathergen.utils.utils import get_dtype, is_stream_diagnostic, is_stream_forcing
 
 type AnyDataReader = DataReaderBase | DataReaderAnemoi | DataReaderObs
 type StreamName = str
@@ -49,6 +49,45 @@ FORECAST_DEFAULTS = {
     "policy": None,
     "num_steps": np.array([0], dtype=np.int32),
 }
+
+
+def source_tokens_bf16_enabled(cf: Config) -> bool:
+    """
+    Cast the source tokens to bf16 in the workers (`data_loading.source_tokens_bf16`, default False)
+
+    EmbeddingEngine.forward casts them to `mixed_precision_dtype` before any arithmetic, so the
+    cast leaves the model input as it is when that dtype is bf16. Otherwise, and without
+    `with_mixed_precision`, the option is ignored.
+    """
+    if not cf.data_loading.get("source_tokens_bf16", False):
+        return False
+    if cf.with_mixed_precision and get_dtype(cf.mixed_precision_dtype) == torch.bfloat16:
+        return True
+    if is_root():
+        logger.warning(
+            "data_loading.source_tokens_bf16 ignored: needs with_mixed_precision and "
+            "mixed_precision_dtype bf16."
+        )
+    return False
+
+
+def cast_source_tokens(batch: ModelBatch, dtype: torch.dtype) -> None:
+    """
+    Cast the source tokens of the model input (`batch.source_samples`) to `dtype` in place
+
+    For `data_loading.source_tokens_bf16`: with fp32 tokens converted in the worker, the batch
+    in shared memory and in the host-to-device copy is smaller, and the embedding's
+    `torch.cat(sdata).to(tokens_all.dtype)` gets the same values. The teacher views
+    (`batch.target_samples`) stay as they are: a FrozenTeacher's embedding has the dtype of its
+    own run config.
+    """
+    for sample in batch.source_samples.samples:
+        for stream_data in sample.streams_data.values():
+            if stream_data is None:
+                continue
+            stream_data.source_tokens_cells = [
+                t if t is None else t.to(dtype) for t in stream_data.source_tokens_cells
+            ]
 
 
 def collect_datasources(
@@ -113,6 +152,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self.world_size = cf.world_size
         self.diffusion_model_conditioning = cf.get("diffusion", {}).get("conditioning", None)
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
+        self.source_tokens_bf16 = source_tokens_bf16_enabled(cf)
 
         # initialise healpix
         self.healpix_level = cf.healpix_level
@@ -946,6 +986,10 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     logger.warning(f"Skipping empty batch with idx={idx}.")
                 else:
                     break
+
+            # after all fp32 work on the batch and its checks, right before the hand-off
+            if self.source_tokens_bf16:
+                cast_source_tokens(batch, torch.bfloat16)
 
             yield batch
 
