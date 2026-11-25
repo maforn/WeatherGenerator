@@ -153,6 +153,8 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         self.diffusion_model_conditioning = cf.get("diffusion", {}).get("conditioning", None)
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
         self.source_tokens_bf16 = source_tokens_bf16_enabled(cf)
+        # drop the generator's reference to the yielded batch (see __iter__)
+        self.release_yielded_batch = cf.data_loading.get("release_yielded_batch", False)
 
         # initialise healpix
         self.healpix_level = cf.healpix_level
@@ -992,6 +994,12 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                 cast_source_tokens(batch, torch.bfloat16)
 
             yield batch
+
+            # The DataLoader worker has put the batch in its queue, which moved its tensors to
+            # shared memory. Without this, `batch` keeps those pages mapped (and its numpy arrays
+            # alive) while the next batch is built: one extra batch per worker in /dev/shm.
+            if self.release_yielded_batch:
+                del batch
 
     def __len__(self):
         return self.len

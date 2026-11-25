@@ -223,6 +223,7 @@ def test_sampler_casts_right_before_the_yield_only_when_enabled(enabled):
     fp32 = copy.deepcopy(batch)
     sampler = MultiStreamDataSampler.__new__(MultiStreamDataSampler)
     sampler.source_tokens_bf16 = enabled
+    sampler.release_yielded_batch = False
     sampler.mode_cfg = {"training_mode": ["masking"], "with_targets": False}
     sampler.len, sampler.batch_size = 1, 1
     sampler.worker_workset = lambda: (0, 1)
