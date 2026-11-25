@@ -574,6 +574,106 @@ def tokenize_apply_mask_target(
     return data, datetimes, coords, coords_local, masked_points_per_cell
 
 
+def tokenize_apply_mask_target_parts(
+    stream_id,
+    hl,
+    idxs_cells,
+    idxs_cells_lens,
+    mask_tokens,
+    mask_channels,
+    rdata,
+    time_win,
+    hpy_verts_rots,
+    hpy_verts_local,
+    hpy_nctrs,
+    enc_time,
+    with_values: bool,
+    with_coords_local: bool,
+):
+    """
+    tokenize_apply_mask_target computing only the requested parts
+    (`data_loading.fast_target_build`)
+
+    get_target_values discards the local coordinates (the encoding of every target point
+    against its cell's vertices and neighbours, the larger part of the work) and
+    get_target_coords discards the values. Without with_values the data is None, without
+    with_coords_local the local coordinates are None; datetimes, coords and the points per cell
+    are always returned. The kept point indices come from one cat and one mask, and the points
+    per cell from bincount instead of a tensor per cell. The parts that are computed are the
+    ones tokenize_apply_mask_target computes, from the same indices; other cases (no kept
+    tokens, a channel mask) return what tokenize_apply_mask_target returns.
+    """
+
+    def original():
+        return tokenize_apply_mask_target(
+            stream_id,
+            hl,
+            idxs_cells,
+            idxs_cells_lens,
+            mask_tokens,
+            mask_channels,
+            rdata,
+            time_win,
+            hpy_verts_rots,
+            hpy_verts_local,
+            hpy_nctrs,
+            enc_time,
+        )
+
+    if mask_tokens is None or mask_channels is not None:
+        return original()
+
+    num_cells = len(idxs_cells_lens)
+    tokens_per_cell_all = np.fromiter(
+        (len(lens) for lens in idxs_cells_lens), dtype=np.int64, count=num_cells
+    )
+    token_lens = np.fromiter(
+        (n for lens in idxs_cells_lens for n in lens),
+        dtype=np.int64,
+        count=int(tokens_per_cell_all.sum()),
+    )
+    keep = np.asarray(mask_tokens, dtype=bool)
+    if len(keep) != len(token_lens) or not keep.any():
+        return original()
+
+    idxs_data = torch.cat([idxs for idxs_cell in idxs_cells for idxs in idxs_cell])
+    if not keep.all():
+        idxs_data = idxs_data[torch.from_numpy(np.repeat(keep, token_lens))]
+
+    cell_of_token = np.repeat(np.arange(num_cells), tokens_per_cell_all)
+    masked_points_per_cell = np.bincount(
+        cell_of_token[keep], weights=token_lens[keep], minlength=num_cells
+    )
+    masked_points_per_cell = torch.from_numpy(masked_points_per_cell.astype(np.int32))
+
+    datetimes = np.atleast_1d(rdata.datetimes[idxs_data])
+    coords = rdata.coords[idxs_data]
+    data = None
+    if with_values:
+        # datapoints without values (inference without targets) have no data rows
+        data = rdata.data[idxs_data] if len(rdata.data) > 0 else rdata.data
+
+    coords_local = None
+    if with_coords_local:
+        if token_lens.sum() > 0:
+            coords_local = get_target_coords_local(
+                stream_id,
+                hl,
+                masked_points_per_cell,
+                coords,
+                rdata.geoinfos[idxs_data],
+                enc_time(datetimes, time_win),
+                hpy_verts_rots,
+                hpy_verts_local,
+                hpy_nctrs,
+            )
+            coords_local.requires_grad = False
+        else:
+            coords_local = torch.tensor([])
+
+    return data, datetimes, coords, coords_local, masked_points_per_cell
+
+
 def get_source_coords_local(
     coords: Tensor,
     hpy_verts_rots: Tensor,

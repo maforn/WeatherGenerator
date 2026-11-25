@@ -23,6 +23,7 @@ from weathergen.datasets.tokenizer_utils import (
     tokenize_apply_mask_source,
     tokenize_apply_mask_source_direct,
     tokenize_apply_mask_target,
+    tokenize_apply_mask_target_parts,
     tokenize_space,
     tokenize_spacetime,
 )
@@ -97,6 +98,7 @@ class TokenizerMasking(Tokenizer):
         fast_read_copies: bool = False,
         fast_source_build: bool = False,
         fast_time_encoding: bool = False,
+        fast_target_build: bool = False,
     ):
         super().__init__(healpix_level)
         self.masker = masker
@@ -110,6 +112,8 @@ class TokenizerMasking(Tokenizer):
         self.encode_times_source = (
             encode_times_source_runs if fast_time_encoding else encode_times_source
         )
+        # data_loading.fast_target_build: targets without the parts that are discarded
+        self.fast_target_build = fast_target_build
 
     def reset_rng(self, rng) -> None:
         """
@@ -248,6 +252,36 @@ class TokenizerMasking(Tokenizer):
 
         return (source_tokens_cells, source_tokens_lens)
 
+    def _target_parts(
+        self,
+        stream_info: dict,
+        rdata: IOReaderData,
+        token_data,
+        time_win: tuple,
+        cell_mask,
+        with_values: bool,
+        with_coords_local: bool,
+    ):
+        """tokenize_apply_mask_target without the discarded part (`fast_target_build`)"""
+        (idxs_cells, idxs_cells_lens) = token_data
+        (mask_tokens, mask_channels) = _cell_to_token_mask_repeat(idxs_cells_lens, cell_mask)
+        return tokenize_apply_mask_target_parts(
+            stream_info["stream_id"],
+            self.hl_target,
+            idxs_cells,
+            idxs_cells_lens,
+            mask_tokens,
+            mask_channels,
+            rdata,
+            time_win,
+            self.hpy_verts_rots_target,
+            self.hpy_verts_local_target,
+            self.hpy_nctrs_target,
+            encode_times_target,
+            with_values,
+            with_coords_local,
+        )
+
     def get_target_coords(
         self,
         stream_info: dict,
@@ -255,9 +289,21 @@ class TokenizerMasking(Tokenizer):
         token_data,
         time_win: tuple,
         cell_mask,
+        with_inverse_order: bool = True,
     ):
+        """
+        with_inverse_order=False (with `fast_target_build`, for training, where StreamData
+        drops it) returns None instead of the inverse point order.
+        """
         # create tokenization index
         (idxs_cells, idxs_cells_lens) = token_data
+
+        if self.fast_target_build:
+            _, datetimes, coords, coords_local, coords_per_cell = self._target_parts(
+                stream_info, rdata, token_data, time_win, cell_mask, False, True
+            )
+            idxs_ord_inv = _inverse_point_order(idxs_cells, coords) if with_inverse_order else None
+            return (datetimes, coords, coords_local, coords_per_cell, idxs_ord_inv)
 
         (mask_tokens, mask_channels) = self.cell_to_token_mask(
             idxs_cells, idxs_cells_lens, cell_mask
@@ -292,9 +338,21 @@ class TokenizerMasking(Tokenizer):
         token_data,
         time_win: tuple,
         cell_mask,
+        with_inverse_order: bool = True,
     ):
+        """
+        with_inverse_order=False (with `fast_target_build`, for training, where StreamData
+        drops it) returns None instead of the inverse point order.
+        """
         # create tokenization index
         (idxs_cells, idxs_cells_lens) = token_data
+
+        if self.fast_target_build:
+            data, datetimes, coords, _, _ = self._target_parts(
+                stream_info, rdata, token_data, time_win, cell_mask, True, False
+            )
+            idxs_ord_inv = _inverse_point_order(idxs_cells, coords) if with_inverse_order else None
+            return (data, datetimes, coords, idxs_ord_inv)
 
         (mask_tokens, mask_channels) = self.cell_to_token_mask(
             idxs_cells, idxs_cells_lens, cell_mask

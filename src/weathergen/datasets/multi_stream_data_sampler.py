@@ -33,7 +33,7 @@ from weathergen.datasets.utils import (
     get_tokens_lens,
 )
 from weathergen.readers_extra.registry import get_extra_reader
-from weathergen.train.utils import Stage, get_batch_size_from_config
+from weathergen.train.utils import TRAIN, Stage, get_batch_size_from_config
 from weathergen.utils.distributed import is_root
 from weathergen.utils.io_timing import io_timer
 from weathergen.utils.utils import get_dtype, is_stream_diagnostic, is_stream_forcing
@@ -207,6 +207,9 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
         # source times encoded once per run of equal times, same batches (see
         # encode_times_source_runs)
         self.fast_time_encoding = cf.data_loading.get("fast_time_encoding", False)
+        # targets without the parts each view discards, same batches (see
+        # tokenize_apply_mask_target_parts)
+        self.fast_target_build = cf.data_loading.get("fast_target_build", False)
 
         # initialise healpix
         self.healpix_level = cf.healpix_level
@@ -218,6 +221,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
             fast_read_copies=self.fast_read_copies,
             fast_source_build=self.fast_source_build,
             fast_time_encoding=self.fast_time_encoding,
+            fast_target_build=self.fast_target_build,
         )
 
         forecast_cfg = FORECAST_DEFAULTS | OmegaConf.to_object(mode_cfg.get("forecast", {}))
@@ -628,6 +632,8 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
             if token_data[0] is None and token_data[1] is None:
                 continue
 
+            # StreamData drops the inverse point order in training
+            with_inverse_order = not (self.fast_target_build and self._stage == TRAIN)
             if "target_coords" in mode:
                 (dts, cc, tc, tc_l, idxs_inv) = self.tokenizer.get_target_coords(
                     stream_info,
@@ -635,6 +641,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     token_data,
                     (time_win_target.start, time_win_target.end),
                     target_mask,
+                    with_inverse_order=with_inverse_order,
                 )
                 stream_data.add_target_coords(
                     self._stage, timestep_idx, dts, cc, tc, tc_l, idxs_inv, rdata.is_spoof
@@ -647,6 +654,7 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     token_data,
                     (time_win_target.start, time_win_target.end),
                     target_mask,
+                    with_inverse_order=with_inverse_order,
                 )
 
                 stream_data.add_target_values(
