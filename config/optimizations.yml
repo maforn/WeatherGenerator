@@ -88,6 +88,10 @@ masked_counts_bincount: True
 # data loader: target local coordinates on the flat points, not split per cell (same values)
 target_coords_flat: True
 
+# data loader: encode the source times once per run of equal times and repeat the rows, instead of
+# once per point (same values)
+fast_time_encoding: True
+
 # EMA weights in pinned CPU memory
 # requires: FSDP (distributed.data_parallel.with_fsdp, several GPUs) and
 #   validation_config.validate_with_ema.enabled (otherwise there is no EMA model)

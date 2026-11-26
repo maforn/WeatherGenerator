@@ -58,6 +58,26 @@ def encode_times_source(times, time_win) -> torch.tensor:
     return time_tensor
 
 
+def encode_times_source_runs(times, time_win) -> torch.tensor:
+    """encode_times_source with one encoding per run of equal consecutive times
+
+    A geostationary window has a few times for millions of points, and gridded data repeats each
+    time for the whole grid. Each encoded row depends only on its time, so the first time of each
+    run is encoded and its row repeated: the same rows. With more runs than half the points (e.g.
+    a time per point) or input that is not 1-D datetime64, all times are encoded as before.
+    """
+    times_np = np.asarray(times)
+    if times_np.dtype.kind != "M" or times_np.ndim != 1 or len(times_np) < 2:
+        return encode_times_source(times, time_win)
+    # NaT != NaT, so every NaT is a run of its own
+    change = times_np[1:] != times_np[:-1]
+    if np.count_nonzero(change) + 1 > len(times_np) // 2:
+        return encode_times_source(times, time_win)
+    starts = np.concatenate(([0], np.flatnonzero(change) + 1))
+    run_lens = torch.from_numpy(np.diff(starts, append=len(times_np)))
+    return torch.repeat_interleave(encode_times_source(times_np[starts], time_win), run_lens, dim=0)
+
+
 def encode_times_target(times, time_win) -> torch.tensor:
     """Encode times in the format used for target (relative time in window)
 

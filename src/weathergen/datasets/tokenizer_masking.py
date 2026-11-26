@@ -17,6 +17,7 @@ from weathergen.datasets.masking import Masker
 from weathergen.datasets.tokenizer import Tokenizer
 from weathergen.datasets.tokenizer_utils import (
     encode_times_source,
+    encode_times_source_runs,
     encode_times_target,
     tokenize_apply_mask_source,
     tokenize_apply_mask_target,
@@ -50,12 +51,16 @@ class TokenizerMasking(Tokenizer):
         target_requested_fields_only: bool = False,
         masked_counts_bincount: bool = False,
         target_coords_flat: bool = False,
+        fast_time_encoding: bool = False,
     ):
         super().__init__(healpix_level)
         self.vectorize_hpy_splits = vectorize_hpy_splits
         self.target_requested_fields_only = target_requested_fields_only
         self.masked_counts_bincount = masked_counts_bincount
         self.target_coords_flat = target_coords_flat
+        self.encode_times_source = (
+            encode_times_source_runs if fast_time_encoding else encode_times_source
+        )
         self.masker = masker
         self.rng = None
         self.token_size = None
@@ -179,7 +184,7 @@ class TokenizerMasking(Tokenizer):
             rdata,
             time_win,
             self.hpy_verts_rots_source[-1][self.source_cell_start : self.source_cell_end],
-            encode_times_source,
+            self.encode_times_source,
             counts_bincount=self.masked_counts_bincount,
         )
 
