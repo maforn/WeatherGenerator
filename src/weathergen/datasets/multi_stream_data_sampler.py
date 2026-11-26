@@ -116,6 +116,7 @@ class MultiStreamDataSampler(torch.utils.data.IterableDataset):
 
         self.mini_epoch = 0
         self.even_workset_split = cf.get("even_workset_split", False)
+        self.release_yielded_batch = cf.get("release_yielded_batch", False)
         self.mask_value = 0.0
         self.source_dtype = get_source_tokens_dtype(cf)
         self.repeat_data = cf.data_loading.get("repeat_data_in_mini_epoch", False)
@@ -880,6 +881,10 @@ Set repeat_data_in_mini_epoch to True if this is undesired."
                     break
 
             yield batch
+            # the worker has queued the batch, which moved its tensors to shared memory; without
+            # this, the generator keeps it alive while it builds the next one
+            if self.release_yielded_batch:
+                del batch
 
     def __len__(self):
         return self.len
