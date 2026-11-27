@@ -74,6 +74,10 @@ anemoi_select_vars: True
 # it alive until the next garbage collection: +1.7 GiB on random steps)
 train_gc_collect_every_step: True
 
+# data loader: the sampler drops its reference to each batch after yielding it; otherwise every
+# loader worker keeps its last batch (in shared memory by then) while it builds the next one
+release_yielded_batch: True
+
 # data loader: split the points of all cells into tokens with one sort, not one sort per cell
 # (same tokens)
 vectorize_hpy_splits: True
