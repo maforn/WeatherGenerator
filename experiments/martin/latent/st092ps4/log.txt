@@ -1,0 +1,1603 @@
+Logging set up. Logs are in ./logs/st092ps4
+DDP initialization: rank=3, world_size=4
+Logging set up. Logs are in ./logs/st092ps4
+DDP initialization: rank=1, world_size=4
+Logging set up. Logs are in ./logs/st092ps4
+DDP initialization: rank=0, world_size=4
+Logging set up. Logs are in ./logs/st092ps4
+DDP initialization: rank=2, world_size=4
+Reading streams from /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres
+Reading streams from /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres
+Reading streams from /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres
+Reading streams from /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres
+Discover stream configs: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+Discover stream configs: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+Discover stream configs: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+Discover stream configs: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml, /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+Loaded stream config: METOP_ABC_AVHRR_IASI from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml
+Loaded stream config: METOP_ABC_AVHRR_IASI from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml
+Loaded stream config: METOP_ABC_AVHRR_IASI from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml
+Loaded stream config: METOP_ABC_AVHRR_IASI from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml
+Loaded stream config: ERA5_in from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml
+Loaded stream config: ERA5_in from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml
+Loaded stream config: ERA5_in from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml
+Loaded stream config: ERA5_in from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml
+Loaded stream config: ERA5 from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml
+Loaded stream config: ERA5 from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml
+Loaded stream config: ERA5 from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml
+Loaded stream config: ERA5 from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml
+Loaded stream config: METEOSAT_SEVIRI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: GOES_ABI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: METEOSAT_SEVIRI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: HIMAWARI_AHI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: GOES_ABI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: GOES_ABI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: METEOSAT_SEVIRI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: HIMAWARI_AHI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: HIMAWARI_AHI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: GOES_ABI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: METEOSAT_SEVIRI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: GOES_ABI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: HIMAWARI_AHI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: GOES_ABI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: GOES_ABI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: HIMAWARI_AHI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: HIMAWARI_AHI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: HIMAWARI_AHI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: GOES_ABI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: HIMAWARI_AHI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+Loaded stream config: SurfaceCombined from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+Loaded stream config: SurfaceCombined from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+Loaded stream config: SurfaceCombined from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+Loaded stream config: SurfaceCombined from file /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+Loading private config from platform-env.py: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator-private/hpc/platform-env.py.
+Loading private config from platform-env.py: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator-private/hpc/platform-env.py.
+Loading private config from platform-env.py: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator-private/hpc/platform-env.py.
+Loading private config from platform-env.py: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator-private/hpc/platform-env.py.
+Detected HPC: jupiter.
+Detected HPC: jupiter.
+Detected HPC: jupiter.
+Detected HPC: jupiter.
+Loading private config from platform-env.py output: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator-private/hpc/jupiter/config/paths.yml.
+Loading private config from platform-env.py output: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator-private/hpc/jupiter/config/paths.yml.
+Loading private config from platform-env.py output: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator-private/hpc/jupiter/config/paths.yml.
+Loading private config from platform-env.py output: /e/scratch/weatherai/slurm/slurm_weathergen_st092ps4_dir/WeatherGenerator-private/hpc/jupiter/config/paths.yml.
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+TimeWindowHandler: start=2017-06-01T00:00:00.000000000, end=2022-12-31T00:00:00.000000000, len=06:00:00, step=01:00:00
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/idx_197001010000_1
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/idx_197001010000_1
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/idx_197001010000_1
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+Opening dataset with type: anemoi_operan from stream config ERA5_in.
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/dates
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/latitudes
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/latitudes
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/latitudes
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/longitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/longitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/longitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/longitudes
+key=statistics_tendencies_6h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_mean
+key=statistics_tendencies_6h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_mean
+key=statistics_tendencies_6h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_mean
+key=statistics_tendencies_6h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_mean
+key=statistics_tendencies_6h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_stdev
+key=statistics_tendencies_6h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_stdev
+key=statistics_tendencies_6h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_stdev
+key=statistics_tendencies_6h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_stdev
+key=statistics_tendencies_6h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_maximum
+key=statistics_tendencies_6h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_maximum
+key=statistics_tendencies_6h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_maximum
+key=statistics_tendencies_6h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_maximum
+key=statistics_tendencies_6h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_minimum
+key=statistics_tendencies_6h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_minimum
+key=statistics_tendencies_6h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_minimum
+key=statistics_tendencies_6h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+Opening dataset with type: anemoi from stream config ERA5.
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/dates
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/longitudes
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/longitudes
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/longitudes
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/longitudes
+key=statistics_tendencies_1h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_mean
+key=statistics_tendencies_1h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_mean
+key=statistics_tendencies_1h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_mean
+key=statistics_tendencies_1h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_mean
+key=statistics_tendencies_1h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_stdev
+key=statistics_tendencies_1h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_stdev
+key=statistics_tendencies_1h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_stdev
+key=statistics_tendencies_1h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_stdev
+key=statistics_tendencies_1h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_maximum
+key=statistics_tendencies_1h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_maximum
+key=statistics_tendencies_1h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_maximum
+key=statistics_tendencies_1h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_maximum
+key=statistics_tendencies_1h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_minimum
+key=statistics_tendencies_1h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_minimum
+key=statistics_tendencies_1h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_minimum
+key=statistics_tendencies_1h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+Opening dataset with type: obs from stream config METEOSAT_SEVIRI_IR.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/idx_197001010000_1
+METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+Opening dataset with type: obs from stream config GOES_ABI_IR.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/idx_197001010000_1
+GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+Opening dataset with type: obs from stream config HIMAWARI_AHI_IR.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+Opening dataset with type: obs from stream config HIMAWARI_AHI_IR.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+Opening dataset with type: obs from stream config GOES_ABI_VIS.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/idx_197001010000_1
+GOES_ABI_VIS geoinfos : ['zenith']
+GOES_ABI_VIS geoinfos : ['zenith']
+GOES_ABI_VIS geoinfos : ['zenith']
+GOES_ABI_VIS geoinfos : ['zenith']
+Opening dataset with type: obs from stream config HIMAWARI_AHI_VIS.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+Opening dataset with type: obs from stream config HIMAWARI_AHI_VIS.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+Opening dataset with type: obs from stream config SurfaceCombined.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/idx_197001010000_1
+SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+forecast_steps : 2
+Sufficient available samples in the time range specified
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/data
+forecast_steps : 2
+Sufficient available samples in the time range specified
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/idx_197001010000_1
+TimeWindowHandler: start=2023-10-01T00:00:00.000000000, end=2023-12-31T00:00:00.000000000, len=06:00:00, step=01:00:00
+forecast_steps : 2
+Sufficient available samples in the time range specified
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/data
+Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/dates
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/data
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/idx_197001010000_1
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/dates
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/data
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/idx_197001010000_1
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/dates
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/idx_197001010000_1
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/data
+Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/dates
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/data
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/idx_197001010000_1
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/dates
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/data
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/idx_197001010000_1
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/dates
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/idx_197001010000_1
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/data
+Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/dates
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/data
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/idx_197001010000_1
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/dates
+forecast_steps : 2
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+Sufficient available samples in the time range specified
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/idx_197001010000_1
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr/idx_197001010000_1
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+Opening dataset with type: anemoi_operan from stream config ERA5_in.
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/dates
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr/idx_197001010000_1
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr/idx_197001010000_1
+METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/dates
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/longitudes
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/latitudes
+key=statistics_tendencies_6h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_mean
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/longitudes
+key=statistics_tendencies_6h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_stdev
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/longitudes
+key=statistics_tendencies_6h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_maximum
+key=statistics_tendencies_6h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_mean
+key=statistics_tendencies_6h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_minimum
+key=statistics_tendencies_6h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_stdev
+key=statistics_tendencies_6h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_mean
+key=statistics_tendencies_6h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_maximum
+key=statistics_tendencies_6h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_stdev
+key=statistics_tendencies_6h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_minimum
+key=statistics_tendencies_6h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_maximum
+key=statistics_tendencies_6h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_minimum
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/longitudes
+key=statistics_tendencies_6h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_mean
+key=statistics_tendencies_6h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_stdev
+key=statistics_tendencies_6h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_maximum
+key=statistics_tendencies_6h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/statistics_tendencies_6h_minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/data
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/dates
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+Opening dataset with type: anemoi from stream config ERA5.
+ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/data
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/dates
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/dates
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr/minimum
+key=data, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/dates
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/longitudes
+key=statistics_tendencies_1h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_mean
+key=statistics_tendencies_1h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_stdev
+key=statistics_tendencies_1h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_maximum
+key=statistics_tendencies_1h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/latitudes
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/longitudes
+key=statistics_tendencies_1h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_mean
+key=statistics_tendencies_1h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_stdev
+key=statistics_tendencies_1h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_maximum
+key=statistics_tendencies_1h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/idx_197001010000_1
+METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/data
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/latitudes
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/idx_197001010000_1
+GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/longitudes
+key=statistics_tendencies_1h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_mean
+key=statistics_tendencies_1h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_stdev
+key=statistics_tendencies_1h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_maximum
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/dates
+key=statistics_tendencies_1h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_minimum
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/idx_197001010000_1
+key=latitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/latitudes
+GOES_ABI_VIS geoinfos : ['zenith']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=longitudes, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/longitudes
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=statistics_tendencies_1h_mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_mean
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/data
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=statistics_tendencies_1h_stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_stdev
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/dates
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/idx_197001010000_1
+key=statistics_tendencies_1h_maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_maximum
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=statistics_tendencies_1h_minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/statistics_tendencies_1h_minimum
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/data
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/dates
+ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/idx_197001010000_1
+ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/dates
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/idx_197001010000_1
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/dates
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/idx_197001010000_1
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/data
+METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/dates
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/idx_197001010000_1
+ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/data
+key=mean, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/mean
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/dates
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/data
+key=stdev, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/stdev
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/idx_197001010000_1
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/dates
+key=maximum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/maximum
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/idx_197001010000_1
+GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+key=minimum, store_path=file:///e/data1/slmet/ml_training/aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr/minimum
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+Opening dataset with type: obs from stream config METEOSAT_SEVIRI_IR.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/dates
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/data
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2014-2024-seviri-o256-wegen-v3.zarr/idx_197001010000_1
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/dates
+METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+Opening dataset with type: obs from stream config GOES_ABI_IR.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/idx_197001010000_1
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/data
+GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+GOES_ABI_VIS geoinfos : ['zenith']
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/idx_197001010000_1
+GOES_ABI_VIS geoinfos : ['zenith']
+Opening dataset with type: obs from stream config HIMAWARI_AHI_IR.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/idx_197001010000_1
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/data
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/dates
+Opening dataset with type: obs from stream config HIMAWARI_AHI_IR.
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-IR-o256-v1.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/data
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+Opening dataset with type: obs from stream config GOES_ABI_VIS.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/data
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/dates
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/idx_197001010000_1
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr/idx_197001010000_1
+SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+GOES_ABI_VIS geoinfos : ['zenith']
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/idx_197001010000_1
+SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+Opening dataset with type: obs from stream config HIMAWARI_AHI_VIS.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2015-2022-himawari8-VIS-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+Opening dataset with type: obs from stream config HIMAWARI_AHI_VIS.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-file-2022-2024-himawari9-VIS-o256-v1.zarr/idx_197001010000_1
+HIMAWARI_AHI_VIS geoinfos : ['zenith']
+Opening dataset with type: obs from stream config SurfaceCombined.
+key=data, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/data
+key=dates, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/dates
+key=idx_197001010000_1, store_path=file:///e/data1/slmet/ml_training/observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr/idx_197001010000_1
+SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+ERA5 :: coord embed: :: [512, 512, 512]
+Identity activation of pred head of ERA5 stream
+SurfaceCombined :: coord embed: :: [512, 512, 512]
+Identity activation of pred head of SurfaceCombined stream
+ERA5 :: coord embed: :: [512, 512, 512]
+Identity activation of pred head of ERA5 stream
+SurfaceCombined :: coord embed: :: [512, 512, 512]
+Identity activation of pred head of SurfaceCombined stream
+ERA5 :: coord embed: :: [512, 512, 512]
+Identity activation of pred head of ERA5 stream
+SurfaceCombined :: coord embed: :: [512, 512, 512]
+Identity activation of pred head of SurfaceCombined stream
+ERA5 :: coord embed: :: [512, 512, 512]
+Identity activation of pred head of ERA5 stream
+SurfaceCombined :: coord embed: :: [512, 512, 512]
+Identity activation of pred head of SurfaceCombined stream
+steps_decay=-668 lr_steps=100
+('cf.lr_steps_warmup and cf.lr_steps_cooldown', ' were larger than cf.lr_steps=100', '. The value have been adjusted to lr_steps_warmup=10 and ', ' lr_steps_cooldown=5 so steps_decay=85.')
+latent_noise_kl_weight : 0.0
+latent_noise_gamma : 2.0
+latent_noise_use_additive_noise : False
+latent_noise_deterministic_latents : True
+latent_noise_saturate_encodings : 5
+embed_unembed_mode : block
+embed_dropout_rate : 0.1
+ae_local_dim_embed : 2048
+ae_local_num_blocks : 4
+ae_local_num_heads : 16
+ae_local_dropout_rate : 0.1
+ae_local_with_qk_lnorm : True
+ae_local_max_tokens_per_cell : 128
+ae_local_num_queries : 1
+ae_local_queries_per_cell : False
+ae_adapter_num_heads : 16
+ae_adapter_embed : 128
+ae_adapter_with_qk_lnorm : True
+ae_adapter_with_residual : True
+ae_adapter_dropout_rate : 0.1
+ae_global_dim_embed : 2048
+ae_global_num_blocks : 4
+ae_global_num_heads : 32
+ae_global_dropout_rate : 0.1
+ae_global_with_qk_lnorm : True
+ae_global_att_dense_rate : 1.0
+ae_global_block_factor : 64
+ae_global_mlp_hidden_factor : 2
+ae_global_trailing_layer_norm : False
+ae_aggregation_num_blocks : 0
+ae_aggregation_num_heads : 32
+ae_aggregation_dropout_rate : 0.1
+ae_aggregation_with_qk_lnorm : True
+ae_aggregation_att_dense_rate : 1.0
+ae_aggregation_block_factor : 64
+ae_aggregation_mlp_hidden_factor : 2
+decoder_type : PerceiverIOCoordConditioning
+pred_adapter_kv : False
+pred_self_attention : True
+pred_dyadic_dims : False
+pred_mlp_adaln : True
+num_class_tokens : 0
+num_register_tokens : 0
+fe_num_blocks : 16
+fe_num_heads : 32
+fe_dropout_rate : 0.1
+fe_with_qk_lnorm : True
+fe_layer_norm_after_blocks : [7]
+fe_impute_latent_noise_std : 0.0001
+forecast_att_dense_rate : 1.0
+healpix_level : 5
+rope_2D : False
+with_mixed_precision : True
+with_flash_attention : True
+compile_model : False
+distributed : {'data_parallel': {'with_ddp': True, 'with_fsdp': True, 'find_unused_parameters': True, 'world_size': 4}, 'spatial_parallel': {'size': 1, 'size_original': 1}}
+attention_dtype : bf16
+mixed_precision_dtype : bf16
+mlp_norm_eps : 1e-05
+norm_eps : 0.0001
+freeze_modules : 
+load_chkpt : {}
+norm_type : RMSNorm
+streams_directory : ./config/streams/operan_georing_avhrr_synop_lowres/
+  type : obs  stream_id : 20  filenames : ['observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr', 'observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr', 'observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr']  geoinfo_channels : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']  loss_weight : 1.0  masking_override : {'model_input': {'masking_strategy_config': {'rate': 1.0}}}  token_size : 512  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 2, 'dim_embed': 256, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 256}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : METOP_ABC_AVHRR_IASI  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_avhrr_mean_vis_0', 'obsvalue_rawbt_16', 'obsvalue_rawbt_63', 'obsvalue_rawbt_138', 'obsvalue_rawbt_170', 'obsvalue_rawbt_185', 'obsvalue_rawbt_224', 'obsvalue_rawbt_249', 'obsvalue_rawbt_271', 'obsvalue_rawbt_445', 'obsvalue_rawbt_756', 'obsvalue_rawbt_867', 'obsvalue_rawbt_921', 'obsvalue_rawbt_2907', 'obsvalue_rawbt_2991', 'obsvalue_rawbt_3093', 'obsvalue_rawbt_3160', 'obsvalue_rawbt_5383']  train_target_channels : ['obsvalue_avhrr_mean_vis_0', 'obsvalue_rawbt_16', 'obsvalue_rawbt_63', 'obsvalue_rawbt_138', 'obsvalue_rawbt_170', 'obsvalue_rawbt_185', 'obsvalue_rawbt_224', 'obsvalue_rawbt_249', 'obsvalue_rawbt_271', 'obsvalue_rawbt_445', 'obsvalue_rawbt_756', 'obsvalue_rawbt_867', 'obsvalue_rawbt_921', 'obsvalue_rawbt_2907', 'obsvalue_rawbt_2991', 'obsvalue_rawbt_3093', 'obsvalue_rawbt_3160', 'obsvalue_rawbt_5383']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_avhrr_mean_vis_0', 'obsvalue_rawbt_16', 'obsvalue_rawbt_63', 'obsvalue_rawbt_138', 'obsvalue_rawbt_170', 'obsvalue_rawbt_185', 'obsvalue_rawbt_224', 'obsvalue_rawbt_249', 'obsvalue_rawbt_271', 'obsvalue_rawbt_445', 'obsvalue_rawbt_756', 'obsvalue_rawbt_867', 'obsvalue_rawbt_921', 'obsvalue_rawbt_2907', 'obsvalue_rawbt_2991', 'obsvalue_rawbt_3093', 'obsvalue_rawbt_3160', 'obsvalue_rawbt_5383']  val_target_channels : ['obsvalue_avhrr_mean_vis_0', 'obsvalue_rawbt_16', 'obsvalue_rawbt_63', 'obsvalue_rawbt_138', 'obsvalue_rawbt_170', 'obsvalue_rawbt_185', 'obsvalue_rawbt_224', 'obsvalue_rawbt_249', 'obsvalue_rawbt_271', 'obsvalue_rawbt_445', 'obsvalue_rawbt_756', 'obsvalue_rawbt_867', 'obsvalue_rawbt_921', 'obsvalue_rawbt_2907', 'obsvalue_rawbt_2991', 'obsvalue_rawbt_3093', 'obsvalue_rawbt_3160', 'obsvalue_rawbt_5383']  type : anemoi_operan  filenames : ['aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr']  stream_id : 0  source : ['q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'q_1000', 't_50', 't_100', 't_150', 't_200', 't_250', 't_300', 't_400', 't_500', 't_600', 't_700', 't_850', 't_925', 't_1000', 'u_50', 'u_100', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'u_1000', 'v_50', 'v_100', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'v_1000', 'z_50', 'z_100', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925', 'z_1000', '10u', '10v', '2d', '2t', 'msl']  target : ['q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'q_1000', 't_50', 't_100', 't_150', 't_200', 't_250', 't_300', 't_400', 't_500', 't_600', 't_700', 't_850', 't_925', 't_1000', 'u_50', 'u_100', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'u_1000', 'v_50', 'v_100', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'v_1000', 'z_50', 'z_100', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925', 'z_1000', '10u', '10v', '2d', '2t', 'msl']  geoinfo_channels : ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy_config': {'rate': 0.1}}}  token_size : 8  tokenize_spacetime : True  max_num_targets : -1  forcing : True  frequency : 06:00:00  nominal_time_mapping : {'0': 5, '6': 9, '12': 17, '18': 21}  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 8, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 256}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : ERA5_in  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  train_target_channels : ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  val_target_channels : ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  type : anemoi  filenames : ['aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr']  stream_id : 1  source_exclude : ['z', 'w_10', 'w_50', 'w_100', 'w_150', 'w_200', 'w_250', 'w_300', 'w_400', 'w_500', 'w_600', 'w_700', 'w_850', 'w_925', 'w_1000', 'skt', 'tcw', 'cp', 'tp', 'q_50', 'q_100']  target_exclude : ['z', 'w_10', 'w_50', 'w_100', 'w_150', 'w_200', 'w_250', 'w_300', 'w_400', 'w_500', 'w_600', 'w_700', 'w_850', 'w_925', 'w_1000', 'slor', 'sdor', 'tcw', 'cp', 'tp', 'q_50', 'q_100']  geoinfo_channels : ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'target_input': {'masking_strategy_config': {'rate': 1.0}}}  token_size : 8  tokenize_spacetime : False  max_num_targets : -1  diagnostic : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 256, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : ERA5  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  train_target_channels : ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  val_target_channels : ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  type : obs  stream_id : 10  filenames : ['observations-file-2014-2024-seviri-o256-wegen-v3.zarr']  geoinfo_channels : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : METEOSAT_SEVIRI_IR  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_rawbt_065', 'obsvalue_rawbt_086', 'obsvalue_rawbt_160', 'obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  train_target_channels : ['obsvalue_rawbt_065', 'obsvalue_rawbt_086', 'obsvalue_rawbt_160', 'obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_065', 'obsvalue_rawbt_086', 'obsvalue_rawbt_160', 'obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  val_target_channels : ['obsvalue_rawbt_065', 'obsvalue_rawbt_086', 'obsvalue_rawbt_160', 'obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  type : obs  stream_id : 11  filenames : ['observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr']  geoinfo_channels : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : GOES_ABI_IR  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  train_target_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  val_target_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  type : obs  stream_id : 12  filenames : ['observations-file-2015-2022-himawari8-IR-o256-v1.zarr', 'observations-file-2022-2024-himawari9-IR-o256-v1.zarr']  geoinfo_channels : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : HIMAWARI_AHI_IR  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  train_target_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  val_target_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  type : obs  stream_id : 13  filenames : ['observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr']  geoinfo_channels : ['zenith']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : GOES_ABI_VIS  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  train_target_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  target_channel_weights : [1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  val_target_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  type : obs  stream_id : 14  filenames : ['observations-file-2015-2022-himawari8-VIS-o256-v1.zarr', 'observations-file-2022-2024-himawari9-VIS-o256-v1.zarr']  geoinfo_channels : ['zenith']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : HIMAWARI_AHI_VIS  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  train_target_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  target_channel_weights : [1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  val_target_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  type : obs  stream_id : 30  filenames : ['observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr']  source : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  target : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  geoinfo_channels : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']  loss_weight : 1.0  token_size : 64  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 0.1}}}  tokenize_spacetime : False  max_num_targets : -1  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 2, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : SurfaceCombined  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  train_target_channels : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  val_target_channels : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']zarr_store : zip
+general : {'istep': 0, 'rank': '???', 'world_size': '???', 'multiprocessing_method': 'fork', 'desc': '', 'run_id': 'st092ps4', 'run_history': []}
+train_logging : {'terminal': 10, 'metrics': 1, 'checkpoint': 500, 'memory_tracking': True, 'throughput_tracking': True}
+data_loading : {'num_workers': 12, 'rng_seed': 1, 'repeat_data_in_mini_epoch': False}
+training_config : {'training_mode': ['masking'], 'num_mini_epochs': 1, 'samples_per_mini_epoch': 400, 'shuffle': True, 'start_date': '2017-06-01T00:00', 'end_date': '2022-12-31T00:00', 'time_window_step': '01:00:00', 'time_window_len': '06:00:00', 'learning_rate_scheduling': {'lr_start': 1e-06, 'lr_max': 5e-05, 'lr_final_decay': 2e-06, 'lr_final': 0.0, 'num_steps_warmup': 256, 'num_steps_cooldown': 512, 'policy_warmup': 'cosine', 'policy_decay': 'constant', 'policy_cooldown': 'linear', 'parallel_scaling_policy': 'sqrt'}, 'optimizer': {'grad_clip': 1.0, 'weight_decay': 0.1, 'log_grad_norms': False, 'adamw': {'beta1': 0.98125, 'beta2': 0.9875, 'eps': 2e-08}}, 'losses': {'physical': {'type': 'LossPhysical', 'loss_fcts': {'mse': {}}}}, 'model_input': {'source_masking': {'masking_strategy': 'forecast'}}, 'forecast': {'time_step': '06:00:00', 'offset': 1, 'num_steps': 2, 'policy': 'fixed'}}
+validation_config : {'samples_per_mini_epoch': 4, 'shuffle': False, 'start_date': '2023-10-01T00:00', 'end_date': '2023-12-31T00:00', 'validate_with_ema': {'enabled': True, 'ema_ramp_up_ratio': 0.09, 'ema_halflife_in_thousands': 0.001}, 'output': {'num_samples': 0, 'normalized_samples': False, 'streams': None}, 'validate_before_training': False}
+test_config : {'samples_per_mini_epoch': 128, 'shuffle': False, 'start_date': '2023-06-01T00:00', 'end_date': '2023-08-31T00:00', 'output': {'num_samples': 128, 'normalized_samples': False, 'streams': None}}
+wgtags : {'org': None, 'issue': None, 'exp': None, 'grid': None}
+from_run_id : None
+data_path_anemoi : /e/data1/slmet/ml_training
+data_path_obs : /e/data1/slmet/ml_training
+data_path_eobs : /e/data1/slmet/ml_training
+data_path_aux : /e/scratch/weatherai/shared_work/assets/
+path_shared_working_dir : /e/scratch/weatherai/shared_work
+path_shared_slurm_dir : /e/scratch/weatherai/slurm/
+data_path_fesom : /p/project1/hclimrep/koldunovn1
+data_path_icon : /p/scratch/hclimrep/shared/weather_generator_data/icon_art
+data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']
+mlflow : {'tracking_uri': 'https://dbc-080c3210-c159.cloud.databricks.com/'}
+profiling : {'memory_profiling': False, 'pytorch_profiling': False, 'only_profiling': False}
+checkpoint_per_block : True
+fe_checkpoint_per_step : True
+fe_blocks_per_checkpoint : 2
+fe_reshard_after_forward : True
+decoder_gather_after_kv_projection : True
+source_tokens_in_mixed_precision : True
+source_tokens_on_cpu : True
+ae_adapter_checkpoint : True
+ae_local_checkpoint_outer : True
+embed_num_chunks : 4
+embed_checkpoint_per_chunk : True
+embed_index_copy : True
+decoder_num_chunks : 2
+embed_readout_batched : True
+skip_all_valid_filter_copy : True
+target_requested_fields_only : True
+obs_single_read : True
+anemoi_select_vars : True
+train_gc_collect_every_step : True
+vectorize_hpy_splits : True
+even_workset_split : True
+masked_counts_bincount : True
+target_coords_flat : True
+ema_on_cpu : True
+fsdp_cpu_offload : True
+world_size : 4
+rank : 0
+local_rank : 0
+world_size_original : 4
+
+Mini_epoch 0 of 1: train.
+3::0 : dataset [300,400) : [300,309)
+iter_start=300, iter_end=309, len=100
+3::1 : dataset [300,400) : [309,318)
+iter_start=309, iter_end=318, len=100
+3::2 : dataset [300,400) : [318,327)
+iter_start=318, iter_end=327, len=100
+3::3 : dataset [300,400) : [327,336)
+iter_start=327, iter_end=336, len=100
+forecast_steps : 2
+forecast_steps : 2
+3::4 : dataset [300,400) : [336,344)
+iter_start=336, iter_end=344, len=100
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+3::5 : dataset [300,400) : [344,352)
+iter_start=344, iter_end=352, len=100
+Sufficient available samples in the time range specified
+3::6 : dataset [300,400) : [352,360)
+forecast_steps : 2
+iter_start=352, iter_end=360, len=100
+forecast_steps : 2
+3::7 : dataset [300,400) : [360,368)
+Sufficient available samples in the time range specified
+iter_start=360, iter_end=368, len=100
+Sufficient available samples in the time range specified
+3::8 : dataset [300,400) : [368,376)
+forecast_steps : 2
+iter_start=368, iter_end=376, len=100
+forecast_steps : 2
+3::9 : dataset [300,400) : [376,384)
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+iter_start=376, iter_end=384, len=100
+forecast_steps : 2
+3::10 : dataset [300,400) : [384,392)
+Sufficient available samples in the time range specified
+iter_start=384, iter_end=392, len=100
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+3::11 : dataset [300,400) : [392,400)
+iter_start=392, iter_end=400, len=100
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Creating Zarr event loop
+Using selector: EpollSelector
+1::0 : dataset [100,200) : [100,109)
+iter_start=100, iter_end=109, len=100
+1::1 : dataset [100,200) : [109,118)
+iter_start=109, iter_end=118, len=100
+1::2 : dataset [100,200) : [118,127)
+iter_start=118, iter_end=127, len=100
+1::3 : dataset [100,200) : [127,136)
+iter_start=127, iter_end=136, len=100
+1::4 : dataset [100,200) : [136,144)
+forecast_steps : 2
+forecast_steps : 2
+iter_start=136, iter_end=144, len=100
+forecast_steps : 2
+Sufficient available samples in the time range specified
+1::5 : dataset [100,200) : [144,152)
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+iter_start=144, iter_end=152, len=100
+forecast_steps : 2
+1::6 : dataset [100,200) : [152,160)
+Sufficient available samples in the time range specified
+iter_start=152, iter_end=160, len=100
+forecast_steps : 2
+1::7 : dataset [100,200) : [160,168)
+iter_start=160, iter_end=168, len=100
+Sufficient available samples in the time range specified
+1::8 : dataset [100,200) : [168,176)
+forecast_steps : 2
+iter_start=168, iter_end=176, len=100
+forecast_steps : 2
+Sufficient available samples in the time range specified
+1::9 : dataset [100,200) : [176,184)
+Sufficient available samples in the time range specified
+forecast_steps : 2
+iter_start=176, iter_end=184, len=100
+1::10 : dataset [100,200) : [184,192)
+Sufficient available samples in the time range specified
+iter_start=184, iter_end=192, len=100
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+1::11 : dataset [100,200) : [192,200)
+iter_start=192, iter_end=200, len=100
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Creating Zarr event loop
+Using selector: EpollSelector
+2::0 : dataset [200,300) : [200,209)
+iter_start=200, iter_end=209, len=100
+2::1 : dataset [200,300) : [209,218)
+iter_start=209, iter_end=218, len=100
+2::2 : dataset [200,300) : [218,227)
+iter_start=218, iter_end=227, len=100
+2::3 : dataset [200,300) : [227,236)
+iter_start=227, iter_end=236, len=100
+forecast_steps : 2
+forecast_steps : 2
+2::4 : dataset [200,300) : [236,244)
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+iter_start=236, iter_end=244, len=100
+2::5 : dataset [200,300) : [244,252)
+forecast_steps : 2
+iter_start=244, iter_end=252, len=100
+Sufficient available samples in the time range specified
+forecast_steps : 2
+2::6 : dataset [200,300) : [252,260)
+Sufficient available samples in the time range specified
+iter_start=252, iter_end=260, len=100
+2::7 : dataset [200,300) : [260,268)
+forecast_steps : 2
+iter_start=260, iter_end=268, len=100
+2::8 : dataset [200,300) : [268,276)
+Sufficient available samples in the time range specified
+forecast_steps : 2
+iter_start=268, iter_end=276, len=100
+2::9 : dataset [200,300) : [276,284)
+Sufficient available samples in the time range specified
+iter_start=276, iter_end=284, len=100
+2::10 : dataset [200,300) : [284,292)
+forecast_steps : 2
+forecast_steps : 2
+iter_start=284, iter_end=292, len=100
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+2::11 : dataset [200,300) : [292,300)
+iter_start=292, iter_end=300, len=100
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Creating Zarr event loop
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Creating Zarr event loop
+Using selector: EpollSelector
+0::0 : dataset [0,100) : [0,9)
+iter_start=0, iter_end=9, len=100
+0::1 : dataset [0,100) : [9,18)
+iter_start=9, iter_end=18, len=100
+0::2 : dataset [0,100) : [18,27)
+iter_start=18, iter_end=27, len=100
+0::3 : dataset [0,100) : [27,36)
+forecast_steps : 2
+iter_start=27, iter_end=36, len=100
+forecast_steps : 2
+0::4 : dataset [0,100) : [36,44)
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+iter_start=36, iter_end=44, len=100
+forecast_steps : 2
+0::5 : dataset [0,100) : [44,52)
+Sufficient available samples in the time range specified
+iter_start=44, iter_end=52, len=100
+forecast_steps : 2
+0::6 : dataset [0,100) : [52,60)
+forecast_steps : 2
+iter_start=52, iter_end=60, len=100
+Sufficient available samples in the time range specified
+0::7 : dataset [0,100) : [60,68)
+Sufficient available samples in the time range specified
+iter_start=60, iter_end=68, len=100
+forecast_steps : 2
+0::8 : dataset [0,100) : [68,76)
+Sufficient available samples in the time range specified
+iter_start=68, iter_end=76, len=100
+0::9 : dataset [0,100) : [76,84)
+forecast_steps : 2
+iter_start=76, iter_end=84, len=100
+Sufficient available samples in the time range specified
+forecast_steps : 2
+0::10 : dataset [0,100) : [84,92)
+Sufficient available samples in the time range specified
+iter_start=84, iter_end=92, len=100
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+0::11 : dataset [0,100) : [92,100)
+iter_start=92, iter_end=100, len=100
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Using selector: EpollSelector
+Creating Zarr event loop
+Using selector: EpollSelector
+Switching lr scheduler to 'constant' at step = 10.
+Switching lr scheduler to 'constant' at step = 10.
+Switching lr scheduler to 'constant' at step = 10.
+Switching lr scheduler to 'constant' at step = 10.
+000 : 00010/00100 : 000010 : loss = 7.2747E-01 (lr=9.99E-05, s/sec=0.158)
+	
+LossPhysical.ERA5.mse.avg : 6.6489E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 7.9004E-01 	
+LossPhysical.loss_avg : 7.2747E-01 	
+
+
+000 : 00020/00100 : 000020 : loss = 6.7873E-01 (lr=1.00E-04, s/sec=0.289)
+	
+LossPhysical.ERA5.mse.avg : 6.9237E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 6.6508E-01 	
+LossPhysical.loss_avg : 6.7873E-01 	
+
+
+000 : 00030/00100 : 000030 : loss = 6.4801E-01 (lr=1.00E-04, s/sec=0.291)
+	
+LossPhysical.ERA5.mse.avg : 6.8251E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 6.1350E-01 	
+LossPhysical.loss_avg : 6.4801E-01 	
+
+
+000 : 00040/00100 : 000040 : loss = 6.0586E-01 (lr=1.00E-04, s/sec=0.294)
+	
+LossPhysical.ERA5.mse.avg : 5.9770E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 6.1402E-01 	
+LossPhysical.loss_avg : 6.0586E-01 	
+
+
+000 : 00050/00100 : 000050 : loss = 5.5874E-01 (lr=1.00E-04, s/sec=0.294)
+	
+LossPhysical.ERA5.mse.avg : 6.0960E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 5.0788E-01 	
+LossPhysical.loss_avg : 5.5874E-01 	
+
+
+000 : 00060/00100 : 000060 : loss = 6.4353E-01 (lr=1.00E-04, s/sec=0.295)
+	
+LossPhysical.ERA5.mse.avg : 6.1186E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 6.7520E-01 	
+LossPhysical.loss_avg : 6.4353E-01 	
+
+
+000 : 00070/00100 : 000070 : loss = 4.8824E-01 (lr=1.00E-04, s/sec=0.298)
+	
+LossPhysical.ERA5.mse.avg : 5.5302E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 4.2345E-01 	
+LossPhysical.loss_avg : 4.8824E-01 	
+
+
+000 : 00080/00100 : 000080 : loss = 4.9745E-01 (lr=1.00E-04, s/sec=0.298)
+	
+LossPhysical.ERA5.mse.avg : 5.3165E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 4.6325E-01 	
+LossPhysical.loss_avg : 4.9745E-01 	
+
+
+000 : 00090/00100 : 000090 : loss = 5.8299E-01 (lr=1.00E-04, s/sec=0.314)
+	
+LossPhysical.ERA5.mse.avg : 5.5629E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 6.0969E-01 	
+LossPhysical.loss_avg : 5.8299E-01 	
+
+
+Switching lr scheduler to 'linear' at step = 95.
+Switching lr scheduler to 'linear' at step = 95.
+Switching lr scheduler to 'linear' at step = 95.
+Switching lr scheduler to 'linear' at step = 95.
+Mini_epoch 0 of 1: validate.
+3::0 : dataset [3,4) : [3,4)
+iter_start=3, iter_end=4, len=1
+3::1 : dataset [3,4) : [4,4)
+iter_start=4, iter_end=4, len=1
+3::2 : dataset [3,4) : [4,4)
+iter_start=4, iter_end=4, len=1
+forecast_steps : 2
+3::3 : dataset [3,4) : [4,4)
+Sufficient available samples in the time range specified
+iter_start=4, iter_end=4, len=1
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+3::4 : dataset [3,4) : [4,4)
+Sufficient available samples in the time range specified
+iter_start=4, iter_end=4, len=1
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+3::5 : dataset [3,4) : [4,4)
+Sufficient available samples in the time range specified
+iter_start=4, iter_end=4, len=1
+3::6 : dataset [3,4) : [4,4)
+iter_start=4, iter_end=4, len=1
+3::7 : dataset [3,4) : [4,4)
+iter_start=4, iter_end=4, len=1
+forecast_steps : 2
+3::8 : dataset [3,4) : [4,4)
+Sufficient available samples in the time range specified
+iter_start=4, iter_end=4, len=1
+3::9 : dataset [3,4) : [4,4)
+forecast_steps : 2
+iter_start=4, iter_end=4, len=1
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+3::10 : dataset [3,4) : [4,4)
+forecast_steps : 2
+iter_start=4, iter_end=4, len=1
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Creating Zarr event loop
+Using selector: EpollSelector
+3::11 : dataset [3,4) : [4,4)
+iter_start=4, iter_end=4, len=1
+forecast_steps : 2
+Sufficient available samples in the time range specified
+0::0 : dataset [0,1) : [0,1)
+iter_start=0, iter_end=1, len=1
+0::1 : dataset [0,1) : [1,1)
+iter_start=1, iter_end=1, len=1
+0::2 : dataset [0,1) : [1,1)
+iter_start=1, iter_end=1, len=1
+forecast_steps : 2
+0::3 : dataset [0,1) : [1,1)
+Sufficient available samples in the time range specified
+forecast_steps : 2
+iter_start=1, iter_end=1, len=1
+forecast_steps : 2
+Sufficient available samples in the time range specified
+0::4 : dataset [0,1) : [1,1)
+Sufficient available samples in the time range specified
+iter_start=1, iter_end=1, len=1
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+0::5 : dataset [0,1) : [1,1)
+iter_start=1, iter_end=1, len=1
+0::6 : dataset [0,1) : [1,1)
+iter_start=1, iter_end=1, len=1
+0::7 : dataset [0,1) : [1,1)
+forecast_steps : 2
+iter_start=1, iter_end=1, len=1
+Sufficient available samples in the time range specified
+0::8 : dataset [0,1) : [1,1)
+iter_start=1, iter_end=1, len=1
+forecast_steps : 2
+Sufficient available samples in the time range specified
+0::9 : dataset [0,1) : [1,1)
+iter_start=1, iter_end=1, len=1
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+0::10 : dataset [0,1) : [1,1)
+iter_start=1, iter_end=1, len=1
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+2::0 : dataset [2,3) : [2,3)
+1::0 : dataset [1,2) : [1,2)
+forecast_steps : 2
+1::1 : dataset [1,2) : [2,2)
+2::1 : dataset [2,3) : [3,3)
+Creating Zarr event loop
+1::2 : dataset [1,2) : [2,2)
+Sufficient available samples in the time range specified
+1::3 : dataset [1,2) : [2,2)
+2::2 : dataset [2,3) : [3,3)
+1::4 : dataset [1,2) : [2,2)
+0::11 : dataset [0,1) : [1,1)
+2::3 : dataset [2,3) : [3,3)
+iter_start=2, iter_end=2, len=1
+iter_start=3, iter_end=3, len=1
+iter_start=1, iter_end=1, len=1
+1::5 : dataset [1,2) : [2,2)
+2::4 : dataset [2,3) : [3,3)
+1::6 : dataset [1,2) : [2,2)
+2::5 : dataset [2,3) : [3,3)
+1::7 : dataset [1,2) : [2,2)
+iter_start=3, iter_end=3, len=1
+1::8 : dataset [1,2) : [2,2)
+2::6 : dataset [2,3) : [3,3)
+iter_start=2, iter_end=2, len=1
+iter_start=3, iter_end=3, len=1
+1::9 : dataset [1,2) : [2,2)
+2::7 : dataset [2,3) : [3,3)
+1::10 : dataset [1,2) : [2,2)
+iter_start=3, iter_end=3, len=1
+forecast_steps : 2
+forecast_steps : 2
+2::8 : dataset [2,3) : [3,3)
+1::11 : dataset [1,2) : [2,2)
+Sufficient available samples in the time range specified
+2::9 : dataset [2,3) : [3,3)
+iter_start=1, iter_end=2, len=1
+iter_start=3, iter_end=3, len=1
+Using selector: EpollSelector
+2::10 : dataset [2,3) : [3,3)
+iter_start=2, iter_end=2, len=1
+2::11 : dataset [2,3) : [3,3)
+iter_start=2, iter_end=2, len=1
+iter_start=2, iter_end=3, len=1
+iter_start=2, iter_end=2, len=1
+iter_start=3, iter_end=3, len=1
+iter_start=2, iter_end=2, len=1
+iter_start=3, iter_end=3, len=1
+iter_start=2, iter_end=2, len=1
+iter_start=3, iter_end=3, len=1
+iter_start=2, iter_end=2, len=1
+forecast_steps : 2
+forecast_steps : 2
+forecast_steps : 2
+iter_start=2, iter_end=2, len=1
+forecast_steps : 2
+iter_start=2, iter_end=2, len=1
+iter_start=3, iter_end=3, len=1
+Sufficient available samples in the time range specified
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+iter_start=2, iter_end=2, len=1
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+iter_start=3, iter_end=3, len=1
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+iter_start=3, iter_end=3, len=1
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+forecast_steps : 2
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+forecast_steps : 2
+Sufficient available samples in the time range specified
+Sufficient available samples in the time range specified
+Creating Zarr event loop
+Creating Zarr event loop
+Using selector: EpollSelector
+Using selector: EpollSelector
+validation (st092ps4) : 000 : 
+                        0.5018930435180664
+LossPhysical.ERA5.mse.avg : 5.8587E-01 	
+LossPhysical.SurfaceCombined.mse.avg : 4.1792E-01 	
+LossPhysical.loss_avg : 5.0189E-01 	
+
+
+Mini_epoch 0 of 1: save_model.
+Saved model to /e/scratch/weatherai/shared_work/models/st092ps4/st092ps4_chkpt00000.chkpt
+Saved model to /e/scratch/weatherai/shared_work/models/st092ps4/st092ps4_chkpt00001.chkpt

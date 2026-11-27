@@ -1,0 +1,1243 @@
+0: DDP initialization: device=cuda:0, rank=0, world_size=4
+0: [W1112 03:35:02.923588265 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [r65-nod66.jupiter.internal]:1345 (errno: 97 - Address family not supported by protocol).
+3: DDP initialization: device=cuda:3, rank=3, world_size=4
+2: DDP initialization: device=cuda:2, rank=2, world_size=4
+1: DDP initialization: device=cuda:1, rank=1, world_size=4
+3: [W1112 03:35:03.395259242 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [r65-nod66.jupiter.internal]:1345 (errno: 97 - Address family not supported by protocol).
+1: [W1112 03:35:03.395554148 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [jpbo-065-32.jupiter.internal]:1345 (errno: 97 - Address family not supported by protocol).
+2: [W1112 03:35:03.397599961 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [jpbo-065-32-interconnect-1.jupiter.internal]:1345 (errno: 97 - Address family not supported by protocol).
+1: [Gloo] Rank 1 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+0: [Gloo] Rank 0 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+3: [Gloo] Rank 3 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+2: [Gloo] Rank 2 is connected to 3 peer ranks. Expected number of connected peer ranks is : 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO ncclOsDlopen(libnccl-env.so) failed: libnccl-env.so: cannot open shared object file: No such file or directory
+0: jpbo-065-32:670257:670257 [0] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Stack size limit (unlimited) is unsafe; will use 8192KB for newly launched threads
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Bootstrap: Using ib0:10.128.40.224<0>
+0: jpbo-065-32:670257:670257 [0] NCCL INFO cudaDriverVersion 13030
+0: jpbo-065-32:670257:670257 [0] NCCL INFO NCCL version 2.30.4+cuda12.9
+0: jpbo-065-32:670257:670257 [0] NCCL INFO NCCL git version HEAD 747384637
+1: jpbo-065-32:670258:670258 [1] NCCL INFO ncclOsDlopen(libnccl-env.so) failed: libnccl-env.so: cannot open shared object file: No such file or directory
+1: jpbo-065-32:670258:670258 [1] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+1: jpbo-065-32:670258:670258 [1] NCCL INFO cudaDriverVersion 13030
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Stack size limit (unlimited) is unsafe; will use 8192KB for newly launched threads
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Bootstrap: Using ib0:10.128.40.224<0>
+1: jpbo-065-32:670258:670258 [1] NCCL INFO NCCL version 2.30.4+cuda12.9
+1: jpbo-065-32:670258:670258 [1] NCCL INFO NCCL git version HEAD 747384637
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Comm config Blocking set to 1
+2: jpbo-065-32:670259:670259 [2] NCCL INFO ncclOsDlopen(libnccl-env.so) failed: libnccl-env.so: cannot open shared object file: No such file or directory
+2: jpbo-065-32:670259:670259 [2] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+2: jpbo-065-32:670259:670259 [2] NCCL INFO cudaDriverVersion 13030
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Stack size limit (unlimited) is unsafe; will use 8192KB for newly launched threads
+3: jpbo-065-32:670260:670260 [3] NCCL INFO ncclOsDlopen(libnccl-env.so) failed: libnccl-env.so: cannot open shared object file: No such file or directory
+3: jpbo-065-32:670260:670260 [3] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+3: jpbo-065-32:670260:670260 [3] NCCL INFO cudaDriverVersion 13030
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Bootstrap: Using ib0:10.128.40.224<0>
+2: jpbo-065-32:670259:670259 [2] NCCL INFO NCCL version 2.30.4+cuda12.9
+2: jpbo-065-32:670259:670259 [2] NCCL INFO NCCL git version HEAD 747384637
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Stack size limit (unlimited) is unsafe; will use 8192KB for newly launched threads
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Bootstrap: Using ib0:10.128.40.224<0>
+3: jpbo-065-32:670260:670260 [3] NCCL INFO NCCL version 2.30.4+cuda12.9
+3: jpbo-065-32:670260:670260 [3] NCCL INFO NCCL git version HEAD 747384637
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Comm config Blocking set to 1
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Comm config Blocking set to 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Comm config Blocking set to 1
+1: jpbo-065-32:670258:670258 [1] NCCL INFO ncclOsDlopen(libnccl-net.so) failed: libnccl-net.so: cannot open shared object file: No such file or directory
+1: jpbo-065-32:670258:670258 [1] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+0: jpbo-065-32:670257:670257 [0] NCCL INFO ncclOsDlopen(libnccl-net.so) failed: libnccl-net.so: cannot open shared object file: No such file or directory
+0: jpbo-065-32:670257:670257 [0] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+2: jpbo-065-32:670259:670259 [2] NCCL INFO ncclOsDlopen(libnccl-net.so) failed: libnccl-net.so: cannot open shared object file: No such file or directory
+2: jpbo-065-32:670259:670259 [2] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+3: jpbo-065-32:670260:670260 [3] NCCL INFO ncclOsDlopen(libnccl-net.so) failed: libnccl-net.so: cannot open shared object file: No such file or directory
+3: jpbo-065-32:670260:670260 [3] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Count not open libibverbs.so
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Count not open libibverbs.so
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Count not open libibverbs.so
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Count not open libibverbs.so
+0: jpbo-065-32:670257:670257 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [2]mlx5_2:1/IB [3]mlx5_3:1/IB [RO]; OOB ib0:10.128.40.224<0>
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Initialized NET plugin IB
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Assigned NET plugin IB to comm
+3: jpbo-065-32:670260:670260 [3] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [2]mlx5_2:1/IB [3]mlx5_3:1/IB [RO]; OOB ib0:10.128.40.224<0>
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Initialized NET plugin IB
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Assigned NET plugin IB to comm
+1: jpbo-065-32:670258:670258 [1] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [2]mlx5_2:1/IB [3]mlx5_3:1/IB [RO]; OOB ib0:10.128.40.224<0>
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Initialized NET plugin IB
+2: jpbo-065-32:670259:670259 [2] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [2]mlx5_2:1/IB [3]mlx5_3:1/IB [RO]; OOB ib0:10.128.40.224<0>
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Initialized NET plugin IB
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Assigned NET plugin IB to comm
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Assigned NET plugin IB to comm
+1: jpbo-065-32:670258:670258 [1] NCCL INFO ncclOsDlopen(libnccl-gin.so) failed: libnccl-gin.so: cannot open shared object file: No such file or directory
+1: jpbo-065-32:670258:670258 [1] NCCL INFO GIN/Plugin: Could not find: libnccl-gin.so
+0: jpbo-065-32:670257:670257 [0] NCCL INFO ncclOsDlopen(libnccl-gin.so) failed: libnccl-gin.so: cannot open shared object file: No such file or directory
+0: jpbo-065-32:670257:670257 [0] NCCL INFO GIN/Plugin: Could not find: libnccl-gin.so
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Assigned RMA plugin GIN_IB_PROXY to comm
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Using network IB
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Assigned RMA plugin GIN_IB_PROXY to comm
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Using network IB
+2: jpbo-065-32:670259:670259 [2] NCCL INFO ncclOsDlopen(libnccl-gin.so) failed: libnccl-gin.so: cannot open shared object file: No such file or directory
+2: jpbo-065-32:670259:670259 [2] NCCL INFO GIN/Plugin: Could not find: libnccl-gin.so
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Assigned RMA plugin GIN_IB_PROXY to comm
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Using network IB
+3: jpbo-065-32:670260:670260 [3] NCCL INFO ncclOsDlopen(libnccl-gin.so) failed: libnccl-gin.so: cannot open shared object file: No such file or directory
+3: jpbo-065-32:670260:670260 [3] NCCL INFO GIN/Plugin: Could not find: libnccl-gin.so
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Assigned RMA plugin GIN_IB_PROXY to comm
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Using network IB
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Loaded NVML from libnvidia-ml.so.1
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Loaded NVML from libnvidia-ml.so.1
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Loaded NVML from libnvidia-ml.so.1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Loaded NVML from libnvidia-ml.so.1
+1: jpbo-065-32:670258:670258 [1] NCCL INFO DMA-BUF is available on GPU device 1
+1: jpbo-065-32:670258:670258 [1] NCCL INFO [Rank 1] ncclCommInitRankConfig comm 0x35bec660 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 1901000 commId 0x63bddcc09bbd567c - Init START
+3: jpbo-065-32:670260:670260 [3] NCCL INFO DMA-BUF is available on GPU device 3
+3: jpbo-065-32:670260:670260 [3] NCCL INFO [Rank 3] ncclCommInitRankConfig comm 0x331c9af0 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId 3901000 commId 0x63bddcc09bbd567c - Init START
+2: jpbo-065-32:670259:670259 [2] NCCL INFO DMA-BUF is available on GPU device 2
+2: jpbo-065-32:670259:670259 [2] NCCL INFO [Rank 2] ncclCommInitRankConfig comm 0x31dc61f0 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 2901000 commId 0x63bddcc09bbd567c - Init START
+2: jpbo-065-32:670259:670259 [2] NCCL INFO RAS client listening socket at 127.0.0.1<28028>
+0: jpbo-065-32:670257:670257 [0] NCCL INFO DMA-BUF is available on GPU device 0
+0: jpbo-065-32:670257:670257 [0] NCCL INFO [Rank 0] ncclCommInitRankConfig comm 0x19afd0f0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 901000 commId 0x63bddcc09bbd567c - Init START
+1: jpbo-065-32:670258:670258 [1] NCCL INFO RAS client listening socket at 127.0.0.1<28028>
+3: jpbo-065-32:670260:670260 [3] NCCL INFO RAS client listening socket at 127.0.0.1<28028>
+0: jpbo-065-32:670257:670257 [0] NCCL INFO RAS client listening socket at 127.0.0.1<28028>
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Bootstrap timings total 0.023917 (create 0.000045, send 0.000144, recv 0.011648, ring 0.000287, delay 0.000002)
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Bootstrap timings total 0.012358 (create 0.000032, send 0.000137, recv 0.000146, ring 0.010047, delay 0.000001)
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Bootstrap timings total 0.002795 (create 0.000029, send 0.000079, recv 0.000093, ring 0.000093, delay 0.000000)
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Bootstrap timings total 0.018300 (create 0.000043, send 0.000172, recv 0.015479, ring 0.000212, delay 0.000001)
+1: jpbo-065-32:670258:670258 [1] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 1 is 72-143. (GPU affinity = 72-143 ; CPU affinity = 72-143).
+1: jpbo-065-32:670258:670258 [1] NCCL INFO NVLS multicast support is not available on dev 1
+2: jpbo-065-32:670259:670259 [2] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 2 is 144-215. (GPU affinity = 144-215 ; CPU affinity = 144-215).
+2: jpbo-065-32:670259:670259 [2] NCCL INFO NVLS multicast support is not available on dev 2
+3: jpbo-065-32:670260:670260 [3] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 3 is 216-287. (GPU affinity = 216-287 ; CPU affinity = 216-287).
+3: jpbo-065-32:670260:670260 [3] NCCL INFO NVLS multicast support is not available on dev 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 0 is 0-71. (GPU affinity = 0-71 ; CPU affinity = 0-71).
+0: jpbo-065-32:670257:670257 [0] NCCL INFO NVLS multicast support is not available on dev 0
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Rank 2: 4 Net devices
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Rank 2: 0 CollNet devices
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Rank 1: 4 Net devices
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Rank 1: 0 CollNet devices
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Rank 3: 4 Net devices
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Rank 3: 0 CollNet devices
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Rank 0: 4 Net devices
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Rank 0: 0 CollNet devices
+1: jpbo-065-32:670258:670258 [1] NCCL INFO comm 0x35bec660 rank 1 nRanks 4 nNodes 1 localRanks 4 localRank 1 MNNVL 0
+2: jpbo-065-32:670259:670259 [2] NCCL INFO comm 0x31dc61f0 rank 2 nRanks 4 nNodes 1 localRanks 4 localRank 2 MNNVL 0
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Local Net device counts across ranks: min 4 max 4
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Local CollNet device counts across ranks: min 0 max 0
+0: jpbo-065-32:670257:670257 [0] NCCL INFO comm 0x19afd0f0 rank 0 nRanks 4 nNodes 1 localRanks 4 localRank 0 MNNVL 0
+3: jpbo-065-32:670260:670260 [3] NCCL INFO comm 0x331c9af0 rank 3 nRanks 4 nNodes 1 localRanks 4 localRank 3 MNNVL 0
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Trees [0] 2/-1/-1->1->0 [1] 2/-1/-1->1->0 [2] 2/-1/-1->1->0 [3] 2/-1/-1->1->0 [4] 3/-1/-1->1->2 [5] 3/-1/-1->1->2 [6] 3/-1/-1->1->2 [7] 3/-1/-1->1->2 [8] 0/-1/-1->1->-1 [9] 0/-1/-1->1->-1 [10] 0/-1/-1->1->-1 [11] 0/-1/-1->1->-1 [12] 2/-1/-1->1->0 [13] 2/-1/-1->1->0 [14] 2/-1/-1->1->0 [15] 2/-1/-1->1->0 [16] 3/-1/-1->1->2 [17] 3/-1/-1->1->2 [18] 3/-1/-1->1->2 [19] 3/-1/-1->1->2 [20] 0/-1/-1->1->-1 [21] 0/-1/-1->1->-1 [22] 0/-1/-1->1->-1 [23] 0/-1/-1->1->-1
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Trees [0] 3/-1/-1->2->1 [1] 3/-1/-1->2->1 [2] 3/-1/-1->2->1 [3] 3/-1/-1->2->1 [4] 1/-1/-1->2->0 [5] 1/-1/-1->2->0 [6] 1/-1/-1->2->0 [7] 1/-1/-1->2->0 [8] -1/-1/-1->2->3 [9] -1/-1/-1->2->3 [10] -1/-1/-1->2->3 [11] -1/-1/-1->2->3 [12] 3/-1/-1->2->1 [13] 3/-1/-1->2->1 [14] 3/-1/-1->2->1 [15] 3/-1/-1->2->1 [16] 1/-1/-1->2->0 [17] 1/-1/-1->2->0 [18] 1/-1/-1->2->0 [19] 1/-1/-1->2->0 [20] -1/-1/-1->2->3 [21] -1/-1/-1->2->3 [22] -1/-1/-1->2->3 [23] -1/-1/-1->2->3
+2: jpbo-065-32:670259:670259 [2] NCCL INFO P2P Chunksize set to 524288
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 00/24 : 0 1 2 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 01/24 : 0 1 3 2
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 02/24 : 0 2 3 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 03/24 : 0 2 1 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 04/24 : 0 3 1 2
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Trees [0] -1/-1/-1->3->2 [1] -1/-1/-1->3->2 [2] -1/-1/-1->3->2 [3] -1/-1/-1->3->2 [4] -1/-1/-1->3->1 [5] -1/-1/-1->3->1 [6] -1/-1/-1->3->1 [7] -1/-1/-1->3->1 [8] 2/-1/-1->3->0 [9] 2/-1/-1->3->0 [10] 2/-1/-1->3->0 [11] 2/-1/-1->3->0 [12] -1/-1/-1->3->2 [13] -1/-1/-1->3->2 [14] -1/-1/-1->3->2 [15] -1/-1/-1->3->2 [16] -1/-1/-1->3->1 [17] -1/-1/-1->3->1 [18] -1/-1/-1->3->1 [19] -1/-1/-1->3->1 [20] 2/-1/-1->3->0 [21] 2/-1/-1->3->0 [22] 2/-1/-1->3->0 [23] 2/-1/-1->3->0
+3: jpbo-065-32:670260:670260 [3] NCCL INFO P2P Chunksize set to 524288
+1: jpbo-065-32:670258:670258 [1] NCCL INFO P2P Chunksize set to 524288
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 05/24 : 0 3 2 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 06/24 : 0 1 2 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 07/24 : 0 1 3 2
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 08/24 : 0 2 3 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 09/24 : 0 2 1 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 10/24 : 0 3 1 2
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 11/24 : 0 3 2 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 12/24 : 0 1 2 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 13/24 : 0 1 3 2
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 14/24 : 0 2 3 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 15/24 : 0 2 1 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 16/24 : 0 3 1 2
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 17/24 : 0 3 2 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 18/24 : 0 1 2 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 19/24 : 0 1 3 2
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 20/24 : 0 2 3 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 21/24 : 0 2 1 3
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 22/24 : 0 3 1 2
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 23/24 : 0 3 2 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] 1/-1/-1->0->-1 [2] 1/-1/-1->0->-1 [3] 1/-1/-1->0->-1 [4] 2/-1/-1->0->-1 [5] 2/-1/-1->0->-1 [6] 2/-1/-1->0->-1 [7] 2/-1/-1->0->-1 [8] 3/-1/-1->0->1 [9] 3/-1/-1->0->1 [10] 3/-1/-1->0->1 [11] 3/-1/-1->0->1 [12] 1/-1/-1->0->-1 [13] 1/-1/-1->0->-1 [14] 1/-1/-1->0->-1 [15] 1/-1/-1->0->-1 [16] 2/-1/-1->0->-1 [17] 2/-1/-1->0->-1 [18] 2/-1/-1->0->-1 [19] 2/-1/-1->0->-1 [20] 3/-1/-1->0->1 [21] 3/-1/-1->0->1 [22] 3/-1/-1->0->1 [23] 3/-1/-1->0->1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO P2P Chunksize set to 524288
+0: jpbo-065-32:670257:670257 [0] NCCL INFO ncclOsDlopen(libnccl-profiler.so) failed: libnccl-profiler.so: cannot open shared object file: No such file or directory
+0: jpbo-065-32:670257:670257 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0 isAllCudaP2p 1
+0: jpbo-065-32:670257:671216 [0] NCCL INFO [Proxy Service] Device 0 CPU core 5
+0: jpbo-065-32:670257:671217 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 6
+2: jpbo-065-32:670259:670259 [2] NCCL INFO ncclOsDlopen(libnccl-profiler.so) failed: libnccl-profiler.so: cannot open shared object file: No such file or directory
+2: jpbo-065-32:670259:670259 [2] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0 isAllCudaP2p 1
+2: jpbo-065-32:670259:671218 [0] NCCL INFO [Proxy Service] Device 2 CPU core 210
+2: jpbo-065-32:670259:671219 [0] NCCL INFO [Proxy Service UDS] Device 2 CPU core 211
+3: jpbo-065-32:670260:670260 [3] NCCL INFO ncclOsDlopen(libnccl-profiler.so) failed: libnccl-profiler.so: cannot open shared object file: No such file or directory
+3: jpbo-065-32:670260:670260 [3] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0 isAllCudaP2p 1
+3: jpbo-065-32:670260:671221 [0] NCCL INFO [Proxy Service UDS] Device 3 CPU core 271
+3: jpbo-065-32:670260:671220 [0] NCCL INFO [Proxy Service] Device 3 CPU core 270
+1: jpbo-065-32:670258:670258 [1] NCCL INFO ncclOsDlopen(libnccl-profiler.so) failed: libnccl-profiler.so: cannot open shared object file: No such file or directory
+1: jpbo-065-32:670258:670258 [1] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0 isAllCudaP2p 1
+1: jpbo-065-32:670258:671222 [0] NCCL INFO [Proxy Service] Device 1 CPU core 110
+1: jpbo-065-32:670258:671223 [0] NCCL INFO [Proxy Service UDS] Device 1 CPU core 111
+0: jpbo-065-32:670257:670257 [0] NCCL INFO ncclOsDlopen(libnccl-tuner.so) failed: libnccl-tuner.so: cannot open shared object file: No such file or directory
+0: jpbo-065-32:670257:670257 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+0: jpbo-065-32:670257:670257 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+0: jpbo-065-32:670257:670257 [0] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 16 p2p channels per peer
+0: jpbo-065-32:670257:670257 [0] NCCL INFO CC Off, workFifoBytes 1048576
+2: jpbo-065-32:670259:670259 [2] NCCL INFO ncclOsDlopen(libnccl-tuner.so) failed: libnccl-tuner.so: cannot open shared object file: No such file or directory
+2: jpbo-065-32:670259:670259 [2] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+2: jpbo-065-32:670259:670259 [2] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+2: jpbo-065-32:670259:670259 [2] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 16 p2p channels per peer
+1: jpbo-065-32:670258:670258 [1] NCCL INFO ncclOsDlopen(libnccl-tuner.so) failed: libnccl-tuner.so: cannot open shared object file: No such file or directory
+1: jpbo-065-32:670258:670258 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+1: jpbo-065-32:670258:670258 [1] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+1: jpbo-065-32:670258:670258 [1] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 16 p2p channels per peer
+3: jpbo-065-32:670260:670260 [3] NCCL INFO ncclOsDlopen(libnccl-tuner.so) failed: libnccl-tuner.so: cannot open shared object file: No such file or directory
+3: jpbo-065-32:670260:670260 [3] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+3: jpbo-065-32:670260:670260 [3] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+3: jpbo-065-32:670260:670260 [3] NCCL INFO 24 coll channels, 24 collnet channels, 0 nvls channels, 32 p2p channels, 16 p2p channels per peer
+2: jpbo-065-32:670259:670259 [2] NCCL INFO ncclCommInitRankConfig comm 0x31dc61f0 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 2901000 commId 0x63bddcc09bbd567c - Init COMPLETE
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Init timings - ncclCommInitRankConfig: rank 2 nranks 4 total 2.44 (kernels 0.39, alloc 1.93, bootstrap 0.01, allgathers 0.00, topo 0.03, graphs 0.01, connections 0.03, rest 0.03)
+0: jpbo-065-32:670257:670257 [0] NCCL INFO ncclCommInitRankConfig comm 0x19afd0f0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 901000 commId 0x63bddcc09bbd567c - Init COMPLETE
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 4 total 2.30 (kernels 0.26, alloc 1.94, bootstrap 0.00, allgathers 0.00, topo 0.03, graphs 0.01, connections 0.02, rest 0.05)
+1: jpbo-065-32:670258:670258 [1] NCCL INFO ncclCommInitRankConfig comm 0x35bec660 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 1901000 commId 0x63bddcc09bbd567c - Init COMPLETE
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 4 total 2.44 (kernels 0.39, alloc 1.92, bootstrap 0.02, allgathers 0.00, topo 0.03, graphs 0.01, connections 0.04, rest 0.03)
+3: jpbo-065-32:670260:670260 [3] NCCL INFO ncclCommInitRankConfig comm 0x331c9af0 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId 3901000 commId 0x63bddcc09bbd567c - Init COMPLETE
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Init timings - ncclCommInitRankConfig: rank 3 nranks 4 total 2.44 (kernels 0.39, alloc 1.92, bootstrap 0.02, allgathers 0.00, topo 0.03, graphs 0.01, connections 0.04, rest 0.02)
+3: Process group initialized (cpu:gloo,cuda:nccl).
+2: Process group initialized (cpu:gloo,cuda:nccl).
+1: Process group initialized (cpu:gloo,cuda:nccl).
+0: Process group initialized (cpu:gloo,cuda:nccl).
+0: DDP initialized: root.
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Symmetric VA size=96GB
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Symmetric VA size=96GB
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Symmetric VA size=96GB
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 00/0 : 3[3] -> 0[0] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 00/0 : 1[1] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 03/0 : 3[3] -> 0[0] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 04/0 : 1[1] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 06/0 : 3[3] -> 0[0] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 06/0 : 1[1] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 09/0 : 3[3] -> 0[0] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Symmetric VA size=96GB
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 00/0 : 2[2] -> 3[3] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 10/0 : 1[1] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 12/0 : 3[3] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 02/0 : 2[2] -> 3[3] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 12/0 : 1[1] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 15/0 : 3[3] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 06/0 : 2[2] -> 3[3] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 16/0 : 1[1] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 18/0 : 3[3] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 08/0 : 2[2] -> 3[3] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 18/0 : 1[1] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 21/0 : 3[3] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 12/0 : 2[2] -> 3[3] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 22/0 : 1[1] -> 2[2] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 14/0 : 2[2] -> 3[3] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 18/0 : 2[2] -> 3[3] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 20/0 : 2[2] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 06/0 : 0[0] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 07/0 : 0[0] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 12/0 : 0[0] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 13/0 : 0[0] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 18/0 : 0[0] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 19/0 : 0[0] -> 1[1] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 01/0 : 2[2] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 04/0 : 2[2] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 07/0 : 2[2] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 10/0 : 2[2] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 13/0 : 2[2] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 16/0 : 2[2] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 19/0 : 2[2] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 22/0 : 2[2] -> 0[0] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 01/0 : 1[1] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 02/0 : 0[0] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 02/0 : 3[3] -> 1[1] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 03/0 : 1[1] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 03/0 : 0[0] -> 2[2] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 07/0 : 1[1] -> 3[3] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 04/0 : 3[3] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 08/0 : 0[0] -> 2[2] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 09/0 : 1[1] -> 3[3] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 08/0 : 3[3] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 09/0 : 0[0] -> 2[2] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 13/0 : 1[1] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 14/0 : 0[0] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 10/0 : 3[3] -> 1[1] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 14/0 : 3[3] -> 1[1] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 15/0 : 1[1] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 15/0 : 0[0] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 16/0 : 3[3] -> 1[1] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 19/0 : 1[1] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 20/0 : 0[0] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 20/0 : 3[3] -> 1[1] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 21/0 : 1[1] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 21/0 : 0[0] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 22/0 : 3[3] -> 1[1] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 03/0 : 2[2] -> 1[1] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 01/0 : 3[3] -> 2[2] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 04/0 : 0[0] -> 3[3] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 05/0 : 2[2] -> 1[1] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 02/0 : 1[1] -> 0[0] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 05/0 : 3[3] -> 2[2] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 05/0 : 0[0] -> 3[3] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 05/0 : 1[1] -> 0[0] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 07/0 : 3[3] -> 2[2] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 09/0 : 2[2] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 10/0 : 0[0] -> 3[3] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 11/0 : 3[3] -> 2[2] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 08/0 : 1[1] -> 0[0] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 13/0 : 3[3] -> 2[2] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 11/0 : 1[1] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 11/0 : 2[2] -> 1[1] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 17/0 : 3[3] -> 2[2] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 19/0 : 3[3] -> 2[2] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 14/0 : 1[1] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 15/0 : 2[2] -> 1[1] via P2P/CUMEM
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Channel 23/0 : 3[3] -> 2[2] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 17/0 : 1[1] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 17/0 : 2[2] -> 1[1] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 20/0 : 1[1] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 21/0 : 2[2] -> 1[1] via P2P/CUMEM
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Channel 23/0 : 1[1] -> 0[0] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Channel 23/0 : 2[2] -> 1[1] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 11/0 : 0[0] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 16/0 : 0[0] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 17/0 : 0[0] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 22/0 : 0[0] -> 3[3] via P2P/CUMEM
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Channel 23/0 : 0[0] -> 3[3] via P2P/CUMEM
+2: jpbo-065-32:670259:670259 [2] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+1: jpbo-065-32:670258:670258 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+3: jpbo-065-32:670260:670260 [3] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+0: jpbo-065-32:670257:670257 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+0: Communicating run_id to all nodes: xs51dbll
+0: rank: 0 has run_id: xs51dbll
+1: rank: 1 has run_id: xs51dbll
+2: rank: 2 has run_id: xs51dbll
+3: rank: 3 has run_id: xs51dbll
+2: rank: 2 uses rng_seed: 1
+1: rank: 1 uses rng_seed: 1
+3: rank: 3 uses rng_seed: 1
+0: rank: 0 uses rng_seed: 1
+2: Logging set up. Logs are in ./logs/xs51dbll
+2: DDP initialization: rank=2, world_size=4
+1: Logging set up. Logs are in ./logs/xs51dbll
+1: DDP initialization: rank=1, world_size=4
+2: Reading streams from /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres
+1: Reading streams from /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres
+2: Discover stream configs: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+1: Discover stream configs: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+3: Logging set up. Logs are in ./logs/xs51dbll
+3: DDP initialization: rank=3, world_size=4
+3: Reading streams from /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres
+3: Discover stream configs: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+0: Logging set up. Logs are in ./logs/xs51dbll
+0: DDP initialization: rank=0, world_size=4
+0: Reading streams from /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres
+0: Discover stream configs: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml, /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+1: Loaded stream config: METOP_ABC_AVHRR_IASI from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml
+2: Loaded stream config: METOP_ABC_AVHRR_IASI from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml
+0: Loaded stream config: METOP_ABC_AVHRR_IASI from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml
+3: Loaded stream config: METOP_ABC_AVHRR_IASI from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/avhrr.yml
+1: Loaded stream config: ERA5_in from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml
+2: Loaded stream config: ERA5_in from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml
+0: Loaded stream config: ERA5_in from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml
+3: Loaded stream config: ERA5_in from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5.yml
+2: Loaded stream config: ERA5 from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml
+1: Loaded stream config: ERA5 from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml
+0: Loaded stream config: ERA5 from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml
+3: Loaded stream config: ERA5 from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/era5_out.yml
+2: Loaded stream config: METEOSAT_SEVIRI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+2: Loaded stream config: GOES_ABI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+1: Loaded stream config: METEOSAT_SEVIRI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+0: Loaded stream config: METEOSAT_SEVIRI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+2: Loaded stream config: HIMAWARI_AHI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+0: Loaded stream config: GOES_ABI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+1: Loaded stream config: GOES_ABI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+2: Loaded stream config: GOES_ABI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+3: Loaded stream config: METEOSAT_SEVIRI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+0: Loaded stream config: HIMAWARI_AHI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+1: Loaded stream config: HIMAWARI_AHI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+2: Loaded stream config: HIMAWARI_AHI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+3: Loaded stream config: GOES_ABI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+1: Loaded stream config: GOES_ABI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+0: Loaded stream config: GOES_ABI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+3: Loaded stream config: HIMAWARI_AHI_IR from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+1: Loaded stream config: HIMAWARI_AHI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+3: Loaded stream config: GOES_ABI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+0: Loaded stream config: HIMAWARI_AHI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+3: Loaded stream config: HIMAWARI_AHI_VIS from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/geos.yml
+2: Loaded stream config: SurfaceCombined from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+0: Loaded stream config: SurfaceCombined from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+1: Loaded stream config: SurfaceCombined from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+3: Loaded stream config: SurfaceCombined from file /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator/config/streams/operan_georing_avhrr_synop_lowres/synop.yml
+1: Loading private config from platform-env.py: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator-private/hpc/platform-env.py.
+2: Loading private config from platform-env.py: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator-private/hpc/platform-env.py.
+0: Loading private config from platform-env.py: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator-private/hpc/platform-env.py.
+3: Loading private config from platform-env.py: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator-private/hpc/platform-env.py.
+1: Detected HPC: jupiter.
+2: Detected HPC: jupiter.
+3: Detected HPC: jupiter.
+0: Detected HPC: jupiter.
+1: Loading private config from platform-env.py output: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator-private/hpc/jupiter/config/paths.yml.
+2: Loading private config from platform-env.py output: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator-private/hpc/jupiter/config/paths.yml.
+0: Loading private config from platform-env.py output: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator-private/hpc/jupiter/config/paths.yml.
+3: Loading private config from platform-env.py output: /e/scratch/weatherai/slurm/slurm_weathergen_xs51dbll_dir/WeatherGenerator-private/hpc/jupiter/config/paths.yml.
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+0: TimeWindowHandler: start=2017-06-01T00:00:00.000000000, end=2022-12-31T00:00:00.000000000, len=06:00:00, step=01:00:00
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+0: Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+3: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+1: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+1: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+3: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+3: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+1: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: anemoi_operan from stream config ERA5_in.
+1: ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+1: ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+1: ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+0: ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+2: ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+2: ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+3: ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+0: ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+3: ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+3: ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: anemoi from stream config ERA5.
+1: ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+2: ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+1: ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+2: ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+1: ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+3: ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+0: ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+3: ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+0: ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+3: ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: obs from stream config METEOSAT_SEVIRI_IR.
+2: METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+1: METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+3: METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: Opening dataset with type: obs from stream config GOES_ABI_IR.
+1: GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+3: GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+2: GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: Opening dataset with type: obs from stream config HIMAWARI_AHI_IR.
+0: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+1: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+2: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+3: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: Opening dataset with type: obs from stream config HIMAWARI_AHI_IR.
+1: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+3: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+2: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: Opening dataset with type: obs from stream config GOES_ABI_VIS.
+1: GOES_ABI_VIS geoinfos : ['zenith']
+2: GOES_ABI_VIS geoinfos : ['zenith']
+0: GOES_ABI_VIS geoinfos : ['zenith']
+3: GOES_ABI_VIS geoinfos : ['zenith']
+0: Opening dataset with type: obs from stream config HIMAWARI_AHI_VIS.
+0: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+2: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+3: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+1: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+0: Opening dataset with type: obs from stream config HIMAWARI_AHI_VIS.
+0: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+1: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+2: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+3: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+0: Opening dataset with type: obs from stream config SurfaceCombined.
+1: SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+3: SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+1: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+1: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+3: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+1: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: TimeWindowHandler: start=2023-10-01T00:00:00.000000000, end=2023-12-31T00:00:00.000000000, len=06:00:00, step=01:00:00
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+3: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+0: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+3: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+2: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: obs from stream config METOP_ABC_AVHRR_IASI.
+2: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: METOP_ABC_AVHRR_IASI geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: anemoi_operan from stream config ERA5_in.
+1: ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+1: ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+1: ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+3: ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+3: ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+3: ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+2: ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+2: ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: ERA5_in: source channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+0: ERA5_in: target channels: ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+0: ERA5_in: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: anemoi from stream config ERA5.
+3: ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+3: ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+3: ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+3: METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+3: GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+3: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+3: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+3: GOES_ABI_VIS geoinfos : ['zenith']
+3: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+3: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+3: SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+1: ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+1: ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+1: ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+1: METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+1: GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+1: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+1: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+1: GOES_ABI_VIS geoinfos : ['zenith']
+1: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+1: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+1: SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+2: ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+2: ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+2: METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+2: GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+2: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+2: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+2: GOES_ABI_VIS geoinfos : ['zenith']
+2: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+2: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+2: SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: ERA5: source channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+0: ERA5: target channels: ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']
+0: ERA5: geoinfo channels: ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: Opening dataset with type: obs from stream config METEOSAT_SEVIRI_IR.
+0: METEOSAT_SEVIRI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: Opening dataset with type: obs from stream config GOES_ABI_IR.
+0: GOES_ABI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: Opening dataset with type: obs from stream config HIMAWARI_AHI_IR.
+0: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: Opening dataset with type: obs from stream config HIMAWARI_AHI_IR.
+0: HIMAWARI_AHI_IR geoinfos : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']
+0: Opening dataset with type: obs from stream config GOES_ABI_VIS.
+0: GOES_ABI_VIS geoinfos : ['zenith']
+0: Opening dataset with type: obs from stream config HIMAWARI_AHI_VIS.
+0: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+0: Opening dataset with type: obs from stream config HIMAWARI_AHI_VIS.
+0: HIMAWARI_AHI_VIS geoinfos : ['zenith']
+0: Opening dataset with type: obs from stream config SurfaceCombined.
+0: SurfaceCombined geoinfos : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']
+0: ERA5 :: coord embed: :: [512, 512, 512]
+0: SurfaceCombined :: coord embed: :: [512, 512, 512]
+0: ERA5 :: coord embed: :: [512, 512, 512]
+0: SurfaceCombined :: coord embed: :: [512, 512, 512]
+0: ERA5 :: coord embed: :: [512, 512, 512]
+0: SurfaceCombined :: coord embed: :: [512, 512, 512]
+0: ERA5 :: coord embed: :: [512, 512, 512]
+0: SurfaceCombined :: coord embed: :: [512, 512, 512]
+0: ('cf.lr_steps_warmup and cf.lr_steps_cooldown', ' were larger than cf.lr_steps=100', '. The value have been adjusted to lr_steps_warmup=10 and ', ' lr_steps_cooldown=5 so steps_decay=85.')
+0: latent_noise_kl_weight : 0.0
+0: latent_noise_gamma : 2.0
+0: latent_noise_use_additive_noise : False
+0: latent_noise_deterministic_latents : True
+0: latent_noise_saturate_encodings : 5
+0: embed_unembed_mode : block
+0: embed_dropout_rate : 0.1
+0: ae_local_dim_embed : 4096
+0: ae_local_num_blocks : 4
+0: ae_local_num_heads : 16
+0: ae_local_dropout_rate : 0.1
+0: ae_local_with_qk_lnorm : True
+0: ae_local_max_tokens_per_cell : 128
+0: ae_local_num_queries : 1
+0: ae_local_queries_per_cell : False
+0: ae_adapter_num_heads : 16
+0: ae_adapter_embed : 128
+0: ae_adapter_with_qk_lnorm : True
+0: ae_adapter_with_residual : True
+0: ae_adapter_dropout_rate : 0.1
+0: ae_global_dim_embed : 4096
+0: ae_global_num_blocks : 4
+0: ae_global_num_heads : 32
+0: ae_global_dropout_rate : 0.1
+0: ae_global_with_qk_lnorm : True
+0: ae_global_att_dense_rate : 1.0
+0: ae_global_block_factor : 64
+0: ae_global_mlp_hidden_factor : 2
+0: ae_global_trailing_layer_norm : False
+0: ae_aggregation_num_blocks : 0
+0: ae_aggregation_num_heads : 32
+0: ae_aggregation_dropout_rate : 0.1
+0: ae_aggregation_with_qk_lnorm : True
+0: ae_aggregation_att_dense_rate : 1.0
+0: ae_aggregation_block_factor : 64
+0: ae_aggregation_mlp_hidden_factor : 2
+0: decoder_type : PerceiverIOCoordConditioning
+0: pred_adapter_kv : False
+0: pred_self_attention : True
+0: pred_dyadic_dims : False
+0: pred_mlp_adaln : True
+0: num_class_tokens : 0
+0: num_register_tokens : 0
+0: fe_num_blocks : 16
+0: fe_num_heads : 32
+0: fe_dropout_rate : 0.1
+0: fe_with_qk_lnorm : True
+0: fe_layer_norm_after_blocks : [7]
+0: fe_impute_latent_noise_std : 0.0001
+0: forecast_att_dense_rate : 1.0
+0: healpix_level : 5
+0: rope_2D : False
+0: with_mixed_precision : True
+0: with_flash_attention : True
+0: compile_model : False
+0: distributed : {'data_parallel': {'with_ddp': True, 'with_fsdp': True, 'find_unused_parameters': True, 'world_size': 4}, 'spatial_parallel': {'size': 1, 'size_original': 1}}
+0: attention_dtype : bf16
+0: mixed_precision_dtype : bf16
+0: mlp_norm_eps : 1e-05
+0: norm_eps : 0.0001
+0: freeze_modules : 
+0: load_chkpt : {}
+0: norm_type : RMSNorm
+0: streams_directory : ./config/streams/operan_georing_avhrr_synop_lowres/
+0:   type : obs  stream_id : 20  filenames : ['observations-ea-ofb-0001-2007-2021-metop-a-iasi-radiances-v1.zarr', 'observations-ea-ofb-0001-2013-2023-metop-b-iasi-radiances-v1.zarr', 'observations-ea-ofb-0001-2019-2023-metop-c-iasi-radiances-v1.zarr']  geoinfo_channels : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']  loss_weight : 1.0  masking_override : {'model_input': {'masking_strategy_config': {'rate': 1.0}}}  token_size : 512  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 2, 'dim_embed': 256, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 256}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : METOP_ABC_AVHRR_IASI  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_avhrr_mean_vis_0', 'obsvalue_rawbt_16', 'obsvalue_rawbt_63', 'obsvalue_rawbt_138', '
+0: obsvalue_rawbt_170', 'obsvalue_rawbt_185', 'obsvalue_rawbt_224', 'obsvalue_rawbt_249', 'obsvalue_rawbt_271', 'obsvalue_rawbt_445', 'obsvalue_rawbt_756', 'obsvalue_rawbt_867', 'obsvalue_rawbt_921', 'obsvalue_rawbt_2907', 'obsvalue_rawbt_2991', 'obsvalue_rawbt_3093', 'obsvalue_rawbt_3160', 'obsvalue_rawbt_5383']  train_target_channels : ['obsvalue_avhrr_mean_vis_0', 'obsvalue_rawbt_16', 'obsvalue_rawbt_63', 'obsvalue_rawbt_138', 'obsvalue_rawbt_170', 'obsvalue_rawbt_185', 'obsvalue_rawbt_224', 'obsvalue_rawbt_249', 'obsvalue_rawbt_271', 'obsvalue_rawbt_445', 'obsvalue_rawbt_756', 'obsvalue_rawbt_867', 'obsvalue_rawbt_921', 'obsvalue_rawbt_2907', 'obsvalue_rawbt_2991', 'obsvalue_rawbt_3093', 'obsvalue_rawbt_3160', 'obsvalue_rawbt_5383']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_avhrr_mean_vis_0', 'obsvalue_rawbt_16', 'obsvalue_rawbt_63', 'obsvalue_rawbt_138', 'obsvalue_rawbt_170', 'obsvalue_rawbt_185', 'o
+0: bsvalue_rawbt_224', 'obsvalue_rawbt_249', 'obsvalue_rawbt_271', 'obsvalue_rawbt_445', 'obsvalue_rawbt_756', 'obsvalue_rawbt_867', 'obsvalue_rawbt_921', 'obsvalue_rawbt_2907', 'obsvalue_rawbt_2991', 'obsvalue_rawbt_3093', 'obsvalue_rawbt_3160', 'obsvalue_rawbt_5383']  val_target_channels : ['obsvalue_avhrr_mean_vis_0', 'obsvalue_rawbt_16', 'obsvalue_rawbt_63', 'obsvalue_rawbt_138', 'obsvalue_rawbt_170', 'obsvalue_rawbt_185', 'obsvalue_rawbt_224', 'obsvalue_rawbt_249', 'obsvalue_rawbt_271', 'obsvalue_rawbt_445', 'obsvalue_rawbt_756', 'obsvalue_rawbt_867', 'obsvalue_rawbt_921', 'obsvalue_rawbt_2907', 'obsvalue_rawbt_2991', 'obsvalue_rawbt_3093', 'obsvalue_rawbt_3160', 'obsvalue_rawbt_5383']  type : anemoi_operan  filenames : ['aifs-od-an-oper-0001-mars-o96-2016-2025-6h-v1-for-single-v2.zarr']  stream_id : 0  source : ['q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'q_1000', 't_50', 't_100', 't_150', 't_200', 't_250', 't_300', 't_400', 't_500', 't_600', 't_700', 't_850',
+0:  't_925', 't_1000', 'u_50', 'u_100', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'u_1000', 'v_50', 'v_100', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'v_1000', 'z_50', 'z_100', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925', 'z_1000', '10u', '10v', '2d', '2t', 'msl']  target : ['q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'q_1000', 't_50', 't_100', 't_150', 't_200', 't_250', 't_300', 't_400', 't_500', 't_600', 't_700', 't_850', 't_925', 't_1000', 'u_50', 'u_100', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'u_1000', 'v_50', 'v_100', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'v_1000', 'z_50', 'z_100', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925', 'z_1000', '10u', '10v', '2d', '2t', 'msl']  geoinfo
+0: _channels : ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy_config': {'rate': 0.1}}}  token_size : 8  tokenize_spacetime : True  max_num_targets : -1  forcing : True  frequency : 06:00:00  nominal_time_mapping : {'0': 5, '6': 9, '12': 17, '18': 21}  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 8, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 256}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : ERA5_in  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150
+0: ', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  train_target_channels : ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50',
+0:  'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_8
+0: 50', 'z_925']  val_target_channels : ['10u', '10v', '2d', '2t', 'msl', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  type : anemoi  filenames : ['aifs-ea-an-oper-0001-mars-o96-1979-2024-1h-v3-with-era51.zarr']  stream_id : 1  source_exclude : ['z', 'w_10', 'w_50', 'w_100', 'w_150', 'w_200', 'w_250', 'w_300', 'w_400', 'w_500', 'w_600', 'w_700', 'w_850', 'w_925', 'w_1000', 'skt', 'tcw', 'cp', 'tp', 'q_50', 'q_100']  target_exclude : ['z', 'w_10', 'w_50', 'w_100', 'w_150', 'w_200', 'w_250', 'w_300',
+0:  'w_400', 'w_500', 'w_600', 'w_700', 'w_850', 'w_925', 'w_1000', 'slor', 'sdor', 'tcw', 'cp', 'tp', 'q_50', 'q_100']  geoinfo_channels : ['z', 'lsm', 'slor', 'sdor', 'insolation', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'target_input': {'masking_strategy_config': {'rate': 1.0}}}  token_size : 8  tokenize_spacetime : False  max_num_targets : -1  diagnostic : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 256, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : ERA5  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400
+0: ', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  train_target_channels : ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 
+0: 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 
+0: 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  val_target_channels : ['10u', '10v', '2d', '2t', 'hcc', 'lcc', 'mcc', 'msl', 'q_10', 'q_1000', 'q_150', 'q_200', 'q_250', 'q_300', 'q_400', 'q_500', 'q_600', 'q_700', 'q_850', 'q_925', 'skt', 'sp', 'ssrd', 'strd', 't_10', 't_100', 't_1000', 't_150', 't_200', 't_250', 't_300', 't_400', 't_50', 't_500', 't_600', 't_700', 't_850', 't_925', 'tcc', 'u_10', 'u_100', 'u_1000', 'u_150', 'u_200', 'u_250', 'u_300', 'u_400', 'u_50', 'u_500', 'u_600', 'u_700', 'u_850', 'u_925', 'v_10', 'v_100', 'v_1000', 'v_150', 'v_200', 'v_250', 'v_300', 'v_400', 'v_50', 'v_500', 'v_600', 'v_700', 'v_850', 'v_925', 'z_10', 'z_100', 'z_1000', 
+0: 'z_150', 'z_200', 'z_250', 'z_300', 'z_400', 'z_50', 'z_500', 'z_600', 'z_700', 'z_850', 'z_925']  type : obs  stream_id : 10  filenames : ['observations-file-2014-2024-seviri-o256-wegen-v3.zarr']  geoinfo_channels : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : METEOSAT_SEVIRI_IR  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalu
+0: e_rawbt_065', 'obsvalue_rawbt_086', 'obsvalue_rawbt_160', 'obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  train_target_channels : ['obsvalue_rawbt_065', 'obsvalue_rawbt_086', 'obsvalue_rawbt_160', 'obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_065', 'obsvalue_rawbt_086', 'obsvalue_rawbt_160', 'obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  val_target_channels : ['obsvalue_rawbt_065', 'obsvalue_rawbt_086', 'obsvalue_rawbt_160', 'obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_85
+0: 0', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  type : obs  stream_id : 11  filenames : ['observations-file-2017-2024-abi-goes16-IR-o256-v2.zarr']  geoinfo_channels : ['cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : GOES_ABI_IR  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_rawbt_380'
+0: , 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  train_target_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  val_target_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  type : obs  stream_id : 12  filenames : ['observations-file-2015-2022-himawari8-IR-o256-v1.zarr', 'observations-file-2022-2024-himawari9-IR-o256-v1.zarr']  geoinfo_channels : ['cos_local_time', 'sin
+0: _local_time', 'cos_julian_day', 'sin_julian_day', 'zenith', 'cos_sza']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : HIMAWARI_AHI_IR  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  train_target_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsv
+0: alue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  val_target_channels : ['obsvalue_rawbt_380', 'obsvalue_rawbt_620', 'obsvalue_rawbt_730', 'obsvalue_rawbt_850', 'obsvalue_rawbt_960', 'obsvalue_rawbt_105', 'obsvalue_rawbt_120', 'obsvalue_rawbt_133']  type : obs  stream_id : 13  filenames : ['observations-file-2017-2024-abi-goes16-VIS-o256-v2.zarr']  geoinfo_channels : ['zenith']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens':
+0:  1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : GOES_ABI_VIS  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  train_target_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  target_channel_weights : [1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  val_target_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  type : obs  stream_id : 14  filenames : ['observations-file-2015-2022-himawari8-VIS-o256-v1.zarr', 'observations-file-2022-2024-himawari9-VIS-o256-v1.zarr']  geoinfo_channels : ['zenith']  loss_weight : 1.0  location_weight : cosine_latitude  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config':
+0:  {'rate': 1.0}}}  token_size : 1024  tokenize_spacetime : False  max_num_targets : 131072  forcing : True  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 4, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : HIMAWARI_AHI_VIS  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  train_target_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  target_channel_weights : [1.0, 1.0]  val_source_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  val_target_channels : ['obsvalue_rawbt_086', 'obsvalue_rawbt_160']  type : obs  stream_id : 30  filenames : ['observations-ea-ofb-0001-1979-2025-combined-surface-v5.zarr']  source : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue
+0: _u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  target : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  geoinfo_channels : ['stalt', 'lsm', 'cos_sza', 'cos_local_time', 'sin_local_time', 'cos_julian_day', 'sin_julian_day']  loss_weight : 1.0  token_size : 64  masking_override : {'model_input': {'masking_strategy': 'random', 'masking_strategy_config': {'rate': 0.1}}}  tokenize_spacetime : False  max_num_targets : -1  embed : {'net': 'transformer', 'num_tokens': 1, 'num_heads': 2, 'dim_embed': 512, 'num_blocks': 2}  embed_target_coords : {'net': 'linear', 'dim_embed': 512}  target_readout : {'num_layers': 2, 'num_heads': 4}  pred_head : {'ens_size': 1, 'num_layers': 1}  name : SurfaceCombined  data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']  train_source_channels : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0
+0: ', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  train_target_channels : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  target_channel_weights : [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]  val_source_channels : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']  val_target_channels : ['obsvalue_tsts_0', 'obsvalue_t2m_0', 'obsvalue_td2m_0', 'obsvalue_u10m_0', 'obsvalue_v10m_0', 'obsvalue_pmsl_0', 'obsvalue_ps_0']zarr_store : zip
+0: general : {'istep': 0, 'rank': '???', 'world_size': '???', 'multiprocessing_method': 'fork', 'desc': '', 'run_id': 'xs51dbll', 'run_history': []}
+0: train_logging : {'terminal': 10, 'metrics': 1, 'checkpoint': 500, 'memory_tracking': True, 'throughput_tracking': True}
+0: data_loading : {'num_workers': 12, 'rng_seed': 1, 'repeat_data_in_mini_epoch': False}
+0: training_config : {'training_mode': ['masking'], 'num_mini_epochs': 1, 'samples_per_mini_epoch': 400, 'shuffle': True, 'start_date': '2017-06-01T00:00', 'end_date': '2022-12-31T00:00', 'time_window_step': '01:00:00', 'time_window_len': '06:00:00', 'learning_rate_scheduling': {'lr_start': 1e-06, 'lr_max': 5e-05, 'lr_final_decay': 2e-06, 'lr_final': 0.0, 'num_steps_warmup': 256, 'num_steps_cooldown': 512, 'policy_warmup': 'cosine', 'policy_decay': 'constant', 'policy_cooldown': 'linear', 'parallel_scaling_policy': 'sqrt'}, 'optimizer': {'grad_clip': 1.0, 'weight_decay': 0.1, 'log_grad_norms': False, 'adamw': {'beta1': 0.98125, 'beta2': 0.9875, 'eps': 2e-08}}, 'losses': {'physical': {'type': 'LossPhysical', 'loss_fcts': {'mse': {}}}}, 'model_input': {'source_masking': {'masking_strategy': 'forecast'}}, 'forecast': {'time_step': '06:00:00', 'offset': 1, 'num_steps': 2, 'policy': 'fixed'}}
+0: validation_config : {'samples_per_mini_epoch': 4, 'shuffle': False, 'start_date': '2023-10-01T00:00', 'end_date': '2023-12-31T00:00', 'validate_with_ema': {'enabled': True, 'ema_ramp_up_ratio': 0.09, 'ema_halflife_in_thousands': 0.001}, 'output': {'num_samples': 0, 'normalized_samples': False, 'streams': None}, 'validate_before_training': False}
+0: test_config : {'samples_per_mini_epoch': 128, 'shuffle': False, 'start_date': '2023-06-01T00:00', 'end_date': '2023-08-31T00:00', 'output': {'num_samples': 128, 'normalized_samples': False, 'streams': None}}
+0: wgtags : {'org': None, 'issue': None, 'exp': None, 'grid': None}
+0: from_run_id : None
+0: data_path_anemoi : /e/data1/slmet/ml_training
+0: data_path_obs : /e/data1/slmet/ml_training
+0: data_path_eobs : /e/data1/slmet/ml_training
+0: data_path_aux : /e/scratch/weatherai/shared_work/assets/
+0: path_shared_working_dir : /e/scratch/weatherai/shared_work
+0: path_shared_slurm_dir : /e/scratch/weatherai/slurm/
+0: data_path_fesom : /p/project1/hclimrep/koldunovn1
+0: data_path_icon : /p/scratch/hclimrep/shared/weather_generator_data/icon_art
+0: data_paths : ['/e/data1/slmet/ml_training', '/p/project1/hclimrep/koldunovn1', '/p/scratch/hclimrep/shared/weather_generator_data/icon_art']
+0: mlflow : {'tracking_uri': 'https://dbc-080c3210-c159.cloud.databricks.com/'}
+0: profiling : {'memory_profiling': False, 'pytorch_profiling': False, 'only_profiling': False}
+0: checkpoint_per_block : True
+0: fe_checkpoint_per_step : True
+0: fe_blocks_per_checkpoint : 2
+0: fe_reshard_after_forward : True
+0: decoder_gather_after_kv_projection : True
+0: source_tokens_in_mixed_precision : True
+0: source_tokens_on_cpu : True
+0: ae_adapter_checkpoint : True
+0: ae_local_checkpoint_outer : True
+0: embed_num_chunks : 4
+0: embed_checkpoint_per_chunk : True
+0: embed_index_copy : True
+0: decoder_num_chunks : 2
+0: embed_readout_batched : True
+0: skip_all_valid_filter_copy : True
+0: target_requested_fields_only : True
+0: obs_single_read : True
+0: anemoi_select_vars : True
+0: train_gc_collect_every_step : True
+0: vectorize_hpy_splits : True
+0: even_workset_split : True
+0: masked_counts_bincount : True
+0: target_coords_flat : True
+0: ema_on_cpu : True
+0: fsdp_cpu_offload : True
+0: world_size : 4
+0: rank : 0
+0: local_rank : 0
+0: world_size_original : 4
+0: 
+0: Mini_epoch 0 of 1: train.
+0: 0::0 : dataset [0,100) : [0,9)
+0: 0::1 : dataset [0,100) : [9,18)
+0: iter_start=0, iter_end=9, len=100
+0: iter_start=9, iter_end=18, len=100
+0: 0::2 : dataset [0,100) : [18,27)
+0: iter_start=18, iter_end=27, len=100
+0: 0::3 : dataset [0,100) : [27,36)
+0: iter_start=27, iter_end=36, len=100
+0: 0::4 : dataset [0,100) : [36,44)
+0: forecast_steps : 2
+0: forecast_steps : 2
+0: iter_start=36, iter_end=44, len=100
+0: forecast_steps : 2
+0: 0::5 : dataset [0,100) : [44,52)
+0: Sufficient available samples in the time range specified
+0: Sufficient available samples in the time range specified
+0: Sufficient available samples in the time range specified
+0: iter_start=44, iter_end=52, len=100
+0: 0::6 : dataset [0,100) : [52,60)
+0: forecast_steps : 2
+0: iter_start=52, iter_end=60, len=100
+0: forecast_steps : 2
+0: 0::7 : dataset [0,100) : [60,68)
+0: Sufficient available samples in the time range specified
+0: iter_start=60, iter_end=68, len=100
+0: Sufficient available samples in the time range specified
+0: forecast_steps : 2
+0: 0::8 : dataset [0,100) : [68,76)
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: Sufficient available samples in the time range specified
+0: 0::9 : dataset [0,100) : [76,84)
+0: iter_start=68, iter_end=76, len=100
+0: forecast_steps : 2
+0: iter_start=76, iter_end=84, len=100
+0: Sufficient available samples in the time range specified
+0: 0::10 : dataset [0,100) : [84,92)
+0: iter_start=84, iter_end=92, len=100
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: 0::11 : dataset [0,100) : [92,100)
+0: iter_start=92, iter_end=100, len=100
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+1: 1::0 : dataset [100,200) : [100,109)
+1: iter_start=100, iter_end=109, len=100
+1: 1::1 : dataset [100,200) : [109,118)
+1: iter_start=109, iter_end=118, len=100
+1: 1::2 : dataset [100,200) : [118,127)
+1: iter_start=118, iter_end=127, len=100
+1: 1::3 : dataset [100,200) : [127,136)
+1: forecast_steps : 2
+1: forecast_steps : 2
+1: iter_start=127, iter_end=136, len=100
+1: Sufficient available samples in the time range specified
+1: 1::4 : dataset [100,200) : [136,144)
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: iter_start=136, iter_end=144, len=100
+1: 1::5 : dataset [100,200) : [144,152)
+1: Sufficient available samples in the time range specified
+1: 1::6 : dataset [100,200) : [152,160)
+1: iter_start=144, iter_end=152, len=100
+1: forecast_steps : 2
+1: iter_start=152, iter_end=160, len=100
+1: 1::7 : dataset [100,200) : [160,168)
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: 1::8 : dataset [100,200) : [168,176)
+1: iter_start=160, iter_end=168, len=100
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: iter_start=168, iter_end=176, len=100
+1: 1::9 : dataset [100,200) : [176,184)
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: iter_start=176, iter_end=184, len=100
+1: 1::10 : dataset [100,200) : [184,192)
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: iter_start=184, iter_end=192, len=100
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+1: Sufficient available samples in the time range specified
+1: 1::11 : dataset [100,200) : [192,200)
+1: iter_start=192, iter_end=200, len=100
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+2: 2::0 : dataset [200,300) : [200,209)
+2: 2::1 : dataset [200,300) : [209,218)
+2: iter_start=200, iter_end=209, len=100
+2: iter_start=209, iter_end=218, len=100
+2: 2::2 : dataset [200,300) : [218,227)
+2: 2::3 : dataset [200,300) : [227,236)
+2: iter_start=218, iter_end=227, len=100
+2: iter_start=227, iter_end=236, len=100
+2: 2::4 : dataset [200,300) : [236,244)
+2: forecast_steps : 2
+2: forecast_steps : 2
+2: iter_start=236, iter_end=244, len=100
+2: 2::5 : dataset [200,300) : [244,252)
+2: Sufficient available samples in the time range specified
+2: Sufficient available samples in the time range specified
+2: forecast_steps : 2
+2: iter_start=244, iter_end=252, len=100
+2: Sufficient available samples in the time range specified
+2: 2::6 : dataset [200,300) : [252,260)
+2: forecast_steps : 2
+2: iter_start=252, iter_end=260, len=100
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+2: 2::7 : dataset [200,300) : [260,268)
+2: Sufficient available samples in the time range specified
+2: iter_start=260, iter_end=268, len=100
+2: forecast_steps : 2
+2: 2::8 : dataset [200,300) : [268,276)
+2: Sufficient available samples in the time range specified
+2: iter_start=268, iter_end=276, len=100
+2: forecast_steps : 2
+2: 2::9 : dataset [200,300) : [276,284)
+2: Sufficient available samples in the time range specified
+2: forecast_steps : 2
+2: iter_start=276, iter_end=284, len=100
+2: 2::10 : dataset [200,300) : [284,292)
+2: Sufficient available samples in the time range specified
+2: iter_start=284, iter_end=292, len=100
+2: forecast_steps : 2
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+2: Sufficient available samples in the time range specified
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+2: 2::11 : dataset [200,300) : [292,300)
+2: iter_start=292, iter_end=300, len=100
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+3: 3::0 : dataset [300,400) : [300,309)
+3: 3::1 : dataset [300,400) : [309,318)
+3: iter_start=300, iter_end=309, len=100
+3: iter_start=309, iter_end=318, len=100
+3: 3::2 : dataset [300,400) : [318,327)
+3: iter_start=318, iter_end=327, len=100
+3: 3::3 : dataset [300,400) : [327,336)
+3: iter_start=327, iter_end=336, len=100
+3: 3::4 : dataset [300,400) : [336,344)
+3: forecast_steps : 2
+3: forecast_steps : 2
+3: iter_start=336, iter_end=344, len=100
+3: Sufficient available samples in the time range specified
+3: Sufficient available samples in the time range specified
+3: 3::5 : dataset [300,400) : [344,352)
+3: forecast_steps : 2
+3: 3::6 : dataset [300,400) : [352,360)
+3: Sufficient available samples in the time range specified
+3: iter_start=344, iter_end=352, len=100
+3: forecast_steps : 2
+3: iter_start=352, iter_end=360, len=100
+3: 3::7 : dataset [300,400) : [360,368)
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+3: 3::8 : dataset [300,400) : [368,376)
+3: iter_start=360, iter_end=368, len=100
+3: Sufficient available samples in the time range specified
+3: iter_start=368, iter_end=376, len=100
+3: 3::9 : dataset [300,400) : [376,384)
+3: forecast_steps : 2
+3: iter_start=376, iter_end=384, len=100
+3: Sufficient available samples in the time range specified
+3: forecast_steps : 2
+3: 3::10 : dataset [300,400) : [384,392)
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+3: iter_start=384, iter_end=392, len=100
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+3: Sufficient available samples in the time range specified
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+3: 3::11 : dataset [300,400) : [392,400)
+3: iter_start=392, iter_end=400, len=100
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+2: Switching lr scheduler to 'constant' at step = 10.
+3: Switching lr scheduler to 'constant' at step = 10.
+1: Switching lr scheduler to 'constant' at step = 10.
+0: Switching lr scheduler to 'constant' at step = 10.
+0: 000 : 00010/00100 : 000010 : loss = 7.4961E-01 (lr=9.99E-05, s/sec=0.120)
+0: 	
+0: LossPhysical.ERA5.mse.avg : 6.8172E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 8.1751E-01 	
+0: LossPhysical.loss_avg : 7.4961E-01 	
+0: 
+0: 
+0: 000 : 00020/00100 : 000020 : loss = 7.6712E-01 (lr=1.00E-04, s/sec=0.187)
+0: 	
+0: LossPhysical.ERA5.mse.avg : 7.1027E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 8.2397E-01 	
+0: LossPhysical.loss_avg : 7.6712E-01 	
+0: 
+0: 
+0: 000 : 00030/00100 : 000030 : loss = 6.9372E-01 (lr=1.00E-04, s/sec=0.186)
+0: 	
+0: LossPhysical.ERA5.mse.avg : 6.9521E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 6.9224E-01 	
+0: LossPhysical.loss_avg : 6.9372E-01 	
+0: 
+0: 
+0: 000 : 00040/00100 : 000040 : loss = 5.8775E-01 (lr=1.00E-04, s/sec=0.187)
+0: 	
+0: LossPhysical.ERA5.mse.avg : 6.0462E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 5.7087E-01 	
+0: LossPhysical.loss_avg : 5.8775E-01 	
+0: 
+0: 
+0: 000 : 00050/00100 : 000050 : loss = 5.9403E-01 (lr=1.00E-04, s/sec=0.187)
+0: 	
+0: LossPhysical.ERA5.mse.avg : 6.4573E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 5.4233E-01 	
+0: LossPhysical.loss_avg : 5.9403E-01 	
+0: 
+0: 
+0: 000 : 00060/00100 : 000060 : loss = 6.8932E-01 (lr=1.00E-04, s/sec=0.188)
+0: 	
+0: LossPhysical.ERA5.mse.avg : 6.9533E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 6.8332E-01 	
+0: LossPhysical.loss_avg : 6.8932E-01 	
+0: 
+0: 
+0: 000 : 00070/00100 : 000070 : loss = 5.1993E-01 (lr=1.00E-04, s/sec=0.190)
+0: 	
+0: LossPhysical.ERA5.mse.avg : 6.0953E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 4.3033E-01 	
+0: LossPhysical.loss_avg : 5.1993E-01 	
+0: 
+0: 
+0: 000 : 00080/00100 : 000080 : loss = 5.5307E-01 (lr=1.00E-04, s/sec=0.190)
+0: 	
+0: LossPhysical.ERA5.mse.avg : 5.5961E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 5.4653E-01 	
+0: LossPhysical.loss_avg : 5.5307E-01 	
+0: 
+0: 
+0: 000 : 00090/00100 : 000090 : loss = 5.9827E-01 (lr=1.00E-04, s/sec=0.193)
+0: 	
+0: LossPhysical.ERA5.mse.avg : 5.6410E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 6.3244E-01 	
+0: LossPhysical.loss_avg : 5.9827E-01 	
+0: 
+0: 
+2: Switching lr scheduler to 'linear' at step = 95.
+3: Switching lr scheduler to 'linear' at step = 95.
+1: Switching lr scheduler to 'linear' at step = 95.
+0: Switching lr scheduler to 'linear' at step = 95.
+0: Mini_epoch 0 of 1: validate.
+2: 2::0 : dataset [2,3) : [2,3)
+2: iter_start=2, iter_end=3, len=1
+2: 2::1 : dataset [2,3) : [3,3)
+2: iter_start=3, iter_end=3, len=1
+2: 2::2 : dataset [2,3) : [3,3)
+2: forecast_steps : 2
+2: iter_start=3, iter_end=3, len=1
+2: 2::3 : dataset [2,3) : [3,3)
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+2: Sufficient available samples in the time range specified
+2: iter_start=3, iter_end=3, len=1
+2: 2::4 : dataset [2,3) : [3,3)
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+2: iter_start=3, iter_end=3, len=1
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+2: forecast_steps : 2
+2: 2::5 : dataset [2,3) : [3,3)
+2: Sufficient available samples in the time range specified
+2: iter_start=3, iter_end=3, len=1
+2: 2::6 : dataset [2,3) : [3,3)
+2: iter_start=3, iter_end=3, len=1
+2: 2::7 : dataset [2,3) : [3,3)
+2: forecast_steps : 2
+2: iter_start=3, iter_end=3, len=1
+2: Sufficient available samples in the time range specified
+2: 2::8 : dataset [2,3) : [3,3)
+2: iter_start=3, iter_end=3, len=1
+2: 2::9 : dataset [2,3) : [3,3)
+2: forecast_steps : 2
+2: iter_start=3, iter_end=3, len=1
+2: Sufficient available samples in the time range specified
+2: forecast_steps : 2
+2: 2::10 : dataset [2,3) : [3,3)
+2: Sufficient available samples in the time range specified
+2: forecast_steps : 2
+2: iter_start=3, iter_end=3, len=1
+2: Sufficient available samples in the time range specified
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+2: 2::11 : dataset [2,3) : [3,3)
+2: iter_start=3, iter_end=3, len=1
+2: forecast_steps : 2
+2: Sufficient available samples in the time range specified
+0: 0::0 : dataset [0,1) : [0,1)
+0: iter_start=0, iter_end=1, len=1
+0: 0::1 : dataset [0,1) : [1,1)
+0: iter_start=1, iter_end=1, len=1
+0: 0::2 : dataset [0,1) : [1,1)
+0: forecast_steps : 2
+0: iter_start=1, iter_end=1, len=1
+0: 0::3 : dataset [0,1) : [1,1)
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: iter_start=1, iter_end=1, len=1
+0: Sufficient available samples in the time range specified
+0: forecast_steps : 2
+0: 0::4 : dataset [0,1) : [1,1)
+0: Sufficient available samples in the time range specified
+0: iter_start=1, iter_end=1, len=1
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: 0::5 : dataset [0,1) : [1,1)
+0: iter_start=1, iter_end=1, len=1
+0: 0::6 : dataset [0,1) : [1,1)
+0: iter_start=1, iter_end=1, len=1
+0: 0::7 : dataset [0,1) : [1,1)
+0: forecast_steps : 2
+0: iter_start=1, iter_end=1, len=1
+0: 0::8 : dataset [0,1) : [1,1)
+0: Sufficient available samples in the time range specified
+0: iter_start=1, iter_end=1, len=1
+0: forecast_steps : 2
+0: 0::9 : dataset [0,1) : [1,1)
+0: Sufficient available samples in the time range specified
+0: iter_start=1, iter_end=1, len=1
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: forecast_steps : 2
+0: 0::10 : dataset [0,1) : [1,1)
+0: iter_start=1, iter_end=1, len=1
+0: Sufficient available samples in the time range specified
+0: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+0: forecast_steps : 2
+1: 1::0 : dataset [1,2) : [1,2)
+1: 1::1 : dataset [1,2) : [2,2)
+1: 1::2 : dataset [1,2) : [2,2)
+1: 1::3 : dataset [1,2) : [2,2)
+1: 1::4 : dataset [1,2) : [2,2)
+1: 1::5 : dataset [1,2) : [2,2)
+1: 1::6 : dataset [1,2) : [2,2)
+1: 1::7 : dataset [1,2) : [2,2)
+0: 0::11 : dataset [0,1) : [1,1)
+1: 1::8 : dataset [1,2) : [2,2)
+1: 1::9 : dataset [1,2) : [2,2)
+1: 1::10 : dataset [1,2) : [2,2)
+1: 1::11 : dataset [1,2) : [2,2)
+1: iter_start=1, iter_end=2, len=1
+0: Sufficient available samples in the time range specified
+1: iter_start=2, iter_end=2, len=1
+1: iter_start=2, iter_end=2, len=1
+0: iter_start=1, iter_end=1, len=1
+1: iter_start=2, iter_end=2, len=1
+1: iter_start=2, iter_end=2, len=1
+1: iter_start=2, iter_end=2, len=1
+1: iter_start=2, iter_end=2, len=1
+1: iter_start=2, iter_end=2, len=1
+1: iter_start=2, iter_end=2, len=1
+1: iter_start=2, iter_end=2, len=1
+1: iter_start=2, iter_end=2, len=1
+1: iter_start=2, iter_end=2, len=1
+1: forecast_steps : 2
+0: forecast_steps : 2
+1: forecast_steps : 2
+0: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: forecast_steps : 2
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+3: 3::0 : dataset [3,4) : [3,4)
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: forecast_steps : 2
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+1: Sufficient available samples in the time range specified
+1: forecast_steps : 2
+1: Sufficient available samples in the time range specified
+1: Sufficient available samples in the time range specified
+1: Sufficient available samples in the time range specified
+3: 3::1 : dataset [3,4) : [4,4)
+1: Sufficient available samples in the time range specified
+3: iter_start=3, iter_end=4, len=1
+1: Sufficient available samples in the time range specified
+3: iter_start=4, iter_end=4, len=1
+3: 3::2 : dataset [3,4) : [4,4)
+1: Sufficient available samples in the time range specified
+3: iter_start=4, iter_end=4, len=1
+3: 3::3 : dataset [3,4) : [4,4)
+3: forecast_steps : 2
+3: iter_start=4, iter_end=4, len=1
+3: forecast_steps : 2
+3: 3::4 : dataset [3,4) : [4,4)
+3: Sufficient available samples in the time range specified
+3: Sufficient available samples in the time range specified
+3: forecast_steps : 2
+3: iter_start=4, iter_end=4, len=1
+3: Sufficient available samples in the time range specified
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+3: forecast_steps : 2
+3: 3::5 : dataset [3,4) : [4,4)
+3: Sufficient available samples in the time range specified
+3: iter_start=4, iter_end=4, len=1
+3: 3::6 : dataset [3,4) : [4,4)
+3: forecast_steps : 2
+3: iter_start=4, iter_end=4, len=1
+3: Sufficient available samples in the time range specified
+3: 3::7 : dataset [3,4) : [4,4)
+3: iter_start=4, iter_end=4, len=1
+3: 3::8 : dataset [3,4) : [4,4)
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+3: iter_start=4, iter_end=4, len=1
+3: 3::9 : dataset [3,4) : [4,4)
+3: forecast_steps : 2
+3: iter_start=4, iter_end=4, len=1
+3: Sufficient available samples in the time range specified
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+3: forecast_steps : 2
+3: 3::10 : dataset [3,4) : [4,4)
+3: Sufficient available samples in the time range specified
+3: iter_start=4, iter_end=4, len=1
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+3: 3::11 : dataset [3,4) : [4,4)
+3: iter_start=4, iter_end=4, len=1
+3: forecast_steps : 2
+3: Sufficient available samples in the time range specified
+0: validation (xs51dbll) : 000 : 
+0:                         0.49996981024742126
+0: LossPhysical.ERA5.mse.avg : 5.8987E-01 	
+0: LossPhysical.SurfaceCombined.mse.avg : 4.1007E-01 	
+0: LossPhysical.loss_avg : 4.9997E-01 	
+0: 
+0: 
+0: Mini_epoch 0 of 1: save_model.
+0: Saved model to /e/scratch/weatherai/shared_work/models/xs51dbll/xs51dbll_chkpt00000.chkpt
+0: Saved model to /e/scratch/weatherai/shared_work/models/xs51dbll/xs51dbll_chkpt00001.chkpt
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:25 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:42 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:588 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:25 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:42 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:588 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:25 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:42 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:588 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:25 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:42 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:588 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:25 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:42 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:588 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:25 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:42 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:588 -> 3
+1: jpbo-065-32:670258:671222 [1] NCCL INFO misc/socket.cc:663 -> 3
+2: jpbo-065-32:670259:671218 [2] NCCL INFO misc/socket.cc:663 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:25 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:42 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:588 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:25 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:42 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:25 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:42 -> 3
+2: jpbo-065-32:670259:676542 [2] NCCL INFO misc/socket.cc:588 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:25 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:42 -> 3
+3: jpbo-065-32:670260:676544 [3] NCCL INFO misc/socket.cc:588 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:588 -> 3
+3: jpbo-065-32:670260:671220 [3] NCCL INFO misc/socket.cc:663 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:25 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:42 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:588 -> 3
+1: jpbo-065-32:670258:671222 [1] NCCL INFO misc/socket.cc:663 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:25 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:42 -> 3
+1: jpbo-065-32:670258:676543 [1] NCCL INFO misc/socket.cc:588 -> 3
+1: jpbo-065-32:670258:671222 [1] NCCL INFO misc/socket.cc:663 -> 3
+2: jpbo-065-32:670259:671218 [2] NCCL INFO misc/socket.cc:663 -> 3
+3: jpbo-065-32:670260:671220 [3] NCCL INFO misc/socket.cc:663 -> 3
+2: jpbo-065-32:670259:671218 [2] NCCL INFO misc/socket.cc:663 -> 3
+3: jpbo-065-32:670260:671220 [3] NCCL INFO misc/socket.cc:663 -> 3
+0: [rank0]:[W1112 03:45:37.209541184 ProcessGroupNCCL.cpp:1524] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:25 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:42 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:588 -> 3
+0: jpbo-065-32:670257:671216 [0] NCCL INFO misc/socket.cc:663 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:25 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:42 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:588 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:25 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:42 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:588 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:25 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:42 -> 3
+0: jpbo-065-32:670257:676545 [0] NCCL INFO misc/socket.cc:588 -> 3
+0: [rank0]:[W1112 03:45:38.323474134 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+2: [rank2]:[W1112 03:45:38.323499221 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+3: [rank3]:[W1112 03:45:38.323488118 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+1: [rank1]:[W1112 03:45:38.323657106 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())

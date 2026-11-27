@@ -1,0 +1,10 @@
++ '[' -z stj7pc97 ']'
++ echo 'RUN_ID is set to stj7pc97'
++ '[' -z '' ']'
++ echo 'WEATHERGEN_PRIVATE_HOME is not set, not running upload_experiment.py'
++ '[' -z /e/scratch/weatherai/slurm/slurm_weathergen_stj7pc97_dir/WeatherGenerator ']'
++ venv_path=/e/scratch/weatherai/slurm/slurm_weathergen_stj7pc97_dir/WeatherGenerator/.venv
++ echo 'deleting venv at /e/scratch/weatherai/slurm/slurm_weathergen_stj7pc97_dir/WeatherGenerator/.venv'
++ rm -rf /e/scratch/weatherai/slurm/slurm_weathergen_stj7pc97_dir/WeatherGenerator/.venv
++ echo 'Finished job.'
++ date
