@@ -1,0 +1,11 @@
+{"timestamp": 1794049203.956472, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 0, "wait_seconds": 93.52992604901374}
+{"timestamp": 1794049378.4983697, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 1, "wait_seconds": 0.0298818070004927}
+{"timestamp": 1794049541.0560958, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 2, "wait_seconds": 0.03656866299570538}
+{"timestamp": 1794049703.5314972, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 3, "wait_seconds": 0.0315040799905546}
+{"timestamp": 1794049865.424087, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 4, "wait_seconds": 0.044720106991007924}
+{"timestamp": 1794050027.5272279, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 5, "wait_seconds": 0.03667679300997406}
+{"timestamp": 1794050189.510345, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 6, "wait_seconds": 0.03716817600070499}
+{"timestamp": 1794050351.1992695, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 7, "wait_seconds": 0.044061623004381545}
+{"timestamp": 1794050513.1211805, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 8, "wait_seconds": 0.0373482370050624}
+{"timestamp": 1794050674.6927881, "rank": 2, "stage": "train", "mini_epoch": 0, "step": 9, "wait_seconds": 0.04517491099250037}
+{"timestamp": 1794050919.057777, "rank": 2, "stage": "val", "mini_epoch": 0, "step": 0, "wait_seconds": 84.27570581200416}
